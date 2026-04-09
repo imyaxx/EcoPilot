@@ -1,0 +1,58 @@
+.card {
+  background-color: var(--color-surface-elevated);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--duration-normal) var(--easing-default);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Padding Variants ── */
+
+.compact {
+  padding: var(--space-3);
+}
+
+.default {
+  padding: var(--space-5);
+}
+
+.spacious {
+  padding: var(--space-8);
+}
+
+/* ── Header / Body / Footer Slots ── */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+  margin-bottom: var(--space-4);
+}
+
+.headerTitle {
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.headerAction {
+  flex-shrink: 0;
+}
+
+.body {
+  flex: 1;
+}
+
+.footer {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border-subtle);
+  margin-top: var(--space-4);
+}

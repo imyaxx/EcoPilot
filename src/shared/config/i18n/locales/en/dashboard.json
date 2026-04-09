@@ -1,0 +1,29 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Monitor your building\u2019s environmental performance",
+  "totalEnergy": "Total Energy",
+  "totalWater": "Total Water",
+  "carbonFootprint": "Carbon Footprint",
+  "efficiency": "Efficiency Score",
+  "zones": "Zones",
+  "alerts": "Active Alerts",
+  "metrics": {
+    "consumption": "Consumption",
+    "savings": "Savings",
+    "trend": "Trend",
+    "peak": "Peak Usage",
+    "average": "Average",
+    "target": "Target"
+  },
+  "period": {
+    "today": "Today",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "thisYear": "This Year"
+  },
+  "status": {
+    "optimal": "Optimal",
+    "warning": "Needs Attention",
+    "critical": "Critical"
+  }
+}

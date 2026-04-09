@@ -1,0 +1,27 @@
+{
+  "loading": "Loading...",
+  "error": "Something went wrong",
+  "retry": "Retry",
+  "noData": "No data available",
+  "save": "Save",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "close": "Close",
+  "search": "Search",
+  "filter": "Filter",
+  "reset": "Reset",
+  "viewAll": "View all",
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "units": {
+    "kwh": "kWh",
+    "liters": "L",
+    "cubicMeters": "m\u00b3",
+    "percentage": "%",
+    "celsius": "\u00b0C"
+  }
+}
