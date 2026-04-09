@@ -1,0 +1,89 @@
+/* ============================================
+   Dashboard Page Layout
+   Container, grid, section spacing
+   ============================================ */
+
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-6);
+}
+
+/* ── Header ── */
+
+.header {
+  margin-bottom: var(--space-10);
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.title {
+  font-family: var(--font-sans);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+.subtitle {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-2);
+}
+
+/* ── Status Bar ── */
+
+.statusBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+
+/* ── Sections ── */
+
+.section {
+  margin-bottom: var(--space-10);
+}
+
+.sectionSmall {
+  margin-bottom: var(--space-8);
+}
+
+/* ── Metric Grid ── */
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+}
+
+@media (min-width: 768px) {
+  .metricsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ── Charts Grid ── */
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+}
+
+/* ── Controls Bar ── */
+
+.controlsBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border-subtle);
+}

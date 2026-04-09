@@ -1,0 +1,75 @@
+.chartSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background-color: var(--color-surface-elevated);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chartTitle {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.chartPeriod {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
+
+/* ── Bar Chart Area ── */
+
+.barsContainer {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+  padding-top: var(--space-2);
+}
+
+.bar {
+  flex: 1;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  animation: barPulse 2s ease-in-out infinite;
+}
+
+@keyframes barPulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.bar:nth-child(1) { animation-delay: 0ms; }
+.bar:nth-child(2) { animation-delay: 100ms; }
+.bar:nth-child(3) { animation-delay: 200ms; }
+.bar:nth-child(4) { animation-delay: 300ms; }
+.bar:nth-child(5) { animation-delay: 400ms; }
+.bar:nth-child(6) { animation-delay: 500ms; }
+.bar:nth-child(7) { animation-delay: 600ms; }
+.bar:nth-child(8) { animation-delay: 700ms; }
+.bar:nth-child(9) { animation-delay: 800ms; }
+.bar:nth-child(10) { animation-delay: 900ms; }
+.bar:nth-child(11) { animation-delay: 1000ms; }
+.bar:nth-child(12) { animation-delay: 1100ms; }
+
+/* ── Axis line ── */
+
+.axis {
+  height: 1px;
+  background-color: var(--color-border-subtle);
+}

@@ -25,5 +25,28 @@
     "optimal": "Optimal",
     "warning": "Needs Attention",
     "critical": "Critical"
+  },
+  "insights": {
+    "title": "System Insights",
+    "waterSpike": {
+      "title": "Water usage spike detected",
+      "description": "Zone B water consumption increased 23% compared to last week\u2019s average."
+    },
+    "nightEnergy": {
+      "title": "Unusual night energy usage",
+      "description": "HVAC systems ran 4.2 hours longer than scheduled between 11 PM and 5 AM."
+    },
+    "inefficiency": {
+      "title": "Cooling inefficiency in Zone A",
+      "description": "Temperature differential suggests a possible air leak near the east corridor."
+    }
+  },
+  "charts": {
+    "energyTrend": "Energy Trend",
+    "waterUsage": "Water Usage"
+  },
+  "controls": {
+    "export": "Export",
+    "dateRange": "Date Range"
   }
 }
