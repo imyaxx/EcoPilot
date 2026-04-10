@@ -2,10 +2,9 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
   padding: var(--space-5) var(--space-5) var(--space-4);
   background-color: var(--color-surface-elevated);
-  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 65%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 55%, transparent);
   border-radius: var(--radius-lg);
   overflow: hidden;
   transition:
@@ -14,11 +13,11 @@
 }
 
 .metricCard:hover {
-  border-color: var(--color-border-subtle);
+  border-color: color-mix(in srgb, var(--color-border-subtle) 85%, transparent);
   box-shadow: var(--shadow-sm);
 }
 
-/* ── Accent bar at the top ── */
+/* ── Accent bar ── */
 
 .accentBar {
   position: absolute;
@@ -50,6 +49,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: var(--space-4);
 }
 
 .label {
@@ -57,7 +57,7 @@
   font-size: var(--text-xs);
   font-weight: var(--weight-medium);
   color: var(--color-text-tertiary);
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
@@ -65,29 +65,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius-md);
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
 
 .iconEnergy {
-  background-color: color-mix(in srgb, var(--color-energy) 10%, transparent);
+  background-color: color-mix(in srgb, var(--color-energy) 8%, transparent);
   color: var(--color-energy);
 }
 
 .iconWater {
-  background-color: color-mix(in srgb, var(--color-water) 10%, transparent);
+  background-color: color-mix(in srgb, var(--color-water) 8%, transparent);
   color: var(--color-water);
 }
 
 .iconBrand {
-  background-color: color-mix(in srgb, var(--color-brand-primary) 10%, transparent);
+  background-color: color-mix(in srgb, var(--color-brand-primary) 8%, transparent);
   color: var(--color-brand-primary);
 }
 
 .iconDanger {
-  background-color: color-mix(in srgb, var(--color-alert-primary) 10%, transparent);
+  background-color: color-mix(in srgb, var(--color-alert-primary) 8%, transparent);
   color: var(--color-alert-primary);
 }
 
@@ -97,6 +97,7 @@
   display: flex;
   align-items: baseline;
   gap: var(--space-2);
+  margin-bottom: var(--space-3);
 }
 
 .value {
@@ -114,21 +115,23 @@
   font-size: var(--text-xs);
   font-weight: var(--weight-regular);
   color: var(--color-text-tertiary);
-  opacity: 0.7;
+  opacity: 0.55;
+  transform: translateY(-1px);
 }
 
-/* ── Footer trend ── */
+/* ── Trend indicator ── */
 
 .trend {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: var(--weight-medium);
   letter-spacing: var(--tracking-mono);
   font-variant-numeric: tabular-nums;
   margin-top: auto;
+  padding-top: var(--space-1);
 }
 
 .trendPositive {

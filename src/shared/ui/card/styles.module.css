@@ -1,6 +1,6 @@
 .card {
   background-color: var(--color-surface-elevated);
-  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 65%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 55%, transparent);
   border-radius: var(--radius-lg);
   transition:
     border-color var(--duration-normal) var(--easing-default),
@@ -8,7 +8,7 @@
 }
 
 .card:hover {
-  border-color: var(--color-border-subtle);
+  border-color: color-mix(in srgb, var(--color-border-subtle) 85%, transparent);
   box-shadow: var(--shadow-sm);
 }
 
@@ -34,7 +34,7 @@
   justify-content: space-between;
   gap: var(--space-3);
   padding-bottom: var(--space-3);
-  border-bottom: 1px solid color-mix(in srgb, var(--color-border-subtle) 50%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border-subtle) 40%, transparent);
   margin-bottom: var(--space-4);
 }
 
@@ -55,6 +55,6 @@
 
 .footer {
   padding-top: var(--space-4);
-  border-top: 1px solid color-mix(in srgb, var(--color-border-subtle) 50%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--color-border-subtle) 40%, transparent);
   margin-top: var(--space-4);
 }

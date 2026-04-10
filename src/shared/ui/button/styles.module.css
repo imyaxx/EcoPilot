@@ -18,7 +18,7 @@
 }
 
 .button:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   pointer-events: none;
 }
 
@@ -41,13 +41,13 @@
 .secondary {
   background-color: transparent;
   color: var(--color-text-secondary);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-border-default) 70%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-border-default) 60%, transparent);
 }
 
 .secondary:hover {
   background-color: var(--color-neutral-50);
   color: var(--color-text-primary);
-  box-shadow: inset 0 0 0 1px var(--color-border-default);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-border-default) 85%, transparent);
 }
 
 .secondary:active {
@@ -60,7 +60,7 @@
 }
 
 .ghost:hover {
-  background-color: var(--color-neutral-50);
+  background-color: color-mix(in srgb, var(--color-neutral-50) 70%, transparent);
   color: var(--color-text-secondary);
 }
 
@@ -71,9 +71,9 @@
 /* ── Sizes ── */
 
 .small {
-  padding: var(--space-1) var(--space-3);
+  padding: 3px var(--space-2);
   font-size: var(--text-sm);
-  gap: 5px;
+  gap: var(--space-1);
 }
 
 .medium {

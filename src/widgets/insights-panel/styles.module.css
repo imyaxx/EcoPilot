@@ -1,7 +1,7 @@
 .panel {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .panelTitle {
@@ -11,7 +11,7 @@
   color: var(--color-text-tertiary);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-2);
 }
 
 /* ── Insight Item ── */
@@ -22,16 +22,16 @@
   gap: var(--space-3);
   padding: var(--space-4);
   background-color: var(--color-surface-elevated);
-  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 65%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 55%, transparent);
   border-radius: var(--radius-lg);
   transition:
-    background-color var(--duration-fast) var(--easing-default),
+    background-color var(--duration-normal) var(--easing-default),
     border-color var(--duration-normal) var(--easing-default);
 }
 
 .insightItem:hover {
-  background-color: var(--color-surface-sunken);
-  border-color: var(--color-border-subtle);
+  background-color: color-mix(in srgb, var(--color-surface-sunken) 60%, var(--color-surface-elevated));
+  border-color: color-mix(in srgb, var(--color-border-subtle) 75%, transparent);
 }
 
 /* ── Icon container ── */
@@ -40,25 +40,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius-md);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
   flex-shrink: 0;
   margin-top: 1px;
 }
 
 .iconWarning {
-  background-color: color-mix(in srgb, var(--color-status-warning) 10%, transparent);
+  background-color: color-mix(in srgb, var(--color-status-warning) 8%, transparent);
   color: var(--color-status-warning);
 }
 
 .iconDanger {
-  background-color: color-mix(in srgb, var(--color-status-danger) 9%, transparent);
+  background-color: color-mix(in srgb, var(--color-status-danger) 7%, transparent);
   color: var(--color-status-danger);
 }
 
 .iconInfo {
-  background-color: color-mix(in srgb, var(--color-water) 9%, transparent);
+  background-color: color-mix(in srgb, var(--color-water) 7%, transparent);
   color: var(--color-water);
 }
 
@@ -74,7 +74,7 @@
 .insightTitle {
   font-family: var(--font-sans);
   font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
+  font-weight: var(--weight-medium);
   color: var(--color-text-primary);
   line-height: var(--leading-snug);
 }
@@ -85,4 +85,5 @@
   font-weight: var(--weight-regular);
   color: var(--color-text-tertiary);
   line-height: var(--leading-relaxed);
+  opacity: 0.85;
 }

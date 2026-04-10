@@ -24,21 +24,21 @@ export function DashboardPage() {
     {
       id: 'water-spike',
       severity: 'warning' as const,
-      icon: <Drop size={20} weight="duotone" />,
+      icon: <Drop size={18} weight="duotone" />,
       title: t('dashboard:insights.waterSpike.title'),
       description: t('dashboard:insights.waterSpike.description'),
     },
     {
       id: 'night-energy',
       severity: 'danger' as const,
-      icon: <Lightning size={20} weight="duotone" />,
+      icon: <Lightning size={18} weight="duotone" />,
       title: t('dashboard:insights.nightEnergy.title'),
       description: t('dashboard:insights.nightEnergy.description'),
     },
     {
       id: 'inefficiency',
       severity: 'info' as const,
-      icon: <ThermometerHot size={20} weight="duotone" />,
+      icon: <ThermometerHot size={18} weight="duotone" />,
       title: t('dashboard:insights.inefficiency.title'),
       description: t('dashboard:insights.inefficiency.description'),
     },
@@ -70,7 +70,7 @@ export function DashboardPage() {
             value="2,847"
             unit={t('common:units.kwh')}
             accent="energy"
-            icon={<Lightning size={18} weight="duotone" />}
+            icon={<Lightning size={16} weight="duotone" />}
             trend={{ value: '12.5%', direction: 'negative' }}
           />
           <MetricCard
@@ -78,7 +78,7 @@ export function DashboardPage() {
             value="1,203"
             unit={t('common:units.cubicMeters')}
             accent="water"
-            icon={<Drop size={18} weight="duotone" />}
+            icon={<Drop size={16} weight="duotone" />}
             trend={{ value: '3.2%', direction: 'positive' }}
           />
           <MetricCard
@@ -86,7 +86,7 @@ export function DashboardPage() {
             value="482"
             unit="kg"
             accent="brand"
-            icon={<Gauge size={18} weight="duotone" />}
+            icon={<Gauge size={16} weight="duotone" />}
             trend={{ value: '8.1%', direction: 'positive' }}
           />
           <MetricCard
@@ -94,7 +94,7 @@ export function DashboardPage() {
             value="94.2"
             unit={t('common:units.percentage')}
             accent="brand"
-            icon={<ShieldCheck size={18} weight="duotone" />}
+            icon={<ShieldCheck size={16} weight="duotone" />}
             trend={{ value: '1.4%', direction: 'positive' }}
           />
         </div>
@@ -129,28 +129,28 @@ export function DashboardPage() {
         <Button
           variant="secondary"
           size="small"
-          icon={<CalendarBlank size={14} weight="regular" />}
+          icon={<CalendarBlank size={13} weight="regular" />}
         >
           {t('dashboard:controls.dateRange')}
         </Button>
         <Button
           variant="ghost"
           size="small"
-          icon={<Funnel size={14} weight="regular" />}
+          icon={<Funnel size={13} weight="regular" />}
         >
           {t('common:filter')}
         </Button>
         <Button
           variant="ghost"
           size="small"
-          icon={<Export size={14} weight="regular" />}
+          icon={<Export size={13} weight="regular" />}
         >
           {t('dashboard:controls.export')}
         </Button>
         <Button
           variant="ghost"
           size="small"
-          icon={<ArrowsClockwise size={14} weight="regular" />}
+          icon={<ArrowsClockwise size={13} weight="regular" />}
         >
           {t('common:reset')}
         </Button>
