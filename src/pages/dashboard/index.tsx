@@ -18,7 +18,33 @@ import { InsightsPanel } from '../../widgets/insights-panel';
 import styles from './styles.module.css';
 
 export function DashboardPage() {
-  const { t } = useTranslation(['dashboard', 'common']);
+  const { t, i18n } = useTranslation(['dashboard', 'common']);
+
+  const dateFormatter = new Intl.DateTimeFormat(i18n.resolvedLanguage, {
+    month: 'short',
+    day: '2-digit',
+  });
+
+  const referenceDate = new Date();
+  const chartDates = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23].map((day) =>
+    dateFormatter.format(
+      new Date(referenceDate.getFullYear(), referenceDate.getMonth(), day),
+    ),
+  );
+
+  const energyChartData = [
+    146, 188, 132, 241, 174, 216, 158, 264, 196, 138, 232, 182,
+  ].map((value, index) => ({
+    label: chartDates[index],
+    value,
+  }));
+
+  const waterChartData = [72, 61, 68, 91, 97, 81, 112, 89, 66, 103, 77, 86].map(
+    (value, index) => ({
+      label: chartDates[index],
+      value,
+    }),
+  );
 
   const insights = [
     {
@@ -71,6 +97,7 @@ export function DashboardPage() {
             unit={t('common:units.kwh')}
             accent="energy"
             icon={<Lightning size={16} weight="duotone" />}
+            entryDelay={0}
             trend={{ value: '12.5%', direction: 'negative' }}
           />
           <MetricCard
@@ -79,6 +106,7 @@ export function DashboardPage() {
             unit={t('common:units.cubicMeters')}
             accent="water"
             icon={<Drop size={16} weight="duotone" />}
+            entryDelay={1}
             trend={{ value: '3.2%', direction: 'positive' }}
           />
           <MetricCard
@@ -87,6 +115,7 @@ export function DashboardPage() {
             unit="kg"
             accent="brand"
             icon={<Gauge size={16} weight="duotone" />}
+            entryDelay={2}
             trend={{ value: '8.1%', direction: 'positive' }}
           />
           <MetricCard
@@ -95,6 +124,7 @@ export function DashboardPage() {
             unit={t('common:units.percentage')}
             accent="brand"
             icon={<ShieldCheck size={16} weight="duotone" />}
+            entryDelay={3}
             trend={{ value: '1.4%', direction: 'positive' }}
           />
         </div>
@@ -106,12 +136,16 @@ export function DashboardPage() {
           <ChartSkeleton
             title={t('dashboard:charts.energyTrend')}
             period={t('dashboard:period.thisMonth')}
-            accentColor="var(--color-energy)"
+            accent="energy"
+            data={energyChartData}
+            unit={t('common:units.kwh')}
           />
           <ChartSkeleton
             title={t('dashboard:charts.waterUsage')}
             period={t('dashboard:period.thisMonth')}
-            accentColor="var(--color-water)"
+            accent="water"
+            data={waterChartData}
+            unit={t('common:units.cubicMeters')}
           />
         </div>
       </section>

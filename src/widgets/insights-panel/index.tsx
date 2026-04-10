@@ -22,13 +22,20 @@ const severityIconMap: Record<InsightSeverity, string> = {
   info: styles.iconInfo,
 };
 
+const entryDelayClassMap = [styles.delay0, styles.delay1, styles.delay2];
+
 export function InsightsPanel({ title, items }: InsightsPanelProps) {
   return (
     <div className={styles.panel}>
       <h2 className={styles.panelTitle}>{title}</h2>
 
-      {items.map((item) => (
-        <article key={item.id} className={styles.insightItem}>
+      {items.map((item, index) => (
+        <article
+          key={item.id}
+          className={`${styles.insightItem} ${
+            entryDelayClassMap[index] ?? styles.delay2
+          }`}
+        >
           <div
             className={`${styles.insightIcon} ${severityIconMap[item.severity]}`}
           >

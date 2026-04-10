@@ -24,14 +24,34 @@
   background-color: var(--color-surface-elevated);
   border: 1px solid color-mix(in srgb, var(--color-border-subtle) 55%, transparent);
   border-radius: var(--radius-lg);
+  cursor: pointer;
+  opacity: 0;
+  animation: insightItemEnter var(--duration-entry) var(--easing-interactive) both;
+  animation-delay: var(--entry-delay, 0ms);
   transition:
-    background-color var(--duration-normal) var(--easing-default),
-    border-color var(--duration-normal) var(--easing-default);
+    background-color var(--duration-interactive) var(--easing-interactive),
+    border-color var(--duration-interactive) var(--easing-interactive);
 }
 
 .insightItem:hover {
-  background-color: color-mix(in srgb, var(--color-surface-sunken) 60%, var(--color-surface-elevated));
-  border-color: color-mix(in srgb, var(--color-border-subtle) 75%, transparent);
+  background-color: color-mix(in srgb, var(--color-surface-sunken) 22%, var(--color-surface-elevated));
+  border-color: color-mix(in srgb, var(--color-border-default) 62%, transparent);
+}
+
+.insightItem:hover .insightIcon {
+  opacity: 1;
+}
+
+.delay0 {
+  --entry-delay: 240ms;
+}
+
+.delay1 {
+  --entry-delay: calc(240ms + var(--duration-stagger));
+}
+
+.delay2 {
+  --entry-delay: calc(240ms + (var(--duration-stagger) * 2));
 }
 
 /* ── Icon container ── */
@@ -45,6 +65,8 @@
   border-radius: var(--radius-sm);
   flex-shrink: 0;
   margin-top: 1px;
+  opacity: 0.92;
+  transition: opacity var(--duration-interactive) var(--easing-interactive);
 }
 
 .iconWarning {
@@ -86,4 +108,23 @@
   color: var(--color-text-tertiary);
   line-height: var(--leading-relaxed);
   opacity: 0.85;
+}
+
+@keyframes insightItemEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .insightItem {
+    opacity: 1;
+    animation: none;
+  }
 }

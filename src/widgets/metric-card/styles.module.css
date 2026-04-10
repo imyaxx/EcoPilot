@@ -6,15 +6,46 @@
   background-color: var(--color-surface-elevated);
   border: 1px solid color-mix(in srgb, var(--color-border-subtle) 55%, transparent);
   border-radius: var(--radius-lg);
+  cursor: pointer;
   overflow: hidden;
+  opacity: 0;
+  animation: metricCardFade var(--duration-entry) var(--easing-interactive) both;
+  animation-delay: var(--entry-delay, 0ms);
   transition:
-    border-color var(--duration-normal) var(--easing-default),
-    box-shadow var(--duration-normal) var(--easing-default);
+    background-color var(--duration-interactive) var(--easing-interactive),
+    border-color var(--duration-interactive) var(--easing-interactive),
+    transform var(--duration-interactive) var(--easing-interactive);
 }
 
 .metricCard:hover {
-  border-color: color-mix(in srgb, var(--color-border-subtle) 85%, transparent);
-  box-shadow: var(--shadow-sm);
+  background-color: color-mix(in srgb, var(--color-surface-sunken) 18%, var(--color-surface-elevated));
+  border-color: color-mix(in srgb, var(--color-border-default) 62%, transparent);
+  transform: translateY(-1px);
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  transform: translateY(8px);
+  animation: metricCardSlide var(--duration-entry) var(--easing-interactive) both;
+  animation-delay: var(--entry-delay, 0ms);
+}
+
+.delay0 {
+  --entry-delay: 0ms;
+}
+
+.delay1 {
+  --entry-delay: var(--duration-stagger);
+}
+
+.delay2 {
+  --entry-delay: calc(var(--duration-stagger) * 2);
+}
+
+.delay3 {
+  --entry-delay: calc(var(--duration-stagger) * 3);
 }
 
 /* ── Accent bar ── */
@@ -140,4 +171,43 @@
 
 .trendNegative {
   color: var(--color-status-danger);
+}
+
+@keyframes metricCardFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes metricCardSlide {
+  from {
+    transform: translateY(8px);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metricCard {
+    opacity: 1;
+    animation: none;
+    transition:
+      background-color var(--duration-interactive) var(--easing-interactive),
+      border-color var(--duration-interactive) var(--easing-interactive);
+  }
+
+  .metricCard:hover {
+    transform: none;
+  }
+
+  .content {
+    transform: none;
+    animation: none;
+  }
 }

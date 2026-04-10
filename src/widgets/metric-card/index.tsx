@@ -14,6 +14,7 @@ interface MetricCardProps {
   unit: string;
   accent: MetricAccent;
   icon: ReactNode;
+  entryDelay?: number;
   trend?: TrendData;
 }
 
@@ -31,40 +32,54 @@ const iconBgMap: Record<MetricAccent, string> = {
   danger: styles.iconDanger,
 };
 
+const entryDelayClassMap = [
+  styles.delay0,
+  styles.delay1,
+  styles.delay2,
+  styles.delay3,
+];
+
 export function MetricCard({
   label,
   value,
   unit,
   accent,
   icon,
+  entryDelay = 0,
   trend,
 }: MetricCardProps) {
   return (
-    <article className={styles.metricCard}>
+    <article
+      className={`${styles.metricCard} ${
+        entryDelayClassMap[entryDelay] ?? styles.delay0
+      }`}
+    >
       <div className={`${styles.accentBar} ${accentBarMap[accent]}`} />
 
-      <div className={styles.header}>
-        <span className={styles.label}>{label}</span>
-        <div className={`${styles.icon} ${iconBgMap[accent]}`}>{icon}</div>
-      </div>
-
-      <div className={styles.valueRow}>
-        <span className={styles.value}>{value}</span>
-        <span className={styles.unit}>{unit}</span>
-      </div>
-
-      {trend && (
-        <div
-          className={`${styles.trend} ${
-            trend.direction === 'positive'
-              ? styles.trendPositive
-              : styles.trendNegative
-          }`}
-        >
-          <span>{trend.direction === 'positive' ? '\u2191' : '\u2193'}</span>
-          <span>{trend.value}</span>
+      <div className={styles.content}>
+        <div className={styles.header}>
+          <span className={styles.label}>{label}</span>
+          <div className={`${styles.icon} ${iconBgMap[accent]}`}>{icon}</div>
         </div>
-      )}
+
+        <div className={styles.valueRow}>
+          <span className={styles.value}>{value}</span>
+          <span className={styles.unit}>{unit}</span>
+        </div>
+
+        {trend && (
+          <div
+            className={`${styles.trend} ${
+              trend.direction === 'positive'
+                ? styles.trendPositive
+                : styles.trendNegative
+            }`}
+          >
+            <span>{trend.direction === 'positive' ? '\u2191' : '\u2193'}</span>
+            <span>{trend.value}</span>
+          </div>
+        )}
+      </div>
     </article>
   );
 }

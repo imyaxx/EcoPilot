@@ -11,10 +11,22 @@
   line-height: var(--leading-normal);
   white-space: nowrap;
   user-select: none;
+  cursor: pointer;
+  transform: translateY(0);
   transition:
-    background-color var(--duration-fast) var(--easing-default),
-    color var(--duration-fast) var(--easing-default),
-    box-shadow var(--duration-fast) var(--easing-default);
+    background-color var(--duration-interactive) var(--easing-interactive),
+    color var(--duration-interactive) var(--easing-interactive),
+    box-shadow var(--duration-interactive) var(--easing-interactive),
+    transform var(--duration-interactive) var(--easing-interactive);
+}
+
+.button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.button:active {
+  transform: translateY(1px);
 }
 
 .button:disabled {
@@ -30,12 +42,11 @@
 }
 
 .primary:hover {
-  background-color: var(--color-brand-strong);
+  background-color: color-mix(in srgb, var(--color-brand-primary) 82%, var(--color-brand-strong));
 }
 
 .primary:active {
-  background-color: var(--color-brand-strong);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
+  background-color: color-mix(in srgb, var(--color-brand-primary) 72%, var(--color-brand-strong));
 }
 
 .secondary {
@@ -45,13 +56,13 @@
 }
 
 .secondary:hover {
-  background-color: var(--color-neutral-50);
+  background-color: color-mix(in srgb, var(--color-neutral-50) 85%, transparent);
   color: var(--color-text-primary);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-border-default) 85%, transparent);
 }
 
 .secondary:active {
-  background-color: var(--color-neutral-100);
+  background-color: color-mix(in srgb, var(--color-neutral-100) 72%, transparent);
 }
 
 .ghost {
@@ -60,12 +71,12 @@
 }
 
 .ghost:hover {
-  background-color: color-mix(in srgb, var(--color-neutral-50) 70%, transparent);
+  background-color: color-mix(in srgb, var(--color-neutral-50) 72%, transparent);
   color: var(--color-text-secondary);
 }
 
 .ghost:active {
-  background-color: var(--color-neutral-100);
+  background-color: color-mix(in srgb, var(--color-neutral-100) 76%, transparent);
 }
 
 /* ── Sizes ── */
