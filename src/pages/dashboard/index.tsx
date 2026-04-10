@@ -129,28 +129,28 @@ export function DashboardPage() {
         <Button
           variant="secondary"
           size="small"
-          icon={<CalendarBlank size={16} weight="regular" />}
+          icon={<CalendarBlank size={14} weight="regular" />}
         >
           {t('dashboard:controls.dateRange')}
         </Button>
         <Button
           variant="ghost"
           size="small"
-          icon={<Funnel size={16} weight="regular" />}
+          icon={<Funnel size={14} weight="regular" />}
         >
           {t('common:filter')}
         </Button>
         <Button
           variant="ghost"
           size="small"
-          icon={<Export size={16} weight="regular" />}
+          icon={<Export size={14} weight="regular" />}
         >
           {t('dashboard:controls.export')}
         </Button>
         <Button
           variant="ghost"
           size="small"
-          icon={<ArrowsClockwise size={16} weight="regular" />}
+          icon={<ArrowsClockwise size={14} weight="regular" />}
         >
           {t('common:reset')}
         </Button>
