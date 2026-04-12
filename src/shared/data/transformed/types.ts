@@ -4,6 +4,8 @@ export type DashboardMetricKey =
   | 'carbonFootprint'
   | 'efficiencyScore';
 
+export type DashboardPeriod = 'week' | 'month' | 'year';
+
 export type DashboardMetricTrendDirection = 'up' | 'down' | 'neutral';
 
 export interface DashboardMetricSnapshot {
@@ -50,9 +52,9 @@ export interface UtilityTariff {
 }
 
 export interface DashboardDataset {
-  metrics: DashboardMetricSnapshot[];
-  energyTrend: ResourceTrendPoint[];
-  waterTrend: ResourceTrendPoint[];
+  metrics: Record<DashboardPeriod, DashboardMetricSnapshot[]>;
+  energyTrend: Record<DashboardPeriod, ResourceTrendPoint[]>;
+  waterTrend: Record<DashboardPeriod, ResourceTrendPoint[]>;
   insights: SystemInsight[];
   tariffs: UtilityTariff[];
 }
@@ -65,6 +67,10 @@ export interface DashboardTrendSummary {
 }
 
 export interface DashboardSelectorResult {
+  period: DashboardPeriod;
+  metrics: DashboardMetricSnapshot[];
+  activeEnergyTrend: ResourceTrendPoint[];
+  activeWaterTrend: ResourceTrendPoint[];
   energySummary: DashboardTrendSummary;
   waterSummary: DashboardTrendSummary;
   criticalInsightsCount: number;

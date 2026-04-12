@@ -1,5 +1,6 @@
 import type {
   DashboardDataset,
+  DashboardPeriod,
   DashboardSelectorResult,
   DashboardTrendSummary,
   UtilityTariff,
@@ -39,9 +40,13 @@ function getTariffByType(
 
 export function selectDashboardDerivedData(
   dataset: DashboardDataset = dashboardDataset,
+  period: DashboardPeriod = 'month',
 ): DashboardSelectorResult {
-  const energyValues = dataset.energyTrend.map((point) => point.value);
-  const waterValues = dataset.waterTrend.map((point) => point.value);
+  const activeEnergyTrend = dataset.energyTrend[period];
+  const activeWaterTrend = dataset.waterTrend[period];
+  const metrics = dataset.metrics[period];
+  const energyValues = activeEnergyTrend.map((point) => point.value);
+  const waterValues = activeWaterTrend.map((point) => point.value);
 
   const criticalInsightsCount = dataset.insights.filter(
     (insight) => insight.severity === 'critical',
@@ -56,6 +61,10 @@ export function selectDashboardDerivedData(
   ).length;
 
   return {
+    period,
+    metrics,
+    activeEnergyTrend,
+    activeWaterTrend,
     energySummary: buildTrendSummary(energyValues),
     waterSummary: buildTrendSummary(waterValues),
     criticalInsightsCount,

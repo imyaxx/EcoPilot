@@ -1,16 +1,41 @@
-import type { ResourceTrendPoint } from './types';
+import type { DashboardPeriod, ResourceTrendPoint } from './types';
 
-export const energyTrend: ResourceTrendPoint[] = [
-  { label: 'Apr 01', value: 198, unit: 'kWh' },
-  { label: 'Apr 02', value: 224, unit: 'kWh' },
-  { label: 'Apr 03', value: 189, unit: 'kWh' },
-  { label: 'Apr 04', value: 257, unit: 'kWh' },
-  { label: 'Apr 05', value: 218, unit: 'kWh' },
-  { label: 'Apr 06', value: 239, unit: 'kWh' },
-  { label: 'Apr 07', value: 205, unit: 'kWh' },
-  { label: 'Apr 08', value: 274, unit: 'kWh' },
-  { label: 'Apr 09', value: 231, unit: 'kWh' },
-  { label: 'Apr 10', value: 194, unit: 'kWh' },
-  { label: 'Apr 11', value: 251, unit: 'kWh' },
-  { label: 'Apr 12', value: 221, unit: 'kWh' },
-];
+export const energyTrend: Record<DashboardPeriod, ResourceTrendPoint[]> = {
+  week: [
+    { label: 'Mon', value: 214, unit: 'kWh' },
+    { label: 'Tue', value: 228, unit: 'kWh' },
+    { label: 'Wed', value: 197, unit: 'kWh' },
+    { label: 'Thu', value: 243, unit: 'kWh' },
+    { label: 'Fri', value: 236, unit: 'kWh' },
+    { label: 'Sat', value: 188, unit: 'kWh' },
+    { label: 'Sun', value: 176, unit: 'kWh' },
+  ],
+  month: [
+    { label: 'Apr 01', value: 198, unit: 'kWh' },
+    { label: 'Apr 02', value: 224, unit: 'kWh' },
+    { label: 'Apr 03', value: 189, unit: 'kWh' },
+    { label: 'Apr 04', value: 257, unit: 'kWh' },
+    { label: 'Apr 05', value: 218, unit: 'kWh' },
+    { label: 'Apr 06', value: 239, unit: 'kWh' },
+    { label: 'Apr 07', value: 205, unit: 'kWh' },
+    { label: 'Apr 08', value: 274, unit: 'kWh' },
+    { label: 'Apr 09', value: 231, unit: 'kWh' },
+    { label: 'Apr 10', value: 194, unit: 'kWh' },
+    { label: 'Apr 11', value: 251, unit: 'kWh' },
+    { label: 'Apr 12', value: 221, unit: 'kWh' },
+  ],
+  year: [
+    { label: 'Jan', value: 4820, unit: 'kWh' },
+    { label: 'Feb', value: 4680, unit: 'kWh' },
+    { label: 'Mar', value: 5120, unit: 'kWh' },
+    { label: 'Apr', value: 5380, unit: 'kWh' },
+    { label: 'May', value: 5610, unit: 'kWh' },
+    { label: 'Jun', value: 6040, unit: 'kWh' },
+    { label: 'Jul', value: 6390, unit: 'kWh' },
+    { label: 'Aug', value: 6210, unit: 'kWh' },
+    { label: 'Sep', value: 5790, unit: 'kWh' },
+    { label: 'Oct', value: 5480, unit: 'kWh' },
+    { label: 'Nov', value: 5260, unit: 'kWh' },
+    { label: 'Dec', value: 5570, unit: 'kWh' },
+  ],
+};

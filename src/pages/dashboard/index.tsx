@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Leaf,
@@ -10,10 +10,10 @@ import {
   Funnel,
   ArrowsClockwise,
   Export,
-  CalendarBlank,
 } from '@phosphor-icons/react';
 import type {
   DashboardMetricKey,
+  DashboardPeriod,
   DashboardTrendSummary,
   SystemInsightCategory,
   SystemInsightSeverity,
@@ -69,6 +69,14 @@ const insightSeverityMap = {
   info: 'info',
 } satisfies Record<SystemInsightSeverity, 'critical' | 'warning' | 'info'>;
 
+const periodTranslationKeyMap = {
+  week: 'dashboard:period.thisWeek',
+  month: 'dashboard:period.thisMonth',
+  year: 'dashboard:period.thisYear',
+} satisfies Record<DashboardPeriod, string>;
+
+const availablePeriods: DashboardPeriod[] = ['week', 'month', 'year'];
+
 function formatChartSummary(summary: DashboardTrendSummary, unit: string) {
   return `Latest: ${summary.currentValue.toLocaleString()} ${unit} · Prev: ${summary.previousValue.toLocaleString()} ${unit} · Change: ${summary.percentageChange}%`;
 }
@@ -76,9 +84,13 @@ function formatChartSummary(summary: DashboardTrendSummary, unit: string) {
 export function DashboardPage() {
   const { t } = useTranslation(['dashboard', 'common']);
   const dataset = dashboardDataset;
-  const derivedData = selectDashboardDerivedData(dataset);
-  const energyUnit = dataset.energyTrend[dataset.energyTrend.length - 1]?.unit ?? '';
-  const waterUnit = dataset.waterTrend[dataset.waterTrend.length - 1]?.unit ?? '';
+  const [period, setPeriod] = useState<DashboardPeriod>('month');
+  const derivedData = selectDashboardDerivedData(dataset, period);
+  const activePeriodLabel = t(periodTranslationKeyMap[period]);
+  const energyUnit =
+    derivedData.activeEnergyTrend[derivedData.activeEnergyTrend.length - 1]?.unit ?? '';
+  const waterUnit =
+    derivedData.activeWaterTrend[derivedData.activeWaterTrend.length - 1]?.unit ?? '';
 
   return (
     <div className={styles.page}>
@@ -101,7 +113,7 @@ export function DashboardPage() {
       {/* ── KPI Metrics ── */}
       <section className={styles.section}>
         <div className={styles.metricsGrid}>
-          {dataset.metrics.map((metric) => {
+          {derivedData.metrics.map((metric) => {
             const config = metricConfigMap[metric.key];
             const trend =
               metric.trendDirection === 'neutral'
@@ -136,9 +148,9 @@ export function DashboardPage() {
           <div className={styles.chartWrapper}>
             <ChartSkeleton
               title={t('dashboard:charts.energyTrend')}
-              period={t('dashboard:period.thisMonth')}
+              period={activePeriodLabel}
               accent="energy"
-              data={dataset.energyTrend.map((point) => ({
+              data={derivedData.activeEnergyTrend.map((point) => ({
                 label: point.label,
                 value: point.value,
               }))}
@@ -151,9 +163,9 @@ export function DashboardPage() {
           <div className={styles.chartWrapper}>
             <ChartSkeleton
               title={t('dashboard:charts.waterUsage')}
-              period={t('dashboard:period.thisMonth')}
+              period={activePeriodLabel}
               accent="water"
-              data={dataset.waterTrend.map((point) => ({
+              data={derivedData.activeWaterTrend.map((point) => ({
                 label: point.label,
                 value: point.value,
               }))}
@@ -182,13 +194,17 @@ export function DashboardPage() {
 
       {/* ── Controls ── */}
       <div className={styles.controlsBar}>
-        <Button
-          variant="secondary"
-          size="small"
-          icon={<CalendarBlank size={13} weight="regular" />}
-        >
-          {t('dashboard:controls.dateRange')}
-        </Button>
+        {availablePeriods.map((periodOption) => (
+          <Button
+            key={periodOption}
+            variant={period === periodOption ? 'secondary' : 'ghost'}
+            size="small"
+            aria-pressed={period === periodOption}
+            onClick={() => setPeriod(periodOption)}
+          >
+            {t(periodTranslationKeyMap[periodOption])}
+          </Button>
+        ))}
         <Button
           variant="ghost"
           size="small"
