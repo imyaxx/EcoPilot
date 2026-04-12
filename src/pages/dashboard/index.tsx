@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Leaf,
@@ -12,15 +12,17 @@ import {
   Export,
 } from '@phosphor-icons/react';
 import type {
+  DashboardDataset,
   DashboardMetricKey,
   DashboardPeriod,
   DashboardTrendSummary,
   SystemInsightCategory,
   SystemInsightSeverity,
 } from '../../shared/data/transformed';
-import { dashboardDataset } from '../../shared/data/transformed';
+import { energyTrend, waterTrend } from '../../shared/data/transformed';
+import { loadDashboardDataset } from '../../shared/data/loaders';
 import { selectDashboardDerivedData } from '../../shared/data/selectors';
-import { Badge, Button } from '../../shared/ui';
+import { Badge, Button, SkeletonCard } from '../../shared/ui';
 import { MetricCard } from '../../widgets/metric-card';
 import { ChartSkeleton } from '../../widgets/chart-skeleton';
 import { InsightsPanel } from '../../widgets/insights-panel';
@@ -83,14 +85,33 @@ function formatChartSummary(summary: DashboardTrendSummary, unit: string) {
 
 export function DashboardPage() {
   const { t } = useTranslation(['dashboard', 'common']);
-  const dataset = dashboardDataset;
+  const [dataset, setDataset] = useState<DashboardDataset | null>(null);
   const [period, setPeriod] = useState<DashboardPeriod>('month');
-  const derivedData = selectDashboardDerivedData(dataset, period);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    void loadDashboardDataset()
+      .then((loadedDataset) => {
+        if (isMounted) {
+          setDataset(loadedDataset);
+        }
+      })
+      .catch((error: unknown) => {
+        console.error('Failed to load dashboard dataset', error);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const derivedData = dataset ? selectDashboardDerivedData(dataset, period) : null;
   const activePeriodLabel = t(periodTranslationKeyMap[period]);
-  const energyUnit =
-    derivedData.activeEnergyTrend[derivedData.activeEnergyTrend.length - 1]?.unit ?? '';
-  const waterUnit =
-    derivedData.activeWaterTrend[derivedData.activeWaterTrend.length - 1]?.unit ?? '';
+  const activeEnergyTrend = derivedData?.activeEnergyTrend ?? energyTrend[period];
+  const activeWaterTrend = derivedData?.activeWaterTrend ?? waterTrend[period];
+  const energyUnit = activeEnergyTrend[activeEnergyTrend.length - 1]?.unit ?? '';
+  const waterUnit = activeWaterTrend[activeWaterTrend.length - 1]?.unit ?? '';
 
   return (
     <div className={styles.page}>
@@ -113,32 +134,36 @@ export function DashboardPage() {
       {/* ── KPI Metrics ── */}
       <section className={styles.section}>
         <div className={styles.metricsGrid}>
-          {derivedData.metrics.map((metric) => {
-            const config = metricConfigMap[metric.key];
-            const trend =
-              metric.trendDirection === 'neutral'
-                ? undefined
-                : {
-                    value: `${metric.deltaPercentage.toFixed(1)}%`,
-                    direction:
-                      metric.trendDirection === 'up'
-                        ? ('positive' as const)
-                        : ('negative' as const),
-                  };
+          {derivedData
+            ? derivedData.metrics.map((metric) => {
+                const config = metricConfigMap[metric.key];
+                const trend =
+                  metric.trendDirection === 'neutral'
+                    ? undefined
+                    : {
+                        value: `${metric.deltaPercentage.toFixed(1)}%`,
+                        direction:
+                          metric.trendDirection === 'up'
+                            ? ('positive' as const)
+                            : ('negative' as const),
+                      };
 
-            return (
-              <MetricCard
-                key={metric.key}
-                label={metric.label}
-                value={metric.formattedValue}
-                unit={metric.unit}
-                accent={config.accent}
-                icon={config.icon}
-                entryDelay={config.entryDelay}
-                trend={trend}
-              />
-            );
-          })}
+                return (
+                  <MetricCard
+                    key={metric.key}
+                    label={metric.label}
+                    value={metric.formattedValue}
+                    unit={metric.unit}
+                    accent={config.accent}
+                    icon={config.icon}
+                    entryDelay={config.entryDelay}
+                    trend={trend}
+                  />
+                );
+              })
+            : Array.from({ length: Object.keys(metricConfigMap).length }, (_, index) => (
+                <SkeletonCard key={index} />
+              ))}
         </div>
       </section>
 
@@ -150,14 +175,16 @@ export function DashboardPage() {
               title={t('dashboard:charts.energyTrend')}
               period={activePeriodLabel}
               accent="energy"
-              data={derivedData.activeEnergyTrend.map((point) => ({
+              data={activeEnergyTrend.map((point) => ({
                 label: point.label,
                 value: point.value,
               }))}
               unit={energyUnit}
             />
             <p className={styles.chartSummary}>
-              {formatChartSummary(derivedData.energySummary, energyUnit)}
+              {derivedData
+                ? formatChartSummary(derivedData.energySummary, energyUnit)
+                : t('common:loading')}
             </p>
           </div>
           <div className={styles.chartWrapper}>
@@ -165,14 +192,16 @@ export function DashboardPage() {
               title={t('dashboard:charts.waterUsage')}
               period={activePeriodLabel}
               accent="water"
-              data={derivedData.activeWaterTrend.map((point) => ({
+              data={activeWaterTrend.map((point) => ({
                 label: point.label,
                 value: point.value,
               }))}
               unit={waterUnit}
             />
             <p className={styles.chartSummary}>
-              {formatChartSummary(derivedData.waterSummary, waterUnit)}
+              {derivedData
+                ? formatChartSummary(derivedData.waterSummary, waterUnit)
+                : t('common:loading')}
             </p>
           </div>
         </div>
@@ -180,16 +209,20 @@ export function DashboardPage() {
 
       {/* ── Insights ── */}
       <section className={styles.section}>
-        <InsightsPanel
-          title={t('dashboard:insights.title')}
-          items={dataset.insights.map((insight) => ({
-            id: insight.id,
-            severity: insightSeverityMap[insight.severity],
-            icon: insightCategoryIconMap[insight.category],
-            title: insight.title,
-            description: insight.description,
-          }))}
-        />
+        {dataset ? (
+          <InsightsPanel
+            title={t('dashboard:insights.title')}
+            items={dataset.insights.map((insight) => ({
+              id: insight.id,
+              severity: insightSeverityMap[insight.severity],
+              icon: insightCategoryIconMap[insight.category],
+              title: insight.title,
+              description: insight.description,
+            }))}
+          />
+        ) : (
+          <SkeletonCard />
+        )}
       </section>
 
       {/* ── Controls ── */}
