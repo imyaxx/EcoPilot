@@ -74,7 +74,7 @@
   color: var(--color-status-warning);
 }
 
-.iconDanger {
+.iconCritical {
   background-color: color-mix(in srgb, var(--color-status-danger) 7%, transparent);
   color: var(--color-status-danger);
 }

@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 import styles from './styles.module.css';
 
-type InsightSeverity = 'warning' | 'danger' | 'info';
+type InsightSeverity = 'warning' | 'critical' | 'info';
 
 interface InsightItem {
   id: string;
@@ -18,7 +18,7 @@ interface InsightsPanelProps {
 
 const severityIconMap: Record<InsightSeverity, string> = {
   warning: styles.iconWarning,
-  danger: styles.iconDanger,
+  critical: styles.iconCritical,
   info: styles.iconInfo,
 };
 

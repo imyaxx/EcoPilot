@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Leaf,
@@ -11,64 +12,73 @@ import {
   Export,
   CalendarBlank,
 } from '@phosphor-icons/react';
+import type {
+  DashboardMetricKey,
+  DashboardTrendSummary,
+  SystemInsightCategory,
+  SystemInsightSeverity,
+} from '../../shared/data/transformed';
+import { dashboardDataset } from '../../shared/data/transformed';
+import { selectDashboardDerivedData } from '../../shared/data/selectors';
 import { Badge, Button } from '../../shared/ui';
 import { MetricCard } from '../../widgets/metric-card';
 import { ChartSkeleton } from '../../widgets/chart-skeleton';
 import { InsightsPanel } from '../../widgets/insights-panel';
 import styles from './styles.module.css';
 
+const metricConfigMap = {
+  totalEnergy: {
+    accent: 'energy',
+    icon: <Lightning size={16} weight="duotone" />,
+    entryDelay: 0,
+  },
+  totalWater: {
+    accent: 'water',
+    icon: <Drop size={16} weight="duotone" />,
+    entryDelay: 1,
+  },
+  carbonFootprint: {
+    accent: 'brand',
+    icon: <Gauge size={16} weight="duotone" />,
+    entryDelay: 2,
+  },
+  efficiencyScore: {
+    accent: 'brand',
+    icon: <ShieldCheck size={16} weight="duotone" />,
+    entryDelay: 3,
+  },
+} satisfies Record<
+  DashboardMetricKey,
+  {
+    accent: 'energy' | 'water' | 'brand';
+    icon: ReactNode;
+    entryDelay: number;
+  }
+>;
+
+const insightCategoryIconMap = {
+  water: <Drop size={18} weight="duotone" />,
+  energy: <Lightning size={18} weight="duotone" />,
+  efficiency: <ThermometerHot size={18} weight="duotone" />,
+  carbon: <Leaf size={18} weight="duotone" />,
+} satisfies Record<SystemInsightCategory, ReactNode>;
+
+const insightSeverityMap = {
+  critical: 'critical',
+  warning: 'warning',
+  info: 'info',
+} satisfies Record<SystemInsightSeverity, 'critical' | 'warning' | 'info'>;
+
+function formatChartSummary(summary: DashboardTrendSummary, unit: string) {
+  return `Latest: ${summary.currentValue.toLocaleString()} ${unit} · Prev: ${summary.previousValue.toLocaleString()} ${unit} · Change: ${summary.percentageChange}%`;
+}
+
 export function DashboardPage() {
-  const { t, i18n } = useTranslation(['dashboard', 'common']);
-
-  const dateFormatter = new Intl.DateTimeFormat(i18n.resolvedLanguage, {
-    month: 'short',
-    day: '2-digit',
-  });
-
-  const referenceDate = new Date();
-  const chartDates = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23].map((day) =>
-    dateFormatter.format(
-      new Date(referenceDate.getFullYear(), referenceDate.getMonth(), day),
-    ),
-  );
-
-  const energyChartData = [
-    146, 188, 132, 241, 174, 216, 158, 264, 196, 138, 232, 182,
-  ].map((value, index) => ({
-    label: chartDates[index],
-    value,
-  }));
-
-  const waterChartData = [72, 61, 68, 91, 97, 81, 112, 89, 66, 103, 77, 86].map(
-    (value, index) => ({
-      label: chartDates[index],
-      value,
-    }),
-  );
-
-  const insights = [
-    {
-      id: 'water-spike',
-      severity: 'warning' as const,
-      icon: <Drop size={18} weight="duotone" />,
-      title: t('dashboard:insights.waterSpike.title'),
-      description: t('dashboard:insights.waterSpike.description'),
-    },
-    {
-      id: 'night-energy',
-      severity: 'danger' as const,
-      icon: <Lightning size={18} weight="duotone" />,
-      title: t('dashboard:insights.nightEnergy.title'),
-      description: t('dashboard:insights.nightEnergy.description'),
-    },
-    {
-      id: 'inefficiency',
-      severity: 'info' as const,
-      icon: <ThermometerHot size={18} weight="duotone" />,
-      title: t('dashboard:insights.inefficiency.title'),
-      description: t('dashboard:insights.inefficiency.description'),
-    },
-  ];
+  const { t } = useTranslation(['dashboard', 'common']);
+  const dataset = dashboardDataset;
+  const derivedData = selectDashboardDerivedData(dataset);
+  const energyUnit = dataset.energyTrend[dataset.energyTrend.length - 1]?.unit ?? '';
+  const waterUnit = dataset.waterTrend[dataset.waterTrend.length - 1]?.unit ?? '';
 
   return (
     <div className={styles.page}>
@@ -91,62 +101,88 @@ export function DashboardPage() {
       {/* ── KPI Metrics ── */}
       <section className={styles.section}>
         <div className={styles.metricsGrid}>
-          <MetricCard
-            label={t('dashboard:totalEnergy')}
-            value="2,847"
-            unit={t('common:units.kwh')}
-            accent="energy"
-            icon={<Lightning size={16} weight="duotone" />}
-            entryDelay={0}
-            trend={{ value: '12.5%', direction: 'negative' }}
-          />
-          <MetricCard
-            label={t('dashboard:totalWater')}
-            value="1,203"
-            unit={t('common:units.cubicMeters')}
-            accent="water"
-            icon={<Drop size={16} weight="duotone" />}
-            entryDelay={1}
-            trend={{ value: '3.2%', direction: 'positive' }}
-          />
-          <MetricCard
-            label={t('dashboard:carbonFootprint')}
-            value="482"
-            unit="kg"
-            accent="brand"
-            icon={<Gauge size={16} weight="duotone" />}
-            entryDelay={2}
-            trend={{ value: '8.1%', direction: 'positive' }}
-          />
-          <MetricCard
-            label={t('dashboard:efficiency')}
-            value="94.2"
-            unit={t('common:units.percentage')}
-            accent="brand"
-            icon={<ShieldCheck size={16} weight="duotone" />}
-            entryDelay={3}
-            trend={{ value: '1.4%', direction: 'positive' }}
-          />
+          {dataset.metrics.map((metric) => {
+            const config = metricConfigMap[metric.key];
+            const trend =
+              metric.trendDirection === 'neutral'
+                ? undefined
+                : {
+                    value: `${metric.deltaPercentage.toFixed(1)}%`,
+                    direction:
+                      metric.trendDirection === 'up'
+                        ? ('positive' as const)
+                        : ('negative' as const),
+                  };
+
+            return (
+              <MetricCard
+                key={metric.key}
+                label={metric.label}
+                value={metric.formattedValue}
+                unit={metric.unit}
+                accent={config.accent}
+                icon={config.icon}
+                entryDelay={config.entryDelay}
+                trend={trend}
+              />
+            );
+          })}
         </div>
       </section>
 
       {/* ── Charts ── */}
       <section className={styles.section}>
         <div className={styles.chartsGrid}>
-          <ChartSkeleton
-            title={t('dashboard:charts.energyTrend')}
-            period={t('dashboard:period.thisMonth')}
-            accent="energy"
-            data={energyChartData}
-            unit={t('common:units.kwh')}
-          />
-          <ChartSkeleton
-            title={t('dashboard:charts.waterUsage')}
-            period={t('dashboard:period.thisMonth')}
-            accent="water"
-            data={waterChartData}
-            unit={t('common:units.cubicMeters')}
-          />
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}
+          >
+            <ChartSkeleton
+              title={t('dashboard:charts.energyTrend')}
+              period={t('dashboard:period.thisMonth')}
+              accent="energy"
+              data={dataset.energyTrend.map((point) => ({
+                label: point.label,
+                value: point.value,
+              }))}
+              unit={energyUnit}
+            />
+            <p
+              style={{
+                margin: 0,
+                color: 'var(--color-text-secondary)',
+                fontFamily: 'var(--font-sans)',
+                fontSize: 'var(--text-xs)',
+                lineHeight: 'var(--leading-relaxed)',
+              }}
+            >
+              {formatChartSummary(derivedData.energySummary, energyUnit)}
+            </p>
+          </div>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}
+          >
+            <ChartSkeleton
+              title={t('dashboard:charts.waterUsage')}
+              period={t('dashboard:period.thisMonth')}
+              accent="water"
+              data={dataset.waterTrend.map((point) => ({
+                label: point.label,
+                value: point.value,
+              }))}
+              unit={waterUnit}
+            />
+            <p
+              style={{
+                margin: 0,
+                color: 'var(--color-text-secondary)',
+                fontFamily: 'var(--font-sans)',
+                fontSize: 'var(--text-xs)',
+                lineHeight: 'var(--leading-relaxed)',
+              }}
+            >
+              {formatChartSummary(derivedData.waterSummary, waterUnit)}
+            </p>
+          </div>
         </div>
       </section>
 
@@ -154,7 +190,13 @@ export function DashboardPage() {
       <section className={styles.section}>
         <InsightsPanel
           title={t('dashboard:insights.title')}
-          items={insights}
+          items={dataset.insights.map((insight) => ({
+            id: insight.id,
+            severity: insightSeverityMap[insight.severity],
+            icon: insightCategoryIconMap[insight.category],
+            title: insight.title,
+            description: insight.description,
+          }))}
         />
       </section>
 
