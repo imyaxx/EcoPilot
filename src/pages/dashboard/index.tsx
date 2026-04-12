@@ -133,9 +133,7 @@ export function DashboardPage() {
       {/* ── Charts ── */}
       <section className={styles.section}>
         <div className={styles.chartsGrid}>
-          <div
-            style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}
-          >
+          <div className={styles.chartWrapper}>
             <ChartSkeleton
               title={t('dashboard:charts.energyTrend')}
               period={t('dashboard:period.thisMonth')}
@@ -146,21 +144,11 @@ export function DashboardPage() {
               }))}
               unit={energyUnit}
             />
-            <p
-              style={{
-                margin: 0,
-                color: 'var(--color-text-secondary)',
-                fontFamily: 'var(--font-sans)',
-                fontSize: 'var(--text-xs)',
-                lineHeight: 'var(--leading-relaxed)',
-              }}
-            >
+            <p className={styles.chartSummary}>
               {formatChartSummary(derivedData.energySummary, energyUnit)}
             </p>
           </div>
-          <div
-            style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}
-          >
+          <div className={styles.chartWrapper}>
             <ChartSkeleton
               title={t('dashboard:charts.waterUsage')}
               period={t('dashboard:period.thisMonth')}
@@ -171,15 +159,7 @@ export function DashboardPage() {
               }))}
               unit={waterUnit}
             />
-            <p
-              style={{
-                margin: 0,
-                color: 'var(--color-text-secondary)',
-                fontFamily: 'var(--font-sans)',
-                fontSize: 'var(--text-xs)',
-                lineHeight: 'var(--leading-relaxed)',
-              }}
-            >
+            <p className={styles.chartSummary}>
               {formatChartSummary(derivedData.waterSummary, waterUnit)}
             </p>
           </div>
