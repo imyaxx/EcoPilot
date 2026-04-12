@@ -6,7 +6,6 @@ import type {
   UtilityTariff,
   WaterPeriod,
 } from '../transformed';
-import { dashboardDataset } from '../transformed';
 
 function buildTrendSummary(values: number[]): DashboardTrendSummary {
   if (values.length < 2) {
@@ -40,7 +39,7 @@ function getTariffByType(
 }
 
 export function selectDashboardDerivedData(
-  dataset: DashboardDataset = dashboardDataset,
+  dataset: DashboardDataset,
   energyPeriod: EnergyPeriod = 'month',
   waterPeriod: WaterPeriod = 'year',
 ): DashboardSelectorResult {

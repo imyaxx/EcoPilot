@@ -20,7 +20,7 @@ import type {
   SystemInsightSeverity,
   WaterPeriod,
 } from '../../shared/data/transformed';
-import { energyTrend, waterTrend } from '../../shared/data/transformed';
+import { energyTrend } from '../../shared/data/transformed';
 import { loadDashboardDataset } from '../../shared/data/loaders';
 import { selectDashboardDerivedData } from '../../shared/data/selectors';
 import { Badge, Button, SkeletonCard } from '../../shared/ui';
@@ -113,7 +113,7 @@ export function DashboardPage() {
   const activeEnergyPeriodLabel = t(energyPeriodTranslationKeyMap[energyPeriod]);
   const activeWaterPeriodLabel = t(waterPeriodTranslationKeyMap[waterPeriod]);
   const activeEnergyTrend = derivedData?.activeEnergyTrend ?? energyTrend[energyPeriod];
-  const activeWaterTrend = derivedData?.activeWaterTrend ?? waterTrend[waterPeriod];
+  const activeWaterTrend = derivedData?.activeWaterTrend ?? [];
   const energyUnit = activeEnergyTrend[activeEnergyTrend.length - 1]?.unit ?? '';
   const waterUnit = activeWaterTrend[activeWaterTrend.length - 1]?.unit ?? '';
   const formatChartSummary = (summary: DashboardTrendSummary, unit: string) => {
