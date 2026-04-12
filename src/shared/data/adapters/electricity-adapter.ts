@@ -1,7 +1,7 @@
 import * as XLSX from 'xlsx';
-import type { DashboardPeriod, ResourceTrendPoint } from '../transformed';
+import type { EnergyPeriod, ResourceTrendPoint } from '../transformed';
 
-type WorkbookEnergyPeriod = Extract<DashboardPeriod, 'month' | 'year'>;
+type WorkbookEnergyPeriod = EnergyPeriod;
 type CellValue = XLSX.CellObject['v'] | null;
 
 interface EnergySheetConfig {

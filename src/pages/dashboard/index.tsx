@@ -14,10 +14,11 @@ import {
 import type {
   DashboardDataset,
   DashboardMetricKey,
-  DashboardPeriod,
   DashboardTrendSummary,
+  EnergyPeriod,
   SystemInsightCategory,
   SystemInsightSeverity,
+  WaterPeriod,
 } from '../../shared/data/transformed';
 import { energyTrend, waterTrend } from '../../shared/data/transformed';
 import { loadDashboardDataset } from '../../shared/data/loaders';
@@ -71,22 +72,22 @@ const insightSeverityMap = {
   info: 'info',
 } satisfies Record<SystemInsightSeverity, 'critical' | 'warning' | 'info'>;
 
-const periodTranslationKeyMap = {
-  week: 'dashboard:period.thisWeek',
-  month: 'dashboard:period.thisMonth',
-  year: 'dashboard:period.thisYear',
-} satisfies Record<DashboardPeriod, string>;
+const energyPeriodTranslationKeyMap = {
+  month: 'dashboard:period.monthly2024',
+  year: 'dashboard:period.annual',
+} satisfies Record<EnergyPeriod, string>;
 
-const availablePeriods: DashboardPeriod[] = ['week', 'month', 'year'];
+const waterPeriodTranslationKeyMap = {
+  year: 'dashboard:period.annual',
+} satisfies Record<WaterPeriod, string>;
 
-function formatChartSummary(summary: DashboardTrendSummary, unit: string) {
-  return `Latest: ${summary.currentValue.toLocaleString()} ${unit} · Prev: ${summary.previousValue.toLocaleString()} ${unit} · Change: ${summary.percentageChange}%`;
-}
+const availableEnergyPeriods: EnergyPeriod[] = ['month', 'year'];
 
 export function DashboardPage() {
   const { t } = useTranslation(['dashboard', 'common']);
   const [dataset, setDataset] = useState<DashboardDataset | null>(null);
-  const [period, setPeriod] = useState<DashboardPeriod>('month');
+  const [energyPeriod, setEnergyPeriod] = useState<EnergyPeriod>('month');
+  const waterPeriod: WaterPeriod = 'year';
 
   useEffect(() => {
     let isMounted = true;
@@ -106,12 +107,23 @@ export function DashboardPage() {
     };
   }, []);
 
-  const derivedData = dataset ? selectDashboardDerivedData(dataset, period) : null;
-  const activePeriodLabel = t(periodTranslationKeyMap[period]);
-  const activeEnergyTrend = derivedData?.activeEnergyTrend ?? energyTrend[period];
-  const activeWaterTrend = derivedData?.activeWaterTrend ?? waterTrend[period];
+  const derivedData = dataset
+    ? selectDashboardDerivedData(dataset, energyPeriod, waterPeriod)
+    : null;
+  const activeEnergyPeriodLabel = t(energyPeriodTranslationKeyMap[energyPeriod]);
+  const activeWaterPeriodLabel = t(waterPeriodTranslationKeyMap[waterPeriod]);
+  const activeEnergyTrend = derivedData?.activeEnergyTrend ?? energyTrend[energyPeriod];
+  const activeWaterTrend = derivedData?.activeWaterTrend ?? waterTrend[waterPeriod];
   const energyUnit = activeEnergyTrend[activeEnergyTrend.length - 1]?.unit ?? '';
   const waterUnit = activeWaterTrend[activeWaterTrend.length - 1]?.unit ?? '';
+  const formatChartSummary = (summary: DashboardTrendSummary, unit: string) => {
+    return t('dashboard:charts.summary', {
+      currentValue: summary.currentValue.toLocaleString(),
+      previousValue: summary.previousValue.toLocaleString(),
+      unit,
+      percentageChange: summary.percentageChange,
+    });
+  };
 
   return (
     <div className={styles.page}>
@@ -173,7 +185,7 @@ export function DashboardPage() {
           <div className={styles.chartWrapper}>
             <ChartSkeleton
               title={t('dashboard:charts.energyTrend')}
-              period={activePeriodLabel}
+              period={activeEnergyPeriodLabel}
               accent="energy"
               data={activeEnergyTrend.map((point) => ({
                 label: point.label,
@@ -181,6 +193,19 @@ export function DashboardPage() {
               }))}
               unit={energyUnit}
             />
+            <div className={styles.titleRow}>
+              {availableEnergyPeriods.map((periodOption) => (
+                <Button
+                  key={periodOption}
+                  variant={energyPeriod === periodOption ? 'secondary' : 'ghost'}
+                  size="small"
+                  aria-pressed={energyPeriod === periodOption}
+                  onClick={() => setEnergyPeriod(periodOption)}
+                >
+                  {t(energyPeriodTranslationKeyMap[periodOption])}
+                </Button>
+              ))}
+            </div>
             <p className={styles.chartSummary}>
               {derivedData
                 ? formatChartSummary(derivedData.energySummary, energyUnit)
@@ -190,7 +215,7 @@ export function DashboardPage() {
           <div className={styles.chartWrapper}>
             <ChartSkeleton
               title={t('dashboard:charts.waterUsage')}
-              period={activePeriodLabel}
+              period={activeWaterPeriodLabel}
               accent="water"
               data={activeWaterTrend.map((point) => ({
                 label: point.label,
@@ -203,6 +228,7 @@ export function DashboardPage() {
                 ? formatChartSummary(derivedData.waterSummary, waterUnit)
                 : t('common:loading')}
             </p>
+            <p className={styles.chartSummary}>{t('dashboard:charts.waterSourceNote')}</p>
           </div>
         </div>
       </section>
@@ -227,17 +253,6 @@ export function DashboardPage() {
 
       {/* ── Controls ── */}
       <div className={styles.controlsBar}>
-        {availablePeriods.map((periodOption) => (
-          <Button
-            key={periodOption}
-            variant={period === periodOption ? 'secondary' : 'ghost'}
-            size="small"
-            aria-pressed={period === periodOption}
-            onClick={() => setPeriod(periodOption)}
-          >
-            {t(periodTranslationKeyMap[periodOption])}
-          </Button>
-        ))}
         <Button
           variant="ghost"
           size="small"

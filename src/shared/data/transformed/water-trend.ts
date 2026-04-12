@@ -1,41 +1,12 @@
-import type { DashboardPeriod, ResourceTrendPoint } from './types';
+import type { ResourceTrendPoint, WaterPeriod } from './types';
 
-export const waterTrend: Record<DashboardPeriod, ResourceTrendPoint[]> = {
-  week: [
-    { label: 'Mon', value: 81, unit: 'm³' },
-    { label: 'Tue', value: 86, unit: 'm³' },
-    { label: 'Wed', value: 78, unit: 'm³' },
-    { label: 'Thu', value: 92, unit: 'm³' },
-    { label: 'Fri', value: 88, unit: 'm³' },
-    { label: 'Sat', value: 73, unit: 'm³' },
-    { label: 'Sun', value: 69, unit: 'm³' },
-  ],
-  month: [
-    { label: 'Apr 01', value: 74, unit: 'm³' },
-    { label: 'Apr 02', value: 82, unit: 'm³' },
-    { label: 'Apr 03', value: 69, unit: 'm³' },
-    { label: 'Apr 04', value: 91, unit: 'm³' },
-    { label: 'Apr 05', value: 78, unit: 'm³' },
-    { label: 'Apr 06', value: 87, unit: 'm³' },
-    { label: 'Apr 07', value: 76, unit: 'm³' },
-    { label: 'Apr 08', value: 98, unit: 'm³' },
-    { label: 'Apr 09', value: 83, unit: 'm³' },
-    { label: 'Apr 10', value: 72, unit: 'm³' },
-    { label: 'Apr 11', value: 89, unit: 'm³' },
-    { label: 'Apr 12', value: 79, unit: 'm³' },
-  ],
+export const waterTrend: Record<WaterPeriod, ResourceTrendPoint[]> = {
   year: [
-    { label: 'Jan', value: 1860, unit: 'm³' },
-    { label: 'Feb', value: 1790, unit: 'm³' },
-    { label: 'Mar', value: 1925, unit: 'm³' },
-    { label: 'Apr', value: 2010, unit: 'm³' },
-    { label: 'May', value: 2140, unit: 'm³' },
-    { label: 'Jun', value: 2265, unit: 'm³' },
-    { label: 'Jul', value: 2390, unit: 'm³' },
-    { label: 'Aug', value: 2335, unit: 'm³' },
-    { label: 'Sep', value: 2210, unit: 'm³' },
-    { label: 'Oct', value: 2090, unit: 'm³' },
-    { label: 'Nov', value: 1985, unit: 'm³' },
-    { label: 'Dec', value: 2055, unit: 'm³' },
+    { label: '2019', value: 143.1, unit: 'млн м³' },
+    { label: '2020', value: 148.0, unit: 'млн м³' },
+    { label: '2021', value: 172.0, unit: 'млн м³' },
+    { label: '2022', value: 185.0, unit: 'млн м³' },
+    { label: '2023', value: 196.0, unit: 'млн м³' },
+    { label: '2024', value: 234.0, unit: 'млн м³' },
   ],
 };

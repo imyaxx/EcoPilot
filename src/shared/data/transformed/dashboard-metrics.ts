@@ -1,47 +1,9 @@
 import type {
   DashboardMetricSnapshot,
-  DashboardPeriod,
+  EnergyPeriod,
 } from './types';
 
-export const dashboardMetrics: Record<DashboardPeriod, DashboardMetricSnapshot[]> = {
-  week: [
-    {
-      key: 'totalEnergy',
-      label: 'Total Energy',
-      value: 1482,
-      formattedValue: '1,482',
-      unit: 'kWh',
-      deltaPercentage: 4.6,
-      trendDirection: 'down',
-    },
-    {
-      key: 'totalWater',
-      label: 'Total Water',
-      value: 567,
-      formattedValue: '567',
-      unit: 'm³',
-      deltaPercentage: 2.1,
-      trendDirection: 'up',
-    },
-    {
-      key: 'carbonFootprint',
-      label: 'Carbon Footprint',
-      value: 246,
-      formattedValue: '246',
-      unit: 'kg',
-      deltaPercentage: 3.8,
-      trendDirection: 'down',
-    },
-    {
-      key: 'efficiencyScore',
-      label: 'Efficiency Score',
-      value: 95.4,
-      formattedValue: '95.4',
-      unit: '%',
-      deltaPercentage: 1.2,
-      trendDirection: 'up',
-    },
-  ],
+export const dashboardMetrics: Record<EnergyPeriod, DashboardMetricSnapshot[]> = {
   month: [
     {
       key: 'totalEnergy',

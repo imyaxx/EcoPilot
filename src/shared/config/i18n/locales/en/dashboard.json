@@ -16,10 +16,8 @@
     "target": "Target"
   },
   "period": {
-    "today": "Today",
-    "thisWeek": "This Week",
-    "thisMonth": "This Month",
-    "thisYear": "This Year"
+    "monthly2024": "Monthly 2024",
+    "annual": "Annual"
   },
   "status": {
     "optimal": "Optimal",
@@ -31,7 +29,9 @@
   },
   "charts": {
     "energyTrend": "Energy Trend",
-    "waterUsage": "Water Usage"
+    "waterUsage": "Water Usage",
+    "waterSourceNote": "Annual data · Almaty Su 2019–2024",
+    "summary": "Latest: {{currentValue}} {{unit}} · Prev: {{previousValue}} {{unit}} · Change: {{percentageChange}}%"
   },
   "controls": {
     "export": "Export",

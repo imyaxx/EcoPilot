@@ -1,9 +1,12 @@
 import type { DashboardDataset } from '../transformed';
-import { extractEnergyMonthTrend, extractEnergyYearTrend, extractTariffs } from '../adapters';
+import {
+  extractEnergyMonthTrend,
+  extractEnergyYearTrend,
+  extractTariffs,
+  extractWaterYearTrend,
+} from '../adapters';
 import { dashboardMetrics } from '../transformed/dashboard-metrics';
-import { energyTrend } from '../transformed/energy-trend';
 import { systemInsights } from '../transformed/insights';
-import { waterTrend } from '../transformed/water-trend';
 import { loadWorkbook } from './workbook-loader';
 
 const ELECTRICITY_WORKBOOK_URL = '/datasets/electricity-consumption-kazakhstan.xlsx';
@@ -18,11 +21,12 @@ export async function loadDashboardDataset(): Promise<DashboardDataset> {
   return {
     metrics: dashboardMetrics,
     energyTrend: {
-      week: energyTrend.week,
       month: extractEnergyMonthTrend(electricityWorkbook),
       year: extractEnergyYearTrend(electricityWorkbook),
     },
-    waterTrend,
+    waterTrend: {
+      year: extractWaterYearTrend(tariffsWorkbook),
+    },
     insights: systemInsights,
     tariffs: extractTariffs(tariffsWorkbook),
   };

@@ -1,9 +1,10 @@
 import type {
   DashboardDataset,
-  DashboardPeriod,
   DashboardSelectorResult,
   DashboardTrendSummary,
+  EnergyPeriod,
   UtilityTariff,
+  WaterPeriod,
 } from '../transformed';
 import { dashboardDataset } from '../transformed';
 
@@ -40,11 +41,12 @@ function getTariffByType(
 
 export function selectDashboardDerivedData(
   dataset: DashboardDataset = dashboardDataset,
-  period: DashboardPeriod = 'month',
+  energyPeriod: EnergyPeriod = 'month',
+  waterPeriod: WaterPeriod = 'year',
 ): DashboardSelectorResult {
-  const activeEnergyTrend = dataset.energyTrend[period];
-  const activeWaterTrend = dataset.waterTrend[period];
-  const metrics = dataset.metrics[period];
+  const activeEnergyTrend = dataset.energyTrend[energyPeriod];
+  const activeWaterTrend = dataset.waterTrend[waterPeriod];
+  const metrics = dataset.metrics[energyPeriod];
   const energyValues = activeEnergyTrend.map((point) => point.value);
   const waterValues = activeWaterTrend.map((point) => point.value);
 
@@ -61,7 +63,8 @@ export function selectDashboardDerivedData(
   ).length;
 
   return {
-    period,
+    energyPeriod,
+    waterPeriod,
     metrics,
     activeEnergyTrend,
     activeWaterTrend,
