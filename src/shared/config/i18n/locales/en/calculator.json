@@ -1,0 +1,34 @@
+{
+  "title": "Cost Calculator",
+  "subtitle": "Estimate your building's utility costs and savings potential",
+  "form": {
+    "title": "Building Parameters",
+    "buildingType": "Building Type",
+    "buildingTypes": {
+      "school": "School",
+      "residential": "Residential",
+      "office": "Office"
+    },
+    "area": "Area (m²)",
+    "areaPlaceholder": "Enter area in square meters",
+    "manualElectricity": "Manual Electricity (kWh/month)",
+    "manualElectricityPlaceholder": "Optional — overrides estimate",
+    "manualWater": "Manual Water (m³/month)",
+    "manualWaterPlaceholder": "Optional — overrides estimate",
+    "reductionTarget": "Reduction Target"
+  },
+  "results": {
+    "title": "Results",
+    "monthlyTotal": "Current Monthly Cost",
+    "yearlyTotal": "Current Yearly Cost",
+    "yearlySavings": "Yearly Savings",
+    "co2Reduction": "CO₂ Reduction",
+    "currency": "тенге",
+    "co2Unit": "кг/год"
+  },
+  "chart": {
+    "title": "Cost Comparison",
+    "current": "Current",
+    "afterSavings": "After Savings"
+  }
+}

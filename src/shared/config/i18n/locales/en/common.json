@@ -17,6 +17,10 @@
     "active": "Active",
     "inactive": "Inactive"
   },
+  "nav": {
+    "dashboard": "Dashboard",
+    "calculator": "Calculator"
+  },
   "units": {
     "kwh": "kWh",
     "liters": "L",

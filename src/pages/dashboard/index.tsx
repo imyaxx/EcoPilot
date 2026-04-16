@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Leaf,
@@ -19,7 +19,6 @@ import type {
   SystemInsightSeverity,
   WaterPeriod,
 } from '../../shared/data/transformed';
-import { loadDashboardDataset } from '../../shared/data/loaders';
 import { selectDashboardDerivedData } from '../../shared/data/selectors';
 import { Badge, Button, SkeletonCard } from '../../shared/ui';
 import { MetricCard } from '../../widgets/metric-card';
@@ -83,29 +82,14 @@ const waterPeriodTranslationKeyMap = {
 const availableEnergyPeriods: EnergyPeriod[] = ['month', 'year'];
 const availableWaterPeriods: WaterPeriod[] = ['month', 'year'];
 
-export function DashboardPage() {
+interface DashboardPageProps {
+  dataset: DashboardDataset | null;
+}
+
+export function DashboardPage({ dataset }: DashboardPageProps) {
   const { t } = useTranslation(['dashboard', 'common']);
-  const [dataset, setDataset] = useState<DashboardDataset | null>(null);
   const [energyPeriod, setEnergyPeriod] = useState<EnergyPeriod>('month');
   const [waterPeriod, setWaterPeriod] = useState<WaterPeriod>('month');
-
-  useEffect(() => {
-    let isMounted = true;
-
-    void loadDashboardDataset()
-      .then((loadedDataset) => {
-        if (isMounted) {
-          setDataset(loadedDataset);
-        }
-      })
-      .catch((error: unknown) => {
-        console.error('Failed to load dashboard dataset', error);
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const derivedData = dataset
     ? selectDashboardDerivedData(dataset, energyPeriod, waterPeriod)
