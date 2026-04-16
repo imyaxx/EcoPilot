@@ -117,6 +117,8 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
   const savedMonthly = monthlyTotal * (form.reductionPct / 100);
   const savedYearly = savedMonthly * 12;
   const savedCO2yearly = electricityKwh * 12 * (form.reductionPct / 100) * CO2_FACTOR;
+  const savedWaterMonthly = waterM3 * waterTariff * (form.reductionPct / 100);
+  const savedWaterYearly = savedWaterMonthly * 12;
 
   const afterYearly = yearlyTotal - savedYearly;
   const maxBarValue = Math.max(yearlyTotal, 1);
@@ -145,8 +147,9 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
 
   return (
     <div className={styles.page}>
-      <div className={styles.content}>
-        {/* ── Left: Form ── */}
+
+      {/* ── form ── */}
+      <div className={styles.formSection}>
         <Card>
           <CardHeader title={t('form.title')} />
           <CardBody>
@@ -257,149 +260,167 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
             </div>
           </CardBody>
         </Card>
+      </div>
 
-        {/* ── Right: Results ── */}
-        <div className={styles.resultsColumn}>
-          <div className={styles.resultCards}>
-            <Card padding="compact" className={styles.resultCard}>
-              <div className={styles.resultCardContent}>
-                <Lightning size={16} weight="duotone" color="var(--color-energy)" />
-                <div>
-                  <p className={styles.resultLabel}>{t('results.monthlyTotal')}</p>
-                  <p className={styles.resultValue}>{displayCurrency(monthlyTotal)}</p>
-                  <p className={styles.resultUnit}>{t('results.currency')}</p>
-                </div>
+      {/* ── results ── */}
+      <div className={styles.resultsSection}>
+        <div className={styles.resultCards}>
+          <Card padding="compact" className={styles.resultCard}>
+            <div className={styles.resultCardContent}>
+              <Lightning size={16} weight="duotone" color="var(--color-energy)" />
+              <div>
+                <p className={styles.resultLabel}>{t('results.monthlyTotal')}</p>
+                <p className={styles.resultValue}>{displayCurrency(monthlyTotal)}</p>
+                <p className={styles.resultUnit}>{t('results.currency')}</p>
               </div>
-            </Card>
-
-            <Card padding="compact" className={styles.resultCard}>
-              <div className={styles.resultCardContent}>
-                <CalendarBlank size={16} weight="duotone" color="var(--color-water)" />
-                <div>
-                  <p className={styles.resultLabel}>{t('results.yearlyTotal')}</p>
-                  <p className={styles.resultValue}>{displayCurrency(yearlyTotal)}</p>
-                  <p className={styles.resultUnit}>{t('results.currency')}</p>
-                </div>
-              </div>
-            </Card>
-
-            <Card
-              padding="compact"
-              className={`${styles.resultCard} ${styles.resultCardHighlight}`}
-            >
-              <div className={styles.resultCardContent}>
-                <TrendDown size={18} weight="duotone" color="var(--color-brand-primary)" />
-                <div>
-                  <p className={styles.resultLabel}>{t('results.yearlySavings')}</p>
-                  <p className={`${styles.resultValue} ${styles.resultValueHighlight}`}>
-                    {displayCurrency(savedYearly)}
-                  </p>
-                  <p className={styles.resultUnit}>{t('results.currency')}</p>
-                </div>
-              </div>
-            </Card>
-
-            <Card padding="compact" className={styles.resultCard}>
-              <div className={styles.resultCardContent}>
-                <Leaf size={16} weight="duotone" color="var(--color-brand-soft)" />
-                <div>
-                  <p className={styles.resultLabel}>{t('results.co2Reduction')}</p>
-                  <p className={styles.resultValue}>{displayCO2(savedCO2yearly)}</p>
-                  <p className={styles.resultUnit}>{t('results.co2Unit')}</p>
-                </div>
-              </div>
-            </Card>
-          </div>
-
-          {/* ── Bar Chart ── */}
-          <Card>
-            <CardHeader title={t('chart.title')} />
-            <CardBody>
-              {hasInput ? (
-                <div
-                  className={styles.chartWrapper}
-                  style={
-                    {
-                      '--scale-current': scaleCurrentBar,
-                      '--scale-savings': scaleSavingsBar,
-                    } as React.CSSProperties
-                  }
-                >
-                  <svg
-                    viewBox={`0 0 240 ${CHART_HEIGHT + 48}`}
-                    className={styles.chartSvg}
-                    role="img"
-                    aria-label={t('chart.title')}
-                  >
-                    <rect
-                      x={30}
-                      y={0}
-                      width={BAR_WIDTH}
-                      height={CHART_HEIGHT}
-                      className={styles.barCurrent}
-                      rx={4}
-                    />
-                    <rect
-                      x={140}
-                      y={0}
-                      width={BAR_WIDTH}
-                      height={CHART_HEIGHT}
-                      className={styles.barSavings}
-                      rx={4}
-                    />
-                    <text
-                      x={65}
-                      y={CHART_HEIGHT + 24}
-                      className={styles.barLabel}
-                      textAnchor="middle"
-                    >
-                      {t('chart.current')}
-                    </text>
-                    <text
-                      x={175}
-                      y={CHART_HEIGHT + 24}
-                      className={styles.barLabel}
-                      textAnchor="middle"
-                    >
-                      {t('chart.afterSavings')}
-                    </text>
-                  </svg>
-                </div>
-              ) : (
-                <div className={styles.chartEmptyState}>
-                  <p className={styles.chartEmptyText}>
-                    Enter building area to see comparison
-                  </p>
-                </div>
-              )}
-            </CardBody>
+            </div>
           </Card>
 
-          {/* ── Recommendations ── */}
-          {hasInput && (
-            <div className={styles.recommendations}>
-              <p className={styles.recommendationsTitle}>Recommendations</p>
-              {RECOMMENDATIONS.map((rec) => (
-                <Card key={rec.title} padding="compact">
-                  <div className={styles.recommendationCard}>
-                    <div className={styles.recommendationIcon}>
-                      <rec.RecommendationIcon
-                        size={18}
-                        weight="duotone"
-                        color={rec.iconColor}
-                      />
-                    </div>
-                    <div className={styles.recommendationContent}>
-                      <p className={styles.recommendationTitle}>{rec.title}</p>
-                      <p className={styles.recommendationDescription}>{rec.description}</p>
-                    </div>
-                  </div>
-                </Card>
-              ))}
+          <Card padding="compact" className={styles.resultCard}>
+            <div className={styles.resultCardContent}>
+              <CalendarBlank size={16} weight="duotone" color="var(--color-water)" />
+              <div>
+                <p className={styles.resultLabel}>{t('results.yearlyTotal')}</p>
+                <p className={styles.resultValue}>{displayCurrency(yearlyTotal)}</p>
+                <p className={styles.resultUnit}>{t('results.currency')}</p>
+              </div>
             </div>
-          )}
+          </Card>
+
+          <Card
+            padding="compact"
+            className={`${styles.resultCard} ${styles.resultCardHighlight}`}
+          >
+            <div className={styles.resultCardContent}>
+              <TrendDown size={18} weight="duotone" color="var(--color-brand-primary)" />
+              <div>
+                <p className={styles.resultLabel}>{t('results.yearlySavings')}</p>
+                <p className={`${styles.resultValue} ${styles.resultValueHighlight}`}>
+                  {displayCurrency(savedYearly)}
+                </p>
+                <p className={styles.resultUnit}>{t('results.currency')}</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card padding="compact" className={styles.resultCard}>
+            <div className={styles.resultCardContent}>
+              <Leaf size={16} weight="duotone" color="var(--color-brand-soft)" />
+              <div>
+                <p className={styles.resultLabel}>{t('results.co2Reduction')}</p>
+                <p className={styles.resultValue}>{displayCO2(savedCO2yearly)}</p>
+                <p className={styles.resultUnit}>{t('results.co2Unit')}</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card padding="compact" className={styles.resultCard}>
+            <div className={styles.resultCardContent}>
+              <Drop size={16} weight="duotone" color="var(--color-water)" />
+              <div>
+                <p className={styles.resultLabel}>Water Savings</p>
+                <p className={styles.resultValue}>
+                  {hasInput ? Math.round(savedWaterYearly).toLocaleString('ru-KZ') : '—'}
+                </p>
+                <p className={styles.resultUnit}>тенге/год</p>
+              </div>
+            </div>
+          </Card>
         </div>
       </div>
+
+      {/* ── chart ── */}
+      <div className={styles.chartSection}>
+        <Card>
+          <CardHeader title={t('chart.title')} />
+          <CardBody>
+            {hasInput ? (
+              <div
+                className={styles.chartWrapper}
+                style={
+                  {
+                    '--scale-current': scaleCurrentBar,
+                    '--scale-savings': scaleSavingsBar,
+                  } as React.CSSProperties
+                }
+              >
+                <svg
+                  viewBox={`0 0 240 ${CHART_HEIGHT + 48}`}
+                  className={styles.chartSvg}
+                  role="img"
+                  aria-label={t('chart.title')}
+                >
+                  <rect
+                    x={30}
+                    y={0}
+                    width={BAR_WIDTH}
+                    height={CHART_HEIGHT}
+                    className={styles.barCurrent}
+                    rx={4}
+                  />
+                  <rect
+                    x={140}
+                    y={0}
+                    width={BAR_WIDTH}
+                    height={CHART_HEIGHT}
+                    className={styles.barSavings}
+                    rx={4}
+                  />
+                  <text
+                    x={65}
+                    y={CHART_HEIGHT + 24}
+                    className={styles.barLabel}
+                    textAnchor="middle"
+                  >
+                    {t('chart.current')}
+                  </text>
+                  <text
+                    x={175}
+                    y={CHART_HEIGHT + 24}
+                    className={styles.barLabel}
+                    textAnchor="middle"
+                  >
+                    {t('chart.afterSavings')}
+                  </text>
+                </svg>
+              </div>
+            ) : (
+              <div className={styles.chartEmptyState}>
+                <p className={styles.chartEmptyText}>
+                  Enter building area to see comparison
+                </p>
+              </div>
+            )}
+          </CardBody>
+        </Card>
+      </div>
+
+      {/* ── recommendations ── */}
+      <div className={styles.recsSection}>
+        {hasInput && (
+          <div className={styles.recommendations}>
+            <p className={styles.recommendationsTitle}>Recommendations</p>
+            {RECOMMENDATIONS.map((rec) => (
+              <Card key={rec.title} padding="compact">
+                <div className={styles.recommendationCard}>
+                  <div className={styles.recommendationIcon}>
+                    <rec.RecommendationIcon
+                      size={18}
+                      weight="duotone"
+                      color={rec.iconColor}
+                    />
+                  </div>
+                  <div className={styles.recommendationContent}>
+                    <p className={styles.recommendationTitle}>{rec.title}</p>
+                    <p className={styles.recommendationDescription}>{rec.description}</p>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }

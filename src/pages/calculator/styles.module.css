@@ -1,25 +1,33 @@
 /* ============================================
-   Calculator Page Layout
+   Calculator Page — Grid Layout
    ============================================ */
 
 .page {
   max-width: 960px;
   margin: 0 auto;
   padding: var(--space-8) var(--space-6) var(--space-10);
-}
-
-/* ── Two-column Content ── */
-
-.content {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-6);
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "form    results"
+    "chart   recs";
+  gap: var(--space-4);
   align-items: start;
 }
 
-@media (min-width: 768px) {
-  .content {
-    grid-template-columns: 1fr 1fr;
+.formSection    { grid-area: form; }
+.resultsSection { grid-area: results; }
+.chartSection   { grid-area: chart; }
+.recsSection    { grid-area: recs; }
+
+@media (max-width: 768px) {
+  .page {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "form"
+      "results"
+      "chart"
+      "recs";
   }
 }
 
@@ -167,19 +175,20 @@
   color: var(--color-text-tertiary);
 }
 
-/* ── Results Column ── */
-
-.resultsColumn {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
+/* ── Result Cards ── */
 
 .resultCards {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-3);
 }
+
+/*
+  Card order:  1=Monthly  2=Yearly  3=YearlySavings  4=CO₂  5=Water
+  Row 1: Monthly | Yearly        (auto, each 1 col)
+  Row 2: Yearly Savings          (spans both cols via resultCardHighlight)
+  Row 3: CO₂ | Water             (auto, each 1 col)
+*/
 
 .resultCard {
   /* inherits Card base styles */
