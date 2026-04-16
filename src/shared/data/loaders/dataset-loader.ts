@@ -9,6 +9,7 @@ import {
   extractEnergyYearTrend,
   extractTariffs,
   extractWaterYearTrend,
+  extractWaterMonthTrend,
 } from '../adapters';
 import { generateInsights } from '../transformed/insights';
 import { loadWorkbook } from './workbook-loader';
@@ -16,7 +17,7 @@ import { loadWorkbook } from './workbook-loader';
 const ELECTRICITY_WORKBOOK_URL = '/datasets/electricity-consumption-kazakhstan.xlsx';
 const TARIFFS_WORKBOOK_URL = '/datasets/tariffs-kazakhstan.xlsx';
 
-const CARBON_FACTOR = 0.5; // kg CO₂ per kWh (Kazakhstan coal-heavy grid ~85% fossil)
+const CARBON_FACTOR = 0.5;
 
 function buildMetrics(
   energyTrend: ResourceTrendPoint[],
@@ -95,10 +96,11 @@ export async function loadDashboardDataset(): Promise<DashboardDataset> {
   const energyMonthTrend = extractEnergyMonthTrend(electricityWorkbook);
   const energyYearTrend = extractEnergyYearTrend(electricityWorkbook);
   const waterYearTrend = extractWaterYearTrend(tariffsWorkbook);
+  const waterMonthTrend = extractWaterMonthTrend(tariffsWorkbook);
 
   return {
     metrics: {
-      month: buildMetrics(energyMonthTrend, waterYearTrend, 'month'),
+      month: buildMetrics(energyMonthTrend, waterMonthTrend, 'month'),
       year: buildMetrics(energyYearTrend, waterYearTrend, 'year'),
     },
     energyTrend: {
@@ -106,6 +108,7 @@ export async function loadDashboardDataset(): Promise<DashboardDataset> {
       year: energyYearTrend,
     },
     waterTrend: {
+      month: waterMonthTrend,
       year: waterYearTrend,
     },
     insights: generateInsights(energyYearTrend, waterYearTrend),

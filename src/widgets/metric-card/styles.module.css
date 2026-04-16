@@ -127,18 +127,25 @@
 .valueRow {
   display: flex;
   align-items: baseline;
+  flex-wrap: wrap;
   gap: var(--space-2);
   margin-bottom: var(--space-3);
+  min-width: 0;
 }
 
 .value {
   font-family: var(--font-mono);
-  font-size: 2.625rem;
+  font-size: clamp(1.1rem, 3.5vw, 2.625rem);
   font-weight: var(--weight-bold);
   line-height: 1;
   letter-spacing: var(--tracking-mono);
   color: var(--color-text-primary);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex-shrink: 1;
 }
 
 .unit {

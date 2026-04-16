@@ -3,80 +3,57 @@ import type { ResourceTrendPoint } from '../transformed';
 
 type CellValue = XLSX.CellObject['v'] | null;
 
-const WATER_SHEET_NAME = 'Water_Consumption_Almaty_Annual';
-const WATER_DATA_START_ROW_INDEX = 3;
-const WATER_YEAR_COLUMN_INDEX = 0;
-const WATER_VOLUME_COLUMN_INDEX = 1;
+const WATER_YEAR_SHEET = 'Water_Consumption_Almaty_Annual';
+const WATER_MONTH_SHEET = 'Monthly_Water_2025_modeled';
 const WATER_UNIT = 'млн м³';
 
-function getWorksheet(workbook: XLSX.WorkBook): XLSX.WorkSheet {
-  const worksheet = workbook.Sheets[WATER_SHEET_NAME];
-
-  if (!worksheet) {
-    throw new Error(`Worksheet "${WATER_SHEET_NAME}" not found`);
-  }
-
+function getWorksheet(workbook: XLSX.WorkBook, sheetName: string): XLSX.WorkSheet {
+  const worksheet = workbook.Sheets[sheetName];
+  if (!worksheet) throw new Error(`Worksheet "${sheetName}" not found`);
   return worksheet;
 }
 
 function getLastRowIndex(worksheet: XLSX.WorkSheet): number {
-  const worksheetRange = worksheet['!ref'];
-
-  if (!worksheetRange) {
-    return -1;
-  }
-
-  return XLSX.utils.decode_range(worksheetRange).e.r;
+  const ref = worksheet['!ref'];
+  if (!ref) return -1;
+  return XLSX.utils.decode_range(ref).e.r;
 }
 
-function getCell(
-  worksheet: XLSX.WorkSheet,
-  rowIndex: number,
-  columnIndex: number,
-): XLSX.CellObject | null {
-  const cellAddress = XLSX.utils.encode_cell({ r: rowIndex, c: columnIndex });
-
-  return worksheet[cellAddress] ?? null;
-}
-
-function getCellValue(
-  worksheet: XLSX.WorkSheet,
-  rowIndex: number,
-  columnIndex: number,
-): CellValue {
-  return getCell(worksheet, rowIndex, columnIndex)?.v ?? null;
+function getCellValue(worksheet: XLSX.WorkSheet, rowIndex: number, columnIndex: number): CellValue {
+  const addr = XLSX.utils.encode_cell({ r: rowIndex, c: columnIndex });
+  return worksheet[addr]?.v ?? null;
 }
 
 export function extractWaterYearTrend(workbook: XLSX.WorkBook): ResourceTrendPoint[] {
-  const worksheet = getWorksheet(workbook);
+  const worksheet = getWorksheet(workbook, WATER_YEAR_SHEET);
   const lastRowIndex = getLastRowIndex(worksheet);
-  const yearTrend: ResourceTrendPoint[] = [];
+  const trend: ResourceTrendPoint[] = [];
 
-  for (
-    let rowIndex = WATER_DATA_START_ROW_INDEX;
-    rowIndex <= lastRowIndex;
-    rowIndex += 1
-  ) {
-    const yearValue = getCellValue(worksheet, rowIndex, WATER_YEAR_COLUMN_INDEX);
-
-    if (typeof yearValue !== 'number' || !Number.isFinite(yearValue)) {
-      break;
-    }
-
-    const volumeValue = getCellValue(worksheet, rowIndex, WATER_VOLUME_COLUMN_INDEX);
-
-    if (typeof volumeValue !== 'number' || !Number.isFinite(volumeValue)) {
-      continue;
-    }
-
-    yearTrend.push({
-      label: String(yearValue),
-      value: volumeValue,
-      unit: WATER_UNIT,
-    });
+  // startRow=3: skip title, warning note, header (rows 0,1,2)
+  for (let r = 3; r <= lastRowIndex; r++) {
+    const year = getCellValue(worksheet, r, 0);
+    if (typeof year !== 'number' || !Number.isFinite(year)) break;
+    const vol = getCellValue(worksheet, r, 1);
+    if (typeof vol !== 'number' || !Number.isFinite(vol)) continue;
+    trend.push({ label: String(year), value: vol, unit: WATER_UNIT });
   }
 
-  return yearTrend.sort((leftPoint, rightPoint) => {
-    return Number(leftPoint.label) - Number(rightPoint.label);
-  });
+  return trend.sort((a, b) => Number(a.label) - Number(b.label));
+}
+
+export function extractWaterMonthTrend(workbook: XLSX.WorkBook): ResourceTrendPoint[] {
+  const worksheet = getWorksheet(workbook, WATER_MONTH_SHEET);
+  const lastRowIndex = getLastRowIndex(worksheet);
+  const trend: ResourceTrendPoint[] = [];
+
+  // row 0: headers, row 1: warning note, rows 2+: data
+  for (let r = 2; r <= lastRowIndex; r++) {
+    const label = getCellValue(worksheet, r, 0);
+    if (typeof label !== 'string' || label === 'ИТОГО') break;
+    const vol = getCellValue(worksheet, r, 3); // column D = объём млн м³
+    if (typeof vol !== 'number' || !Number.isFinite(vol)) continue;
+    trend.push({ label, value: vol, unit: WATER_UNIT });
+  }
+
+  return trend;
 }

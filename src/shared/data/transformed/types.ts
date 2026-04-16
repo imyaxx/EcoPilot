@@ -5,7 +5,7 @@ export type DashboardMetricKey =
   | 'efficiencyScore';
 
 export type EnergyPeriod = 'month' | 'year';
-export type WaterPeriod = 'year';
+export type WaterPeriod = 'month' | 'year';
 
 export type DashboardMetricTrendDirection = 'up' | 'down' | 'neutral';
 
