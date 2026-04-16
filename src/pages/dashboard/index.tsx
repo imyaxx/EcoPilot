@@ -14,7 +14,6 @@ import {
 import type {
   DashboardDataset,
   DashboardMetricKey,
-  DashboardTrendSummary,
   EnergyPeriod,
   SystemInsightCategory,
   SystemInsightSeverity,
@@ -77,16 +76,18 @@ const energyPeriodTranslationKeyMap = {
 } satisfies Record<EnergyPeriod, string>;
 
 const waterPeriodTranslationKeyMap = {
+  month: 'dashboard:period.monthly2025',
   year: 'dashboard:period.annual',
 } satisfies Record<WaterPeriod, string>;
 
 const availableEnergyPeriods: EnergyPeriod[] = ['month', 'year'];
+const availableWaterPeriods: WaterPeriod[] = ['month', 'year'];
 
 export function DashboardPage() {
   const { t } = useTranslation(['dashboard', 'common']);
   const [dataset, setDataset] = useState<DashboardDataset | null>(null);
   const [energyPeriod, setEnergyPeriod] = useState<EnergyPeriod>('month');
-  const waterPeriod: WaterPeriod = 'year';
+  const [waterPeriod, setWaterPeriod] = useState<WaterPeriod>('month');
 
   useEffect(() => {
     let isMounted = true;
@@ -115,14 +116,6 @@ export function DashboardPage() {
   const activeWaterTrend = derivedData?.activeWaterTrend ?? [];
   const energyUnit = activeEnergyTrend[activeEnergyTrend.length - 1]?.unit ?? '';
   const waterUnit = activeWaterTrend[activeWaterTrend.length - 1]?.unit ?? '';
-  const formatChartSummary = (summary: DashboardTrendSummary, unit: string) => {
-    return t('dashboard:charts.summary', {
-      currentValue: summary.currentValue.toLocaleString(),
-      previousValue: summary.previousValue.toLocaleString(),
-      unit,
-      percentageChange: summary.percentageChange,
-    });
-  };
 
   return (
     <div className={styles.page}>
@@ -205,11 +198,6 @@ export function DashboardPage() {
                 </Button>
               ))}
             </div>
-            <p className={styles.chartSummary}>
-              {derivedData
-                ? formatChartSummary(derivedData.energySummary, energyUnit)
-                : t('common:loading')}
-            </p>
           </div>
           <div className={styles.chartWrapper}>
             <ChartSkeleton
@@ -222,12 +210,19 @@ export function DashboardPage() {
               }))}
               unit={waterUnit}
             />
-            <p className={styles.chartSummary}>
-              {derivedData
-                ? formatChartSummary(derivedData.waterSummary, waterUnit)
-                : t('common:loading')}
-            </p>
-            <p className={styles.chartSummary}>{t('dashboard:charts.waterSourceNote')}</p>
+            <div className={styles.titleRow}>
+              {availableWaterPeriods.map((periodOption) => (
+                <Button
+                  key={periodOption}
+                  variant={waterPeriod === periodOption ? 'secondary' : 'ghost'}
+                  size="small"
+                  aria-pressed={waterPeriod === periodOption}
+                  onClick={() => setWaterPeriod(periodOption)}
+                >
+                  {t(waterPeriodTranslationKeyMap[periodOption])}
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
