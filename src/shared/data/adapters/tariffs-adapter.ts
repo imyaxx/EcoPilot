@@ -6,28 +6,27 @@ type TariffUtilityType = UtilityTariff['utilityType'];
 const ASSUMPTIONS_SHEET_NAME = 'Assumptions_for_Dashboard';
 const VALUE_COLUMN_INDEX = 1;
 
+// Row indices in Assumptions_for_Dashboard sheet (0-based):
+// 0: header, 1: electricity tariff, 2: water tariff (baseline)
 const TARIFF_ROW_INDEX = {
-  electricity: 2,
-  water: 4,
+  electricity: 1,
+  water: 2,
 } satisfies Record<TariffUtilityType, number>;
 
 const TARIFF_METADATA = {
   electricity: {
-    label: 'Electricity tariff for budget organizations',
-    unit: 'kWh',
+    label: 'Тариф электроэнергии — бюджетные организации, Алматы',
+    unit: 'кВт·ч',
     currency: 'KZT',
-    sourceLabel: 'Assumptions for Dashboard',
+    sourceLabel: 'esalmaty.kz, январь 2026',
   },
   water: {
-    label: 'Water tariff baseline',
-    unit: 'm³',
+    label: 'Тариф водоснабжения — базовый, Алматы',
+    unit: 'м³',
     currency: 'KZT',
-    sourceLabel: 'Assumptions for Dashboard',
+    sourceLabel: 'Алматы Су, февраль 2025',
   },
-} satisfies Record<
-  TariffUtilityType,
-  Omit<UtilityTariff, 'price' | 'utilityType'>
->;
+} satisfies Record<TariffUtilityType, Omit<UtilityTariff, 'price' | 'utilityType'>>;
 
 function getWorksheet(workbook: XLSX.WorkBook): XLSX.WorkSheet {
   const worksheet = workbook.Sheets[ASSUMPTIONS_SHEET_NAME];
@@ -45,7 +44,6 @@ function getCell(
   columnIndex: number,
 ): XLSX.CellObject | null {
   const cellAddress = XLSX.utils.encode_cell({ r: rowIndex, c: columnIndex });
-
   return worksheet[cellAddress] ?? null;
 }
 
