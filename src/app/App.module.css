@@ -1,24 +1,25 @@
-/* ============================================
-   App Shell — Navigation Bar
-   ============================================ */
-
 .nav {
   position: sticky;
-  top: 0;
+  top: var(--space-4);
   z-index: 100;
-  background-color: var(--color-surface-elevated);
-  border-bottom: 1px solid color-mix(in srgb, var(--color-border-subtle) 70%, transparent);
-  box-shadow: var(--shadow-sm);
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
 }
 
 .navInner {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0 var(--space-6);
-  height: 56px;
+  pointer-events: all;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-8);
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-4);
+  background-color: color-mix(in srgb, var(--color-surface-elevated) 90%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 60%, transparent);
+  border-radius: var(--radius-full, 9999px);
+  box-shadow: 0 2px 16px color-mix(in srgb, var(--color-text-primary) 6%, transparent);
 }
 
 .navBrand {
@@ -29,7 +30,7 @@
 
 .navBrandText {
   font-family: var(--font-sans);
-  font-size: var(--text-md);
+  font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   color: var(--color-text-primary);
   letter-spacing: var(--tracking-tight);
@@ -39,32 +40,36 @@
   display: flex;
   align-items: center;
   gap: var(--space-1);
+  background-color: var(--color-surface-sunken);
+  border-radius: var(--radius-full, 9999px);
+  padding: 3px;
 }
 
 .navTab {
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-4);
+  border-radius: var(--radius-full, 9999px);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: var(--color-text-secondary);
   transition:
     background-color var(--duration-interactive) var(--easing-interactive),
-    color var(--duration-interactive) var(--easing-interactive);
+    color var(--duration-interactive) var(--easing-interactive),
+    box-shadow var(--duration-interactive) var(--easing-interactive);
 }
 
 .navTab:hover {
-  background-color: var(--color-surface-sunken);
   color: var(--color-text-primary);
 }
 
 .navTabActive {
-  background-color: color-mix(in srgb, var(--color-brand-primary) 12%, transparent);
-  color: var(--color-brand-primary);
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text-primary);
   font-weight: var(--weight-semibold);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--color-text-primary) 10%, transparent);
 }
 
 .navTabActive:hover {
-  background-color: color-mix(in srgb, var(--color-brand-primary) 18%, transparent);
-  color: var(--color-brand-primary);
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text-primary);
 }

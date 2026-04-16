@@ -1,7 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Leaf,
   Lightning,
   Drop,
   Gauge,
@@ -20,7 +19,7 @@ import type {
   WaterPeriod,
 } from '../../shared/data/transformed';
 import { selectDashboardDerivedData } from '../../shared/data/selectors';
-import { Badge, Button, SkeletonCard } from '../../shared/ui';
+import { Button, SkeletonCard } from '../../shared/ui';
 import { MetricCard } from '../../widgets/metric-card';
 import { ChartSkeleton } from '../../widgets/chart-skeleton';
 import { InsightsPanel } from '../../widgets/insights-panel';
@@ -60,7 +59,7 @@ const insightCategoryIconMap = {
   water: <Drop size={18} weight="duotone" />,
   energy: <Lightning size={18} weight="duotone" />,
   efficiency: <ThermometerHot size={18} weight="duotone" />,
-  carbon: <Leaf size={18} weight="duotone" />,
+  carbon: <Drop size={18} weight="duotone" />,
 } satisfies Record<SystemInsightCategory, ReactNode>;
 
 const insightSeverityMap = {
@@ -103,21 +102,7 @@ export function DashboardPage({ dataset }: DashboardPageProps) {
 
   return (
     <div className={styles.page}>
-      {/* ── Header ── */}
-      <header className={styles.header}>
-        <div className={styles.titleRow}>
-          <Leaf size={32} weight="duotone" color="var(--color-brand-primary)" />
-          <h1 className={styles.title}>{t('dashboard:title')}</h1>
-        </div>
-        <p className={styles.subtitle}>{t('dashboard:subtitle')}</p>
-      </header>
 
-      {/* ── Status Badges ── */}
-      <div className={styles.statusBar}>
-        <Badge variant="success">{t('dashboard:status.optimal')}</Badge>
-        <Badge variant="warning">{t('dashboard:status.warning')}</Badge>
-        <Badge variant="danger">{t('dashboard:status.critical')}</Badge>
-      </div>
 
       {/* ── KPI Metrics ── */}
       <section className={styles.section}>
