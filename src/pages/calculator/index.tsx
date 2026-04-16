@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Calculator,
   Lightning,
   CalendarBlank,
   TrendDown,
   Leaf,
+  Drop,
+  Thermometer,
 } from '@phosphor-icons/react';
 import { Card, CardHeader, CardBody } from '../../shared/ui';
 import styles from './styles.module.css';
@@ -25,6 +26,15 @@ interface FormState {
   reductionPct: number;
 }
 
+type PhosphorIcon = React.FC<{ size?: number; weight?: string; color?: string }>;
+
+interface RecommendationItem {
+  RecommendationIcon: PhosphorIcon;
+  title: string;
+  description: string;
+  iconColor: string;
+}
+
 const ELECTRICITY_FACTOR: Record<BuildingType, number> = {
   school: 15,
   residential: 8,
@@ -41,6 +51,30 @@ const CO2_FACTOR = 0.5;
 const CHART_HEIGHT = 160;
 const BAR_WIDTH = 70;
 
+const RECOMMENDATIONS: RecommendationItem[] = [
+  {
+    RecommendationIcon: Lightning,
+    title: 'LED Lighting Upgrade',
+    description:
+      'Replacing fluorescent lights with LED reduces electricity consumption by 30–50%',
+    iconColor: 'var(--color-energy)',
+  },
+  {
+    RecommendationIcon: Drop,
+    title: 'Smart Water Meters',
+    description:
+      'Installing individual meters reduces water consumption by 15–20% through awareness alone',
+    iconColor: 'var(--color-water)',
+  },
+  {
+    RecommendationIcon: Thermometer,
+    title: 'HVAC Scheduling',
+    description:
+      'Programming heating/cooling to off-hours schedules saves 20–30% of energy costs',
+    iconColor: 'var(--color-brand-primary)',
+  },
+];
+
 function parseOptionalNumber(value: string): number | null {
   if (value === '') return null;
   const parsed = parseFloat(value);
@@ -49,6 +83,7 @@ function parseOptionalNumber(value: string): number | null {
 
 export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPageProps) {
   const { t } = useTranslation('calculator');
+  const [showManualInputs, setShowManualInputs] = useState(false);
 
   const [form, setForm] = useState<FormState>({
     buildingType: 'school',
@@ -61,6 +96,8 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
   const areaNum = parseFloat(form.area) || 0;
   const manualElectricityNum = parseOptionalNumber(form.manualElectricity);
   const manualWaterNum = parseOptionalNumber(form.manualWater);
+
+  const hasInput = areaNum > 0 || manualElectricityNum !== null || manualWaterNum !== null;
 
   const electricityKwh =
     manualElectricityNum !== null
@@ -86,8 +123,11 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
   const scaleCurrentBar = yearlyTotal / maxBarValue;
   const scaleSavingsBar = afterYearly / maxBarValue;
 
-  const formatCurrency = (value: number): string =>
-    Math.round(value).toLocaleString('ru-KZ');
+  const displayCurrency = (value: number): string =>
+    hasInput ? Math.round(value).toLocaleString('ru-KZ') : '—';
+
+  const displayCO2 = (value: number): string =>
+    hasInput ? Math.round(value).toLocaleString('ru-KZ') : '—';
 
   const handleBuildingTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setForm((prev) => ({ ...prev, buildingType: e.target.value as BuildingType }));
@@ -105,14 +145,6 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.titleRow}>
-          <Calculator size={32} weight="duotone" color="var(--color-brand-primary)" />
-          <h1 className={styles.title}>{t('title')}</h1>
-        </div>
-        <p className={styles.subtitle}>{t('subtitle')}</p>
-      </header>
-
       <div className={styles.content}>
         {/* ── Left: Form ── */}
         <Card>
@@ -150,33 +182,55 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
             </div>
 
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel} htmlFor="manualElectricity">
-                {t('form.manualElectricity')}
-              </label>
-              <input
-                id="manualElectricity"
-                type="number"
-                min={0}
-                className={styles.input}
-                placeholder={t('form.manualElectricityPlaceholder')}
-                value={form.manualElectricity}
-                onChange={handleTextChange('manualElectricity')}
-              />
-            </div>
+              <button
+                type="button"
+                className={styles.manualToggle}
+                onClick={() => setShowManualInputs((prev) => !prev)}
+                aria-expanded={showManualInputs}
+              >
+                {showManualInputs ? 'Hide manual inputs' : 'Enter consumption manually'}
+                <span
+                  className={`${styles.toggleArrow} ${showManualInputs ? styles.toggleArrowOpen : ''}`}
+                >
+                  →
+                </span>
+              </button>
 
-            <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel} htmlFor="manualWater">
-                {t('form.manualWater')}
-              </label>
-              <input
-                id="manualWater"
-                type="number"
-                min={0}
-                className={styles.input}
-                placeholder={t('form.manualWaterPlaceholder')}
-                value={form.manualWater}
-                onChange={handleTextChange('manualWater')}
-              />
+              <div
+                className={`${styles.manualFields} ${showManualInputs ? styles.manualFieldsOpen : ''}`}
+              >
+                <div className={styles.manualFieldInner}>
+                  <div className={styles.fieldGroup}>
+                    <label className={styles.fieldLabel} htmlFor="manualElectricity">
+                      {t('form.manualElectricity')}
+                    </label>
+                    <input
+                      id="manualElectricity"
+                      type="number"
+                      min={0}
+                      className={styles.input}
+                      placeholder={t('form.manualElectricityPlaceholder')}
+                      value={form.manualElectricity}
+                      onChange={handleTextChange('manualElectricity')}
+                    />
+                  </div>
+
+                  <div className={styles.fieldGroup}>
+                    <label className={styles.fieldLabel} htmlFor="manualWater">
+                      {t('form.manualWater')}
+                    </label>
+                    <input
+                      id="manualWater"
+                      type="number"
+                      min={0}
+                      className={styles.input}
+                      placeholder={t('form.manualWaterPlaceholder')}
+                      value={form.manualWater}
+                      onChange={handleTextChange('manualWater')}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className={styles.fieldGroup}>
@@ -184,7 +238,7 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
                 <label className={styles.fieldLabel} htmlFor="reductionPct">
                   {t('form.reductionTarget')}
                 </label>
-                <span className={styles.sliderValue}>{form.reductionPct}%</span>
+                <span className={styles.reductionBadge}>{form.reductionPct}%</span>
               </div>
               <input
                 id="reductionPct"
@@ -212,7 +266,7 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
                 <Lightning size={16} weight="duotone" color="var(--color-energy)" />
                 <div>
                   <p className={styles.resultLabel}>{t('results.monthlyTotal')}</p>
-                  <p className={styles.resultValue}>{formatCurrency(monthlyTotal)}</p>
+                  <p className={styles.resultValue}>{displayCurrency(monthlyTotal)}</p>
                   <p className={styles.resultUnit}>{t('results.currency')}</p>
                 </div>
               </div>
@@ -223,19 +277,22 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
                 <CalendarBlank size={16} weight="duotone" color="var(--color-water)" />
                 <div>
                   <p className={styles.resultLabel}>{t('results.yearlyTotal')}</p>
-                  <p className={styles.resultValue}>{formatCurrency(yearlyTotal)}</p>
+                  <p className={styles.resultValue}>{displayCurrency(yearlyTotal)}</p>
                   <p className={styles.resultUnit}>{t('results.currency')}</p>
                 </div>
               </div>
             </Card>
 
-            <Card padding="compact" className={`${styles.resultCard} ${styles.resultCardHighlight}`}>
+            <Card
+              padding="compact"
+              className={`${styles.resultCard} ${styles.resultCardHighlight}`}
+            >
               <div className={styles.resultCardContent}>
                 <TrendDown size={18} weight="duotone" color="var(--color-brand-primary)" />
                 <div>
                   <p className={styles.resultLabel}>{t('results.yearlySavings')}</p>
                   <p className={`${styles.resultValue} ${styles.resultValueHighlight}`}>
-                    {formatCurrency(savedYearly)}
+                    {displayCurrency(savedYearly)}
                   </p>
                   <p className={styles.resultUnit}>{t('results.currency')}</p>
                 </div>
@@ -247,9 +304,7 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
                 <Leaf size={16} weight="duotone" color="var(--color-brand-soft)" />
                 <div>
                   <p className={styles.resultLabel}>{t('results.co2Reduction')}</p>
-                  <p className={styles.resultValue}>
-                    {Math.round(savedCO2yearly).toLocaleString('ru-KZ')}
-                  </p>
+                  <p className={styles.resultValue}>{displayCO2(savedCO2yearly)}</p>
                   <p className={styles.resultUnit}>{t('results.co2Unit')}</p>
                 </div>
               </div>
@@ -260,57 +315,89 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
           <Card>
             <CardHeader title={t('chart.title')} />
             <CardBody>
-              <div
-                className={styles.chartWrapper}
-                style={
-                  {
-                    '--scale-current': scaleCurrentBar,
-                    '--scale-savings': scaleSavingsBar,
-                  } as React.CSSProperties
-                }
-              >
-                <svg
-                  viewBox={`0 0 240 ${CHART_HEIGHT + 48}`}
-                  className={styles.chartSvg}
-                  role="img"
-                  aria-label={t('chart.title')}
+              {hasInput ? (
+                <div
+                  className={styles.chartWrapper}
+                  style={
+                    {
+                      '--scale-current': scaleCurrentBar,
+                      '--scale-savings': scaleSavingsBar,
+                    } as React.CSSProperties
+                  }
                 >
-                  <rect
-                    x={30}
-                    y={0}
-                    width={BAR_WIDTH}
-                    height={CHART_HEIGHT}
-                    className={styles.barCurrent}
-                    rx={4}
-                  />
-                  <rect
-                    x={140}
-                    y={0}
-                    width={BAR_WIDTH}
-                    height={CHART_HEIGHT}
-                    className={styles.barSavings}
-                    rx={4}
-                  />
-                  <text
-                    x={65}
-                    y={CHART_HEIGHT + 24}
-                    className={styles.barLabel}
-                    textAnchor="middle"
+                  <svg
+                    viewBox={`0 0 240 ${CHART_HEIGHT + 48}`}
+                    className={styles.chartSvg}
+                    role="img"
+                    aria-label={t('chart.title')}
                   >
-                    {t('chart.current')}
-                  </text>
-                  <text
-                    x={175}
-                    y={CHART_HEIGHT + 24}
-                    className={styles.barLabel}
-                    textAnchor="middle"
-                  >
-                    {t('chart.afterSavings')}
-                  </text>
-                </svg>
-              </div>
+                    <rect
+                      x={30}
+                      y={0}
+                      width={BAR_WIDTH}
+                      height={CHART_HEIGHT}
+                      className={styles.barCurrent}
+                      rx={4}
+                    />
+                    <rect
+                      x={140}
+                      y={0}
+                      width={BAR_WIDTH}
+                      height={CHART_HEIGHT}
+                      className={styles.barSavings}
+                      rx={4}
+                    />
+                    <text
+                      x={65}
+                      y={CHART_HEIGHT + 24}
+                      className={styles.barLabel}
+                      textAnchor="middle"
+                    >
+                      {t('chart.current')}
+                    </text>
+                    <text
+                      x={175}
+                      y={CHART_HEIGHT + 24}
+                      className={styles.barLabel}
+                      textAnchor="middle"
+                    >
+                      {t('chart.afterSavings')}
+                    </text>
+                  </svg>
+                </div>
+              ) : (
+                <div className={styles.chartEmptyState}>
+                  <p className={styles.chartEmptyText}>
+                    Enter building area to see comparison
+                  </p>
+                </div>
+              )}
             </CardBody>
           </Card>
+
+          {/* ── Recommendations ── */}
+          {hasInput && (
+            <div className={styles.recommendations}>
+              <p className={styles.recommendationsTitle}>Recommendations</p>
+              {RECOMMENDATIONS.map((rec) => (
+                <Card key={rec.title} padding="compact">
+                  <div className={styles.recommendationCard}>
+                    <div className={styles.recommendationIcon}>
+                      <rec.RecommendationIcon
+                        size={18}
+                        weight="duotone"
+                        color={rec.iconColor}
+                      />
+                    </div>
+                    <div className={styles.recommendationContent}>
+                      <p className={styles.recommendationTitle}>{rec.title}</p>
+                      <p className={styles.recommendationDescription}>{rec.description}</p>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
