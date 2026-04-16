@@ -15,7 +15,9 @@
     "manualElectricityPlaceholder": "Optional — overrides estimate",
     "manualWater": "Manual Water (m³/month)",
     "manualWaterPlaceholder": "Optional — overrides estimate",
-    "reductionTarget": "Reduction Target"
+    "reductionTarget": "Reduction Target",
+    "manualToggleShow": "Enter consumption manually →",
+    "manualToggleHide": "Hide manual inputs ↑"
   },
   "results": {
     "title": "Results",
@@ -23,8 +25,10 @@
     "yearlyTotal": "Current Yearly Cost",
     "yearlySavings": "Yearly Savings",
     "co2Reduction": "CO₂ Reduction",
+    "waterSavings": "Water Savings",
     "currency": "тенге",
-    "co2Unit": "кг/год"
+    "co2Unit": "кг/год",
+    "currencyPerYear": "тенге/год"
   },
   "chart": {
     "title": "Cost Comparison",

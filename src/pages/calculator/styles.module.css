@@ -5,7 +5,7 @@
 .page {
   max-width: 960px;
   margin: 0 auto;
-  padding: var(--space-8) var(--space-6) var(--space-10);
+  padding: var(--space-16) var(--space-6) var(--space-10);
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
@@ -113,15 +113,6 @@
   outline: var(--focus-ring-width) solid var(--color-focus-ring);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
-}
-
-.toggleArrow {
-  display: inline-block;
-  transition: transform var(--duration-interactive) var(--easing-interactive);
-}
-
-.toggleArrowOpen {
-  transform: rotate(90deg);
 }
 
 .manualFields {

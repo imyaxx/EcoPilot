@@ -121,15 +121,15 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
   const savedWaterYearly = savedWaterMonthly * 12;
 
   const afterYearly = yearlyTotal - savedYearly;
-  const maxBarValue = Math.max(yearlyTotal, 1);
+  const maxBarValue = Math.max(yearlyTotal, afterYearly, 1);
   const scaleCurrentBar = yearlyTotal / maxBarValue;
-  const scaleSavingsBar = afterYearly / maxBarValue;
+  const scaleSavingsBar = Math.max(afterYearly / maxBarValue, 0.05);
 
   const displayCurrency = (value: number): string =>
-    hasInput ? Math.round(value).toLocaleString('ru-KZ') : '—';
+    hasInput ? Math.round(value).toLocaleString() : '—';
 
   const displayCO2 = (value: number): string =>
-    hasInput ? Math.round(value).toLocaleString('ru-KZ') : '—';
+    hasInput ? Math.round(value).toLocaleString() : '—';
 
   const handleBuildingTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setForm((prev) => ({ ...prev, buildingType: e.target.value as BuildingType }));
@@ -191,12 +191,7 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
                 onClick={() => setShowManualInputs((prev) => !prev)}
                 aria-expanded={showManualInputs}
               >
-                {showManualInputs ? 'Hide manual inputs' : 'Enter consumption manually'}
-                <span
-                  className={`${styles.toggleArrow} ${showManualInputs ? styles.toggleArrowOpen : ''}`}
-                >
-                  →
-                </span>
+                {showManualInputs ? t('form.manualToggleHide') : t('form.manualToggleShow')}
               </button>
 
               <div
@@ -318,11 +313,11 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
             <div className={styles.resultCardContent}>
               <Drop size={16} weight="duotone" color="var(--color-water)" />
               <div>
-                <p className={styles.resultLabel}>Water Savings</p>
+                <p className={styles.resultLabel}>{t('results.waterSavings')}</p>
                 <p className={styles.resultValue}>
-                  {hasInput ? Math.round(savedWaterYearly).toLocaleString('ru-KZ') : '—'}
+                  {hasInput ? Math.round(savedWaterYearly).toLocaleString() : '—'}
                 </p>
-                <p className={styles.resultUnit}>тенге/год</p>
+                <p className={styles.resultUnit}>{t('results.currencyPerYear')}</p>
               </div>
             </div>
           </Card>
@@ -397,28 +392,26 @@ export function CalculatorPage({ electricityTariff, waterTariff }: CalculatorPag
 
       {/* ── recommendations ── */}
       <div className={styles.recsSection}>
-        {hasInput && (
-          <div className={styles.recommendations}>
-            <p className={styles.recommendationsTitle}>Recommendations</p>
-            {RECOMMENDATIONS.map((rec) => (
-              <Card key={rec.title} padding="compact">
-                <div className={styles.recommendationCard}>
-                  <div className={styles.recommendationIcon}>
-                    <rec.RecommendationIcon
-                      size={18}
-                      weight="duotone"
-                      color={rec.iconColor}
-                    />
-                  </div>
-                  <div className={styles.recommendationContent}>
-                    <p className={styles.recommendationTitle}>{rec.title}</p>
-                    <p className={styles.recommendationDescription}>{rec.description}</p>
-                  </div>
+        <div className={styles.recommendations}>
+          <p className={styles.recommendationsTitle}>Recommendations</p>
+          {RECOMMENDATIONS.map((rec) => (
+            <Card key={rec.title} padding="compact">
+              <div className={styles.recommendationCard}>
+                <div className={styles.recommendationIcon}>
+                  <rec.RecommendationIcon
+                    size={18}
+                    weight="duotone"
+                    color={rec.iconColor}
+                  />
                 </div>
-              </Card>
-            ))}
-          </div>
-        )}
+                <div className={styles.recommendationContent}>
+                  <p className={styles.recommendationTitle}>{rec.title}</p>
+                  <p className={styles.recommendationDescription}>{rec.description}</p>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
 
     </div>
