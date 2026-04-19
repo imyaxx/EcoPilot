@@ -6,7 +6,7 @@
 .page {
   max-width: var(--container-max-width);
   margin: 0 auto;
-  padding: var(--space-8) var(--space-6) var(--space-10);
+  padding: var(--space-6) var(--space-6) var(--space-10);
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
@@ -15,11 +15,20 @@
 /* ── Hero ── */
 
 .hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 430px);
+  gap: var(--space-6);
+  align-items: start;
+  padding: 0 0 var(--space-4);
+  animation: heroFadeIn var(--duration-slow) var(--easing-decelerate) both;
+}
+
+.heroCopy {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  padding: var(--space-2) 0 var(--space-4);
-  animation: heroFadeIn var(--duration-slow) var(--easing-decelerate) both;
+  min-width: 0;
+  padding-top: clamp(2.5rem, 4.5vw, 3.75rem);
 }
 
 .heroEyebrow {
@@ -49,6 +58,18 @@
   max-width: 60ch;
 }
 
+.heroPulse {
+  width: 100%;
+  max-width: 390px;
+  justify-self: end;
+  align-self: start;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.heroPulse > * {
+  width: 100%;
+}
+
 /* ── section wrapper ── */
 
 .section {
@@ -75,45 +96,39 @@
   }
 }
 
-/* ── Charts section: 2 charts side-by-side, carbon-pulse below full width ── */
+/* ── Charts section ── */
 
 .chartsSection {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-areas:
-    "charts pulse";
-  gap: var(--space-4);
-  align-items: stretch;
+  display: block;
 }
 
 .chartsGrid {
-  grid-area: charts;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
 }
 
-.pulseCell {
-  grid-area: pulse;
-  display: flex;
-}
-
-.pulseCell > * {
-  flex: 1;
-}
-
-@media (max-width: 1100px) {
-  .chartsSection {
+@media (max-width: 980px) {
+  .hero {
     grid-template-columns: 1fr;
-    grid-template-areas:
-      "charts"
-      "pulse";
+    align-items: start;
+  }
+
+  .heroPulse {
+    max-width: none;
+    justify-self: stretch;
+    margin-top: 0;
+  }
+
+  .heroCopy {
+    padding-top: 0;
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 860px) {
   .chartsGrid {
     grid-template-columns: 1fr;
+    gap: var(--space-4);
   }
 }
 

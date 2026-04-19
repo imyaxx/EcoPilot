@@ -116,3 +116,35 @@
 .footnote {
   color: color-mix(in srgb, #ffffff 45%, transparent);
 }
+
+.compact {
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+
+.compact .decorGrid {
+  opacity: 0.14;
+  background-size: 28px 28px;
+}
+
+.compact .eyebrow {
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+}
+
+.compact .counter {
+  gap: var(--space-2);
+  margin-top: 0;
+  flex-wrap: nowrap;
+}
+
+.compact .counterValue {
+  font-size: clamp(2.75rem, 4.2vw, 3.9rem);
+}
+
+.compact .counterUnit {
+  font-size: 0.875rem;
+  padding-bottom: 0.25rem;
+}

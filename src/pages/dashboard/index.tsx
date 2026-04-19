@@ -124,9 +124,17 @@ export function DashboardPage({
     <div className={styles.page}>
       {/* ── Hero ── */}
       <header className={styles.hero}>
-        <span className={styles.heroEyebrow}>{t('hero.eyebrow')}</span>
-        <h1 className={styles.heroTitle}>{t('hero.title')}</h1>
-        <p className={styles.heroSubtitle}>{t('hero.subtitle')}</p>
+        <div className={styles.heroCopy}>
+          <span className={styles.heroEyebrow}>{t('hero.eyebrow')}</span>
+          <h1 className={styles.heroTitle}>{t('hero.title')}</h1>
+          <p className={styles.heroSubtitle}>{t('hero.subtitle')}</p>
+        </div>
+
+        {annualEnergyForPulse > 0 && (
+          <div className={styles.heroPulse}>
+            <CarbonPulse annualEnergyMlnKwh={annualEnergyForPulse} compact />
+          </div>
+        )}
       </header>
 
       {/* ── KPI Metrics ── */}
@@ -140,7 +148,7 @@ export function DashboardPage({
         </div>
       </section>
 
-      {/* ── Charts + Carbon Pulse row ── */}
+      {/* ── Charts ── */}
       <section className={styles.chartsSection}>
         <div className={styles.chartsGrid}>
           <LineChart
@@ -194,12 +202,6 @@ export function DashboardPage({
             }
           />
         </div>
-
-        {annualEnergyForPulse > 0 && (
-          <div className={styles.pulseCell}>
-            <CarbonPulse annualEnergyMlnKwh={annualEnergyForPulse} />
-          </div>
-        )}
       </section>
 
       {/* ── Heatmap ── */}

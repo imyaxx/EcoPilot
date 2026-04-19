@@ -8,6 +8,7 @@ interface CarbonPulseProps {
    * Used to calculate a realistic per-second emission rate.
    */
   annualEnergyMlnKwh: number;
+  compact?: boolean;
 }
 
 const CARBON_FACTOR_KG_PER_KWH = 0.5;
@@ -18,7 +19,10 @@ function formatNumber(value: number): string {
   return Math.floor(value).toLocaleString();
 }
 
-export function CarbonPulse({ annualEnergyMlnKwh }: CarbonPulseProps) {
+export function CarbonPulse({
+  annualEnergyMlnKwh,
+  compact = false,
+}: CarbonPulseProps) {
   const { t } = useTranslation('dashboard');
   const [emittedKg, setEmittedKg] = useState(0);
   const startRef = useRef<number | null>(null);
@@ -67,7 +71,10 @@ export function CarbonPulse({ annualEnergyMlnKwh }: CarbonPulseProps) {
   }, [annualEnergyMlnKwh, kgPerSecond]);
 
   return (
-    <section className={styles.pulse} aria-live="polite">
+    <section
+      className={[styles.pulse, compact && styles.compact].filter(Boolean).join(' ')}
+      aria-live="polite"
+    >
       <div className={styles.decorGrid} aria-hidden="true" />
 
       <div className={styles.header}>
@@ -79,16 +86,20 @@ export function CarbonPulse({ annualEnergyMlnKwh }: CarbonPulseProps) {
         <span className={styles.counterUnit}>{t('carbonPulse.unit')}</span>
       </div>
 
-      <p className={styles.subtitle}>{t('carbonPulse.subtitle')}</p>
+      {!compact && (
+        <>
+          <p className={styles.subtitle}>{t('carbonPulse.subtitle')}</p>
 
-      <div className={styles.footer}>
-        <span className={styles.basedOn}>
-          {t('carbonPulse.basedOn', {
-            value: annualEnergyMlnKwh.toLocaleString(),
-          })}
-        </span>
-        <span className={styles.footnote}>{t('carbonPulse.footnote')}</span>
-      </div>
+          <div className={styles.footer}>
+            <span className={styles.basedOn}>
+              {t('carbonPulse.basedOn', {
+                value: annualEnergyMlnKwh.toLocaleString(),
+              })}
+            </span>
+            <span className={styles.footnote}>{t('carbonPulse.footnote')}</span>
+          </div>
+        </>
+      )}
     </section>
   );
 }

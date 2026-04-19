@@ -4,8 +4,8 @@
   --accent-soft: var(--color-brand-soft);
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  padding: var(--space-6);
+  gap: var(--space-3);
+  padding: var(--space-5);
   background-color: var(--color-surface-elevated);
   border: 1px solid color-mix(in srgb, var(--color-border-subtle) 55%, transparent);
   border-radius: var(--radius-xl);
@@ -57,13 +57,13 @@
 .headerText {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
   min-width: 0;
 }
 
 .title {
   font-family: var(--font-sans);
-  font-size: var(--text-md);
+  font-size: 1.125rem;
   font-weight: var(--weight-semibold);
   color: var(--color-text-primary);
   letter-spacing: var(--tracking-tight);
@@ -71,8 +71,9 @@
 
 .subtitle {
   font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  color: var(--color-text-tertiary);
+  font-size: 0.8125rem;
+  font-weight: var(--weight-medium);
+  color: color-mix(in srgb, var(--color-text-secondary) 90%, transparent);
 }
 
 .headerAction {
@@ -107,15 +108,16 @@
 }
 
 .gridLine {
-  stroke: color-mix(in srgb, var(--color-border-subtle) 55%, transparent);
+  stroke: color-mix(in srgb, var(--color-border-default) 32%, transparent);
   stroke-width: 1;
   stroke-dasharray: 2 4;
 }
 
 .axisLabel {
   font-family: var(--font-sans);
-  font-size: 10px;
-  fill: var(--color-text-tertiary);
+  font-size: 12px;
+  font-weight: var(--weight-medium);
+  fill: color-mix(in srgb, var(--color-text-secondary) 96%, transparent);
 }
 
 .area {
@@ -126,7 +128,7 @@
 .line {
   fill: none;
   stroke: var(--accent-color);
-  stroke-width: 2;
+  stroke-width: 2.75;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-dasharray: 2000;
@@ -153,7 +155,7 @@
 .point {
   fill: var(--color-surface-elevated);
   stroke: var(--accent-color);
-  stroke-width: 2;
+  stroke-width: 2.25;
   transition: r var(--duration-interactive) var(--easing-spring);
   pointer-events: none;
 }

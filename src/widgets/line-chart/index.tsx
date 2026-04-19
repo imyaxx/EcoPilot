@@ -20,8 +20,8 @@ interface LineChartProps {
 
 const VIEWBOX_WIDTH = 720;
 const VIEWBOX_HEIGHT = 360;
-const PADDING = { top: 24, right: 24, bottom: 36, left: 52 };
-const GRID_ROWS = 4;
+const PADDING = { top: 16, right: 16, bottom: 34, left: 48 };
+const TARGET_GRID_ROWS = 4;
 
 const accentClassMap: Record<ChartAccent, string> = {
   energy: styles.accentEnergy,
@@ -30,21 +30,46 @@ const accentClassMap: Record<ChartAccent, string> = {
   carbon: styles.accentCarbon,
 };
 
-function niceCeil(value: number): number {
+function niceStep(value: number): number {
   if (value <= 0) return 1;
+
   const magnitude = Math.pow(10, Math.floor(Math.log10(value)));
   const fraction = value / magnitude;
-  let nice: number;
-  if (fraction <= 1) nice = 1;
-  else if (fraction <= 2) nice = 2;
-  else if (fraction <= 5) nice = 5;
-  else nice = 10;
-  return nice * magnitude;
+
+  if (fraction <= 1) return magnitude;
+  if (fraction <= 2) return 2 * magnitude;
+  if (fraction <= 5) return 5 * magnitude;
+  return 10 * magnitude;
+}
+
+function buildAxisRange(values: number[]) {
+  const rawMin = Math.min(...values);
+  const rawMax = Math.max(...values);
+  const range = rawMax - rawMin;
+  const padding = range === 0 ? Math.max(Math.abs(rawMax) * 0.12, 1) : range * 0.12;
+
+  const minCandidate = rawMin - padding;
+  const maxCandidate = rawMax + padding;
+  const step = niceStep((maxCandidate - minCandidate) / TARGET_GRID_ROWS);
+
+  let yMin = Math.floor(minCandidate / step) * step;
+  if (rawMin >= 0 && yMin < 0) yMin = 0;
+
+  let yMax = Math.ceil(maxCandidate / step) * step;
+  if (yMax <= yMin) {
+    yMax = yMin + step * TARGET_GRID_ROWS;
+  }
+
+  const rowCount = Math.max(2, Math.round((yMax - yMin) / step));
+  yMax = yMin + step * rowCount;
+
+  return { yMin, yMax, step, rowCount };
 }
 
 function formatAxisValue(value: number): string {
   if (Math.abs(value) >= 1000) {
-    return `${(value / 1000).toFixed(1)}k`;
+    const compact = value / 1000;
+    return Number.isInteger(compact) ? `${compact.toFixed(0)}k` : `${compact.toFixed(1)}k`;
   }
   if (Number.isInteger(value)) return String(value);
   return value.toFixed(1);
@@ -89,21 +114,17 @@ export function LineChart({
     if (data.length === 0) return null;
 
     const values = data.map((point) => point.value);
-    const rawMin = Math.min(...values);
-    const rawMax = Math.max(...values);
-    const range = rawMax - rawMin || 1;
-    const yMin = Math.max(0, rawMin - range * 0.08);
-    const yMax = niceCeil(rawMax + range * 0.08);
+    const { yMin, yMax, step: axisStep, rowCount } = buildAxisRange(values);
 
     const innerWidth = VIEWBOX_WIDTH - PADDING.left - PADDING.right;
     const innerHeight = VIEWBOX_HEIGHT - PADDING.top - PADDING.bottom;
 
-    const step =
+    const pointStep =
       data.length > 1 ? innerWidth / (data.length - 1) : innerWidth / 2;
     const baseX = data.length > 1 ? PADDING.left : PADDING.left + innerWidth / 2;
 
     const points = data.map((point, index) => {
-      const x = baseX + step * index;
+      const x = baseX + pointStep * index;
       const y =
         PADDING.top +
         innerHeight - ((point.value - yMin) / (yMax - yMin)) * innerHeight;
@@ -111,15 +132,15 @@ export function LineChart({
     });
 
     const gridLines: number[] = [];
-    for (let r = 0; r <= GRID_ROWS; r += 1) {
-      const ratio = r / GRID_ROWS;
+    for (let r = 0; r <= rowCount; r += 1) {
+      const ratio = r / rowCount;
       const y = PADDING.top + innerHeight * (1 - ratio);
       gridLines.push(y);
     }
 
     const axisValues: number[] = [];
-    for (let r = 0; r <= GRID_ROWS; r += 1) {
-      const value = yMin + ((yMax - yMin) * r) / GRID_ROWS;
+    for (let r = 0; r <= rowCount; r += 1) {
+      const value = yMin + axisStep * r;
       axisValues.push(value);
     }
 
@@ -139,7 +160,7 @@ export function LineChart({
       areaPath,
       innerHeight,
       innerWidth,
-      step,
+      step: pointStep,
     };
   }, [data]);
 
@@ -256,7 +277,7 @@ export function LineChart({
           {geometry.points.map((point, index) => {
             const totalLabels = geometry.points.length;
             const shouldSkip =
-              totalLabels > 8 && index % Math.ceil(totalLabels / 8) !== 0;
+              totalLabels > 12 && index % Math.ceil(totalLabels / 12) !== 0;
             if (shouldSkip && index !== totalLabels - 1) return null;
             return (
               <text
@@ -308,7 +329,7 @@ export function LineChart({
               key={`point-${index}`}
               cx={point.x}
               cy={point.y}
-              r={activeIndex === index ? 4.5 : 3}
+              r={activeIndex === index ? 5 : 3.5}
               className={styles.point}
             />
           ))}
