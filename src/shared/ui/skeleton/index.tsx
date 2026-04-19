@@ -13,8 +13,14 @@ export function SkeletonBlock({
   className,
 }: SkeletonBlockProps) {
   const style: CSSProperties = {};
-  if (width) style.width = width;
-  if (height) style.minHeight = height;
+
+  if (width) {
+    style.width = width;
+  }
+
+  if (height) {
+    style.minHeight = height;
+  }
 
   const classNames = [styles.block, className].filter(Boolean).join(' ');
 
@@ -41,9 +47,7 @@ export function SkeletonText({
   className,
 }: SkeletonTextProps) {
   return (
-    <div
-      style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}
-    >
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
       {Array.from({ length: lines }, (_, index) => {
         const isLast = index === lines - 1 && lines > 1;
         const lineWidth = isLast ? 'medium' : width;

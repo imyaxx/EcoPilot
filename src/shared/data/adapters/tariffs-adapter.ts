@@ -13,20 +13,28 @@ const TARIFF_ROW_INDEX = {
   water: 2,
 } satisfies Record<TariffUtilityType, number>;
 
-const TARIFF_METADATA = {
+/**
+ * Language-agnostic metadata for each tariff. The human-readable label and
+ * source come from i18n ("dataSource" in common.json and calculator UI), so
+ * we keep only stable technical identifiers here.
+ */
+const TARIFF_METADATA: Record<
+  TariffUtilityType,
+  Omit<UtilityTariff, 'price' | 'utilityType'>
+> = {
   electricity: {
-    label: 'Тариф электроэнергии — бюджетные организации, Алматы',
-    unit: 'кВт·ч',
+    label: 'electricity.tariff.almaty',
+    unit: 'kWh',
     currency: 'KZT',
-    sourceLabel: 'esalmaty.kz, январь 2026',
+    sourceLabel: 'esalmaty.kz',
   },
   water: {
-    label: 'Тариф водоснабжения — базовый, Алматы',
-    unit: 'м³',
+    label: 'water.tariff.almaty',
+    unit: 'm³',
     currency: 'KZT',
-    sourceLabel: 'Алматы Су, февраль 2025',
+    sourceLabel: 'Almaty Su',
   },
-} satisfies Record<TariffUtilityType, Omit<UtilityTariff, 'price' | 'utilityType'>>;
+};
 
 function getWorksheet(workbook: XLSX.WorkBook): XLSX.WorkSheet {
   const worksheet = workbook.Sheets[ASSUMPTIONS_SHEET_NAME];

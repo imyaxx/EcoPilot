@@ -11,12 +11,12 @@ export type DashboardMetricTrendDirection = 'up' | 'down' | 'neutral';
 
 export interface DashboardMetricSnapshot {
   key: DashboardMetricKey;
-  label: string;
   value: number;
   formattedValue: string;
-  unit: string;
   deltaPercentage: number;
   trendDirection: DashboardMetricTrendDirection;
+  /** Optional mini trend used to render inline sparklines. */
+  sparkline?: number[];
 }
 
 export interface ResourceTrendPoint {
@@ -33,12 +33,24 @@ export type SystemInsightCategory =
   | 'efficiency'
   | 'carbon';
 
+export type SystemInsightId =
+  | 'energy-growth-high'
+  | 'energy-growth-moderate'
+  | 'energy-reduction'
+  | 'water-growth-high'
+  | 'water-growth-moderate'
+  | 'water-reduction'
+  | 'carbon-footprint-info';
+
+/**
+ * Raw insight record. Translation happens in the UI layer — we only carry
+ * interpolation values here so the presentation stays language-agnostic.
+ */
 export interface SystemInsight {
-  id: string;
-  title: string;
-  description: string;
+  id: SystemInsightId;
   severity: SystemInsightSeverity;
   category: SystemInsightCategory;
+  values: Record<string, string | number>;
 }
 
 export type UtilityType = 'electricity' | 'water';

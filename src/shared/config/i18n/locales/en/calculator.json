@@ -1,38 +1,86 @@
 {
-  "title": "Cost Calculator",
-  "subtitle": "Estimate your building's utility costs and savings potential",
+  "hero": {
+    "eyebrow": "Plan & project",
+    "title": "Cost & Savings Calculator",
+    "subtitle": "Estimate what your building spends — and what it could save by going efficient."
+  },
   "form": {
     "title": "Building Parameters",
-    "buildingType": "Building Type",
+    "buildingType": "Building type",
     "buildingTypes": {
       "school": "School",
       "residential": "Residential",
       "office": "Office"
     },
-    "area": "Area (m²)",
+    "area": "Area",
+    "areaUnit": "m²",
     "areaPlaceholder": "Enter area in square meters",
-    "manualElectricity": "Manual Electricity (kWh/month)",
+    "manualElectricity": "Electricity",
+    "manualElectricityUnit": "kWh / month",
     "manualElectricityPlaceholder": "Optional — overrides estimate",
-    "manualWater": "Manual Water (m³/month)",
+    "manualWater": "Water",
+    "manualWaterUnit": "m³ / month",
     "manualWaterPlaceholder": "Optional — overrides estimate",
-    "reductionTarget": "Reduction Target",
-    "manualToggleShow": "Enter consumption manually →",
-    "manualToggleHide": "Hide manual inputs ↑"
+    "reductionTarget": "Reduction target",
+    "manualToggleShow": "Enter consumption manually",
+    "manualToggleHide": "Hide manual inputs",
+    "useBuildingData": "Use city averages"
   },
   "results": {
     "title": "Results",
-    "monthlyTotal": "Current Monthly Cost",
-    "yearlyTotal": "Current Yearly Cost",
-    "yearlySavings": "Yearly Savings",
-    "co2Reduction": "CO₂ Reduction",
-    "waterSavings": "Water Savings",
-    "currency": "тенге",
-    "co2Unit": "кг/год",
-    "currencyPerYear": "тенге/год"
+    "monthlyTotal": "Current monthly cost",
+    "yearlyTotal": "Current yearly cost",
+    "yearlySavings": "Yearly savings",
+    "monthlySavings": "Monthly savings",
+    "co2Reduction": "CO₂ reduction",
+    "waterSavings": "Water savings",
+    "paybackPeriod": "Payback period",
+    "paybackUnit": "months",
+    "empty": "Enter your building's area to see the numbers"
   },
-  "chart": {
-    "title": "Cost Comparison",
-    "current": "Current",
-    "afterSavings": "After Savings"
+  "breakdown": {
+    "title": "Cost Breakdown",
+    "subtitle": "Where the money actually goes",
+    "electricity": "Electricity",
+    "water": "Water",
+    "legend": "{{value}} {{currency}} / month"
+  },
+  "comparison": {
+    "title": "Before vs After",
+    "current": "Today",
+    "afterSavings": "After {{reduction}}% reduction",
+    "saved": "You keep {{amount}} {{currency}}"
+  },
+  "recommendations": {
+    "title": "Recommendations",
+    "subtitle": "Ranked by impact on your bill",
+    "impact": "Potential impact",
+    "items": {
+      "led": {
+        "title": "LED lighting upgrade",
+        "description": "Replacing fluorescent lights with LEDs cuts electricity use by 30–50%.",
+        "impactLabel": "High impact"
+      },
+      "smartMeters": {
+        "title": "Smart water meters",
+        "description": "Individual metering reduces water use by 15–20% through awareness alone.",
+        "impactLabel": "Medium impact"
+      },
+      "hvac": {
+        "title": "HVAC scheduling",
+        "description": "Off-hours heating/cooling schedules save 20–30% of energy costs.",
+        "impactLabel": "High impact"
+      },
+      "insulation": {
+        "title": "Wall & roof insulation",
+        "description": "Proper insulation in Almaty's climate reduces heating load by 25–40%.",
+        "impactLabel": "High impact"
+      },
+      "solar": {
+        "title": "Rooftop solar (PV)",
+        "description": "Even partial rooftop solar in sunny Almaty offsets 10–25% of grid draw.",
+        "impactLabel": "Medium impact"
+      }
+    }
   }
 }

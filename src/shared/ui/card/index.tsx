@@ -21,8 +21,6 @@ export function Card({
   return <div className={classNames}>{children}</div>;
 }
 
-/* ── Compound Components ── */
-
 interface CardHeaderProps {
   title: string;
   action?: ReactNode;

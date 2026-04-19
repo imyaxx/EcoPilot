@@ -72,8 +72,7 @@ function getCellValue(
 
 export function extractEnergyYearTrend(workbook: XLSX.WorkBook): ResourceTrendPoint[] {
   const worksheet = getWorksheet(workbook, 'year');
-  const { startRowIndex, labelColumnIndex, valueColumnIndex } =
-    ENERGY_SHEET_CONFIG.year;
+  const { startRowIndex, labelColumnIndex, valueColumnIndex } = ENERGY_SHEET_CONFIG.year;
   const lastRowIndex = getLastRowIndex(worksheet);
   const yearTrend: ResourceTrendPoint[] = [];
 
@@ -104,8 +103,7 @@ export function extractEnergyYearTrend(workbook: XLSX.WorkBook): ResourceTrendPo
 
 export function extractEnergyMonthTrend(workbook: XLSX.WorkBook): ResourceTrendPoint[] {
   const worksheet = getWorksheet(workbook, 'month');
-  const { startRowIndex, labelColumnIndex, valueColumnIndex } =
-    ENERGY_SHEET_CONFIG.month;
+  const { startRowIndex, labelColumnIndex, valueColumnIndex } = ENERGY_SHEET_CONFIG.month;
   const lastRowIndex = getLastRowIndex(worksheet);
   const monthTrend: ResourceTrendPoint[] = [];
 

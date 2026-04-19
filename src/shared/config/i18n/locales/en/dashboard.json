@@ -1,41 +1,102 @@
 {
-  "title": "Dashboard",
-  "subtitle": "Monitor your building\u2019s environmental performance",
-  "totalEnergy": "Total Energy",
-  "totalWater": "Total Water",
-  "carbonFootprint": "Carbon Footprint",
-  "efficiency": "Efficiency Score",
-  "zones": "Zones",
-  "alerts": "Active Alerts",
+  "hero": {
+    "eyebrow": "City-scale observatory",
+    "title": "Almaty in numbers",
+    "subtitle": "Energy, water and carbon — monitored in one place so the city can act on what matters.",
+    "liveIndicator": "Synced {{time}}",
+    "datasetBadge": "2019 – 2025"
+  },
   "metrics": {
-    "consumption": "Consumption",
-    "savings": "Savings",
-    "trend": "Trend",
-    "peak": "Peak Usage",
-    "average": "Average",
-    "target": "Target"
+    "totalEnergy": {
+      "label": "Total Energy",
+      "unit": "mln kWh"
+    },
+    "totalWater": {
+      "label": "Total Water",
+      "unit": "mln m³"
+    },
+    "carbonFootprint": {
+      "label": "Carbon Footprint",
+      "unit": "mln kg CO₂"
+    },
+    "efficiencyScore": {
+      "label": "Efficiency Score",
+      "unit": "%"
+    }
   },
   "period": {
+    "label": "Period",
+    "monthly": "Monthly",
     "monthly2024": "Monthly 2024",
     "monthly2025": "Monthly 2025",
     "annual": "Annual"
   },
-  "status": {
-    "optimal": "Optimal",
-    "warning": "Needs Attention",
-    "critical": "Critical"
+  "charts": {
+    "energyTrend": "Energy Consumption",
+    "waterUsage": "Water Consumption",
+    "yAxisHint": "values shown in {{unit}}",
+    "tooltip": {
+      "period": "Period",
+      "value": "Value",
+      "change": "vs previous"
+    },
+    "empty": "No series available for this period"
+  },
+  "carbonPulse": {
+    "title": "Live Carbon Counter",
+    "subtitle": "Estimated CO₂ emitted by Almaty's power grid since you opened this page",
+    "basedOn": "Based on current annual consumption ≈ {{value}} mln kWh",
+    "unit": "kg CO₂",
+    "footnote": "~85% of Kazakhstan's electricity is generated from coal and gas"
+  },
+  "heatmap": {
+    "title": "Consumption Heatmap",
+    "subtitle": "Monthly intensity — darker cells mean higher load",
+    "rows": {
+      "energy": "Energy",
+      "water": "Water"
+    },
+    "legend": {
+      "low": "Low",
+      "high": "High"
+    }
   },
   "insights": {
-    "title": "System Insights"
-  },
-  "charts": {
-    "energyTrend": "Energy Trend",
-    "waterUsage": "Water Usage",
-    "waterSourceNote": "Annual data · Almaty Su 2019–2024",
-    "summary": "Latest: {{currentValue}} {{unit}} · Prev: {{previousValue}} {{unit}} · Change: {{percentageChange}}%"
-  },
-  "controls": {
-    "export": "Export",
-    "dateRange": "Date Range"
+    "title": "System Insights",
+    "severity": {
+      "critical": "Critical",
+      "warning": "Warning",
+      "info": "Info"
+    },
+    "items": {
+      "energy-growth-high": {
+        "title": "High growth in electricity consumption",
+        "description": "Consumption rose by {{delta}}% compared to the previous period ({{prev}} → {{last}} mln kWh)."
+      },
+      "energy-growth-moderate": {
+        "title": "Moderate growth in electricity consumption",
+        "description": "Consumption rose by {{delta}}% ({{prev}} → {{last}} mln kWh). Worth auditing system efficiency."
+      },
+      "energy-reduction": {
+        "title": "Electricity consumption is down",
+        "description": "Consumption dropped by {{delta}}% ({{prev}} → {{last}} mln kWh). Efficiency measures are paying off."
+      },
+      "water-growth-high": {
+        "title": "Significant growth in water consumption",
+        "description": "Water supply volume rose by {{delta}}% ({{prev}} → {{last}} mln m³). Likely network losses or load growth."
+      },
+      "water-growth-moderate": {
+        "title": "Water consumption is rising",
+        "description": "Water supply volume rose by {{delta}}% ({{prev}} → {{last}} mln m³)."
+      },
+      "water-reduction": {
+        "title": "Water consumption is down",
+        "description": "Water supply volume fell by {{delta}}% ({{prev}} → {{last}} mln m³)."
+      },
+      "carbon-footprint-info": {
+        "title": "Power-grid carbon footprint",
+        "description": "At current consumption of {{last}} mln kWh, estimated CO₂ emissions reach ~{{carbon}} mln kg. Kazakhstan generates ~85% of its electricity from coal and gas."
+      }
+    }
   }
 }

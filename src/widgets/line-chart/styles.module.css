@@ -1,0 +1,272 @@
+.chart {
+  --accent-color: var(--color-brand-primary);
+  --accent-deep: var(--color-brand-strong);
+  --accent-soft: var(--color-brand-soft);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background-color: var(--color-surface-elevated);
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 55%, transparent);
+  border-radius: var(--radius-xl);
+  transition:
+    border-color var(--duration-normal) var(--easing-default),
+    box-shadow var(--duration-normal) var(--easing-default);
+}
+
+.chart:hover {
+  border-color: color-mix(in srgb, var(--color-border-default) 65%, transparent);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── accent tints ── */
+
+.accentEnergy {
+  --accent-color: var(--color-energy-primary);
+  --accent-deep: var(--color-energy-deep);
+  --accent-soft: var(--color-energy-soft);
+}
+
+.accentWater {
+  --accent-color: var(--color-water-primary);
+  --accent-deep: var(--color-water-deep);
+  --accent-soft: var(--color-water-soft);
+}
+
+.accentBrand {
+  --accent-color: var(--color-brand-primary);
+  --accent-deep: var(--color-brand-strong);
+  --accent-soft: var(--color-brand-soft);
+}
+
+.accentCarbon {
+  --accent-color: var(--color-carbon-primary);
+  --accent-deep: var(--color-carbon-primary);
+  --accent-soft: var(--color-carbon-soft);
+}
+
+/* ── header ── */
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  letter-spacing: var(--tracking-tight);
+}
+
+.subtitle {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
+
+.headerAction {
+  flex-shrink: 0;
+}
+
+/* ── svg area ── */
+
+.svgWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+/* gradient stops referenced via class */
+.gradientStart {
+  stop-color: var(--accent-color);
+  stop-opacity: 0.35;
+}
+
+.gradientEnd {
+  stop-color: var(--accent-color);
+  stop-opacity: 0;
+}
+
+.gridLine {
+  stroke: color-mix(in srgb, var(--color-border-subtle) 55%, transparent);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+
+.axisLabel {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  fill: var(--color-text-tertiary);
+}
+
+.area {
+  animation: areaDraw var(--duration-slower) var(--easing-decelerate) both;
+  pointer-events: none;
+}
+
+.line {
+  fill: none;
+  stroke: var(--accent-color);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  animation: lineDraw var(--duration-slower) var(--easing-decelerate) forwards;
+  pointer-events: none;
+}
+
+@keyframes lineDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes areaDraw {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.point {
+  fill: var(--color-surface-elevated);
+  stroke: var(--accent-color);
+  stroke-width: 2;
+  transition: r var(--duration-interactive) var(--easing-spring);
+  pointer-events: none;
+}
+
+.pointHalo {
+  fill: color-mix(in srgb, var(--accent-color) 22%, transparent);
+  pointer-events: none;
+  animation: haloPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes haloPulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform-origin: center;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.guideLine {
+  stroke: color-mix(in srgb, var(--accent-color) 40%, transparent);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  pointer-events: none;
+}
+
+/* ── tooltip ── */
+
+.tooltip {
+  position: absolute;
+  top: 0;
+  transform: translate(-50%, -110%);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-surface-elevated);
+  border: 1px solid color-mix(in srgb, var(--color-border-default) 65%, transparent);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  white-space: nowrap;
+  pointer-events: none;
+  min-width: 140px;
+  z-index: 2;
+  animation: fadeInUp var(--duration-fast) var(--easing-decelerate) both;
+}
+
+.tooltipLabel {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+
+.tooltipValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  letter-spacing: var(--tracking-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.tooltipDeltaUp,
+.tooltipDeltaDown {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: var(--weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+.tooltipDeltaUp {
+  color: var(--color-status-success);
+}
+
+.tooltipDeltaDown {
+  color: var(--color-status-danger);
+}
+
+.tooltipDeltaHint {
+  color: var(--color-text-tertiary);
+  font-weight: var(--weight-regular);
+  margin-left: 2px;
+}
+
+/* ── empty ── */
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .area {
+    animation: none;
+  }
+  .pointHalo {
+    animation: none;
+  }
+  .tooltip {
+    animation: none;
+  }
+}

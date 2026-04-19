@@ -34,8 +34,6 @@
   pointer-events: none;
 }
 
-/* ── Variants ── */
-
 .primary {
   background-color: var(--color-brand-primary);
   color: var(--color-text-inverse);
@@ -79,8 +77,6 @@
   background-color: color-mix(in srgb, var(--color-neutral-100) 76%, transparent);
 }
 
-/* ── Sizes ── */
-
 .small {
   padding: 3px var(--space-2);
   font-size: var(--text-sm);
@@ -96,8 +92,6 @@
   padding: var(--space-3) var(--space-6);
   font-size: var(--text-md);
 }
-
-/* ── Icon-only ── */
 
 .iconOnly {
   padding: var(--space-2);

@@ -1,241 +1,276 @@
-import { useState, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Lightning,
   Drop,
   Gauge,
   ShieldCheck,
-  ThermometerHot,
+  Cloud,
   Funnel,
   ArrowsClockwise,
   Export,
+  Pulse,
 } from '@phosphor-icons/react';
 import type {
   DashboardDataset,
   DashboardMetricKey,
+  DashboardMetricSnapshot,
   EnergyPeriod,
   SystemInsightCategory,
-  SystemInsightSeverity,
   WaterPeriod,
 } from '../../shared/data/transformed';
 import { selectDashboardDerivedData } from '../../shared/data/selectors';
 import { Button, SkeletonCard } from '../../shared/ui';
-import { MetricCard } from '../../widgets/metric-card';
-import { ChartSkeleton } from '../../widgets/chart-skeleton';
+import { MetricCard, type MetricAccent } from '../../widgets/metric-card';
+import { LineChart } from '../../widgets/line-chart';
+import { CarbonPulse } from '../../widgets/carbon-pulse';
+import { ConsumptionHeatmap } from '../../widgets/consumption-heatmap';
 import { InsightsPanel } from '../../widgets/insights-panel';
 import styles from './styles.module.css';
 
-const metricConfigMap = {
+interface MetricConfig {
+  accent: MetricAccent;
+  icon: ReactNode;
+}
+
+const METRIC_CONFIG: Record<DashboardMetricKey, MetricConfig> = {
   totalEnergy: {
     accent: 'energy',
-    icon: <Lightning size={16} weight="duotone" />,
-    entryDelay: 0,
+    icon: <Lightning size={16} weight="fill" />,
   },
   totalWater: {
     accent: 'water',
-    icon: <Drop size={16} weight="duotone" />,
-    entryDelay: 1,
+    icon: <Drop size={16} weight="fill" />,
   },
   carbonFootprint: {
-    accent: 'brand',
-    icon: <Gauge size={16} weight="duotone" />,
-    entryDelay: 2,
+    accent: 'carbon',
+    icon: <Cloud size={16} weight="fill" />,
   },
   efficiencyScore: {
     accent: 'brand',
-    icon: <ShieldCheck size={16} weight="duotone" />,
-    entryDelay: 3,
+    icon: <ShieldCheck size={16} weight="fill" />,
   },
-} satisfies Record<
-  DashboardMetricKey,
-  {
-    accent: 'energy' | 'water' | 'brand';
-    icon: ReactNode;
-    entryDelay: number;
-  }
->;
+};
 
-const insightCategoryIconMap = {
-  water: <Drop size={18} weight="duotone" />,
-  energy: <Lightning size={18} weight="duotone" />,
-  efficiency: <ThermometerHot size={18} weight="duotone" />,
-  carbon: <Drop size={18} weight="duotone" />,
-} satisfies Record<SystemInsightCategory, ReactNode>;
+const INSIGHT_CATEGORY_ICONS: Record<SystemInsightCategory, ReactNode> = {
+  energy: <Lightning size={18} weight="fill" />,
+  water: <Drop size={18} weight="fill" />,
+  efficiency: <Gauge size={18} weight="fill" />,
+  carbon: <Cloud size={18} weight="fill" />,
+};
 
-const insightSeverityMap = {
-  critical: 'critical',
-  warning: 'warning',
-  info: 'info',
-} satisfies Record<SystemInsightSeverity, 'critical' | 'warning' | 'info'>;
+const ENERGY_PERIODS: EnergyPeriod[] = ['month', 'year'];
+const WATER_PERIODS: WaterPeriod[] = ['month', 'year'];
 
-const energyPeriodTranslationKeyMap = {
-  month: 'dashboard:period.monthly2024',
-  year: 'dashboard:period.annual',
-} satisfies Record<EnergyPeriod, string>;
-
-const waterPeriodTranslationKeyMap = {
-  month: 'dashboard:period.monthly2025',
-  year: 'dashboard:period.annual',
-} satisfies Record<WaterPeriod, string>;
-
-const availableEnergyPeriods: EnergyPeriod[] = ['month', 'year'];
-const availableWaterPeriods: WaterPeriod[] = ['month', 'year'];
+function periodKey(period: EnergyPeriod | WaterPeriod, fallback: string): string {
+  if (period === 'year') return 'period.annual';
+  return fallback;
+}
 
 interface DashboardPageProps {
   dataset: DashboardDataset | null;
+  annualEnergyForPulse: number;
 }
 
-export function DashboardPage({ dataset }: DashboardPageProps) {
-  const { t } = useTranslation(['dashboard', 'common']);
+export function DashboardPage({
+  dataset,
+  annualEnergyForPulse,
+}: DashboardPageProps) {
+  const { t, i18n } = useTranslation('dashboard');
   const [energyPeriod, setEnergyPeriod] = useState<EnergyPeriod>('month');
   const [waterPeriod, setWaterPeriod] = useState<WaterPeriod>('month');
 
   const derivedData = dataset
     ? selectDashboardDerivedData(dataset, energyPeriod, waterPeriod)
     : null;
-  const activeEnergyPeriodLabel = t(energyPeriodTranslationKeyMap[energyPeriod]);
-  const activeWaterPeriodLabel = t(waterPeriodTranslationKeyMap[waterPeriod]);
+
+  const activeEnergyPeriodLabel = t(periodKey(energyPeriod, 'period.monthly2024'));
+  const activeWaterPeriodLabel = t(periodKey(waterPeriod, 'period.monthly2025'));
+
   const activeEnergyTrend = derivedData?.activeEnergyTrend ?? [];
   const activeWaterTrend = derivedData?.activeWaterTrend ?? [];
-  const energyUnit = activeEnergyTrend[activeEnergyTrend.length - 1]?.unit ?? '';
-  const waterUnit = activeWaterTrend[activeWaterTrend.length - 1]?.unit ?? '';
+  const energyUnit = activeEnergyTrend[0]?.unit ?? '';
+  const waterUnit = activeWaterTrend[0]?.unit ?? '';
+
+  const liveTime = useMemo(() => {
+    return new Intl.DateTimeFormat(i18n.language, {
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(new Date());
+  }, [i18n.language]);
+
+  const heatmapSeries = useMemo(() => {
+    if (!dataset) return [];
+    return [
+      {
+        key: 'energy' as const,
+        points: dataset.energyTrend.month,
+      },
+      {
+        key: 'water' as const,
+        points: dataset.waterTrend.month,
+      },
+    ];
+  }, [dataset]);
+
+  const renderMetricCard = (metric: DashboardMetricSnapshot, index: number) => {
+    const config = METRIC_CONFIG[metric.key];
+    const trend =
+      metric.trendDirection === 'neutral'
+        ? undefined
+        : {
+            value: `${metric.deltaPercentage.toFixed(1)}%`,
+            direction:
+              metric.trendDirection === 'up'
+                ? ('positive' as const)
+                : ('negative' as const),
+          };
+
+    return (
+      <MetricCard
+        key={metric.key}
+        label={t(`metrics.${metric.key}.label`)}
+        value={metric.formattedValue}
+        unit={t(`metrics.${metric.key}.unit`)}
+        accent={config.accent}
+        icon={config.icon}
+        entryDelay={index}
+        trend={trend}
+        sparkline={metric.sparkline}
+      />
+    );
+  };
 
   return (
     <div className={styles.page}>
-
+      {/* ── Hero ── */}
+      <header className={styles.hero}>
+        <div className={styles.heroMeta}>
+          <span className={styles.heroEyebrow}>{t('hero.eyebrow')}</span>
+          <div className={styles.heroStatus}>
+            <span className={styles.heroStatusDot} aria-hidden="true" />
+            <span>{t('hero.liveIndicator', { time: liveTime })}</span>
+            <span className={styles.heroDivider} aria-hidden="true">·</span>
+            <span className={styles.heroCoverage}>
+              <Pulse size={12} weight="fill" />
+              {t('hero.datasetBadge')}
+            </span>
+          </div>
+        </div>
+        <h1 className={styles.heroTitle}>{t('hero.title')}</h1>
+        <p className={styles.heroSubtitle}>{t('hero.subtitle')}</p>
+      </header>
 
       {/* ── KPI Metrics ── */}
       <section className={styles.section}>
         <div className={styles.metricsGrid}>
           {derivedData
-            ? derivedData.metrics.map((metric) => {
-                const config = metricConfigMap[metric.key];
-                const trend =
-                  metric.trendDirection === 'neutral'
-                    ? undefined
-                    : {
-                        value: `${metric.deltaPercentage.toFixed(1)}%`,
-                        direction:
-                          metric.trendDirection === 'up'
-                            ? ('positive' as const)
-                            : ('negative' as const),
-                      };
-
-                return (
-                  <MetricCard
-                    key={metric.key}
-                    label={metric.label}
-                    value={metric.formattedValue}
-                    unit={metric.unit}
-                    accent={config.accent}
-                    icon={config.icon}
-                    entryDelay={config.entryDelay}
-                    trend={trend}
-                  />
-                );
-              })
-            : Array.from({ length: Object.keys(metricConfigMap).length }, (_, index) => (
-                <SkeletonCard key={index} />
+            ? derivedData.metrics.map(renderMetricCard)
+            : Array.from({ length: 4 }, (_, index) => (
+                <SkeletonCard key={index} height="160px" />
               ))}
         </div>
       </section>
 
-      {/* ── Charts ── */}
-      <section className={styles.section}>
+      {/* ── Charts + Carbon Pulse row ── */}
+      <section className={styles.chartsSection}>
         <div className={styles.chartsGrid}>
-          <div className={styles.chartWrapper}>
-            <ChartSkeleton
-              title={t('dashboard:charts.energyTrend')}
-              period={activeEnergyPeriodLabel}
-              accent="energy"
-              data={activeEnergyTrend.map((point) => ({
-                label: point.label,
-                value: point.value,
-              }))}
-              unit={energyUnit}
-            />
-            <div className={styles.titleRow}>
-              {availableEnergyPeriods.map((periodOption) => (
-                <Button
-                  key={periodOption}
-                  variant={energyPeriod === periodOption ? 'secondary' : 'ghost'}
-                  size="small"
-                  aria-pressed={energyPeriod === periodOption}
-                  onClick={() => setEnergyPeriod(periodOption)}
-                >
-                  {t(energyPeriodTranslationKeyMap[periodOption])}
-                </Button>
-              ))}
-            </div>
-          </div>
-          <div className={styles.chartWrapper}>
-            <ChartSkeleton
-              title={t('dashboard:charts.waterUsage')}
-              period={activeWaterPeriodLabel}
-              accent="water"
-              data={activeWaterTrend.map((point) => ({
-                label: point.label,
-                value: point.value,
-              }))}
-              unit={waterUnit}
-            />
-            <div className={styles.titleRow}>
-              {availableWaterPeriods.map((periodOption) => (
-                <Button
-                  key={periodOption}
-                  variant={waterPeriod === periodOption ? 'secondary' : 'ghost'}
-                  size="small"
-                  aria-pressed={waterPeriod === periodOption}
-                  onClick={() => setWaterPeriod(periodOption)}
-                >
-                  {t(waterPeriodTranslationKeyMap[periodOption])}
-                </Button>
-              ))}
-            </div>
-          </div>
+          <LineChart
+            title={t('charts.energyTrend')}
+            subtitle={activeEnergyPeriodLabel}
+            accent="energy"
+            data={activeEnergyTrend.map((point) => ({
+              label: point.label,
+              value: point.value,
+            }))}
+            unit={energyUnit}
+            headerAction={
+              <div className={styles.periodTabs}>
+                {ENERGY_PERIODS.map((option) => (
+                  <Button
+                    key={option}
+                    variant={energyPeriod === option ? 'secondary' : 'ghost'}
+                    size="small"
+                    aria-pressed={energyPeriod === option}
+                    onClick={() => setEnergyPeriod(option)}
+                  >
+                    {t(option === 'year' ? 'period.annual' : 'period.monthly')}
+                  </Button>
+                ))}
+              </div>
+            }
+          />
+          <LineChart
+            title={t('charts.waterUsage')}
+            subtitle={activeWaterPeriodLabel}
+            accent="water"
+            data={activeWaterTrend.map((point) => ({
+              label: point.label,
+              value: point.value,
+            }))}
+            unit={waterUnit}
+            headerAction={
+              <div className={styles.periodTabs}>
+                {WATER_PERIODS.map((option) => (
+                  <Button
+                    key={option}
+                    variant={waterPeriod === option ? 'secondary' : 'ghost'}
+                    size="small"
+                    aria-pressed={waterPeriod === option}
+                    onClick={() => setWaterPeriod(option)}
+                  >
+                    {t(option === 'year' ? 'period.annual' : 'period.monthly')}
+                  </Button>
+                ))}
+              </div>
+            }
+          />
         </div>
+
+        {annualEnergyForPulse > 0 && (
+          <div className={styles.pulseCell}>
+            <CarbonPulse annualEnergyMlnKwh={annualEnergyForPulse} />
+          </div>
+        )}
       </section>
+
+      {/* ── Heatmap ── */}
+      {heatmapSeries.length > 0 && (
+        <section className={styles.section}>
+          <ConsumptionHeatmap series={heatmapSeries} />
+        </section>
+      )}
 
       {/* ── Insights ── */}
       <section className={styles.section}>
         {dataset ? (
           <InsightsPanel
-            title={t('dashboard:insights.title')}
-            items={dataset.insights.map((insight) => ({
-              id: insight.id,
-              severity: insightSeverityMap[insight.severity],
-              icon: insightCategoryIconMap[insight.category],
-              title: insight.title,
-              description: insight.description,
-            }))}
+            insights={dataset.insights}
+            categoryIconMap={INSIGHT_CATEGORY_ICONS}
           />
         ) : (
-          <SkeletonCard />
+          <SkeletonCard height="180px" />
         )}
       </section>
 
       {/* ── Controls ── */}
       <div className={styles.controlsBar}>
-        <Button
-          variant="ghost"
-          size="small"
-          icon={<Funnel size={13} weight="regular" />}
-        >
-          {t('common:filter')}
+        <Button variant="ghost" size="small" icon={<Funnel size={13} weight="regular" />}>
+          {t('common:actions.filter')}
         </Button>
-        <Button
-          variant="ghost"
-          size="small"
-          icon={<Export size={13} weight="regular" />}
-        >
-          {t('dashboard:controls.export')}
+        <Button variant="ghost" size="small" icon={<Export size={13} weight="regular" />}>
+          {t('common:actions.export')}
         </Button>
         <Button
           variant="ghost"
           size="small"
           icon={<ArrowsClockwise size={13} weight="regular" />}
+          onClick={() => {
+            setEnergyPeriod('month');
+            setWaterPeriod('month');
+          }}
         >
-          {t('common:reset')}
+          {t('common:actions.reset')}
         </Button>
       </div>
     </div>

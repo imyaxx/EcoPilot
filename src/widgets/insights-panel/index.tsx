@@ -1,52 +1,85 @@
 import { type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+import type {
+  SystemInsight,
+  SystemInsightCategory,
+  SystemInsightSeverity,
+} from '../../shared/data/transformed';
 import styles from './styles.module.css';
 
-type InsightSeverity = 'warning' | 'critical' | 'info';
-
-interface InsightItem {
-  id: string;
-  severity: InsightSeverity;
-  icon: ReactNode;
-  title: string;
-  description: string;
-}
-
 interface InsightsPanelProps {
-  title: string;
-  items: InsightItem[];
+  insights: SystemInsight[];
+  categoryIconMap: Record<SystemInsightCategory, ReactNode>;
 }
 
-const severityIconMap: Record<InsightSeverity, string> = {
+const severityIconClassMap: Record<SystemInsightSeverity, string> = {
   warning: styles.iconWarning,
   critical: styles.iconCritical,
   info: styles.iconInfo,
 };
 
-const entryDelayClassMap = [styles.delay0, styles.delay1, styles.delay2];
+const severityBadgeClassMap: Record<SystemInsightSeverity, string> = {
+  warning: styles.badgeWarning,
+  critical: styles.badgeCritical,
+  info: styles.badgeInfo,
+};
 
-export function InsightsPanel({ title, items }: InsightsPanelProps) {
+const entryDelayClassMap = [
+  styles.delay0,
+  styles.delay1,
+  styles.delay2,
+  styles.delay3,
+];
+
+export function InsightsPanel({ insights, categoryIconMap }: InsightsPanelProps) {
+  const { t } = useTranslation('dashboard');
+
   return (
     <div className={styles.panel}>
-      <h2 className={styles.panelTitle}>{title}</h2>
+      <div className={styles.panelHeader}>
+        <h2 className={styles.panelTitle}>{t('insights.title')}</h2>
+        <span className={styles.panelCount}>
+          {insights.length}
+        </span>
+      </div>
 
-      {items.map((item, index) => (
-        <article
-          key={item.id}
-          className={`${styles.insightItem} ${
-            entryDelayClassMap[index] ?? styles.delay2
-          }`}
-        >
-          <div
-            className={`${styles.insightIcon} ${severityIconMap[item.severity]}`}
-          >
-            {item.icon}
-          </div>
-          <div className={styles.insightContent}>
-            <h3 className={styles.insightTitle}>{item.title}</h3>
-            <p className={styles.insightDescription}>{item.description}</p>
-          </div>
-        </article>
-      ))}
+      <div className={styles.list}>
+        {insights.map((insight, index) => {
+          const title = t(`insights.items.${insight.id}.title`, insight.values);
+          const description = t(
+            `insights.items.${insight.id}.description`,
+            insight.values,
+          );
+          const severityLabel = t(`insights.severity.${insight.severity}`);
+          const delayClass =
+            entryDelayClassMap[index] ?? styles.delay3;
+
+          return (
+            <article
+              key={insight.id}
+              className={`${styles.insightItem} ${delayClass}`}
+            >
+              <div
+                className={`${styles.insightIcon} ${severityIconClassMap[insight.severity]}`}
+                aria-hidden="true"
+              >
+                {categoryIconMap[insight.category]}
+              </div>
+              <div className={styles.insightContent}>
+                <div className={styles.insightTitleRow}>
+                  <h3 className={styles.insightTitle}>{title}</h3>
+                  <span
+                    className={`${styles.severityBadge} ${severityBadgeClassMap[insight.severity]}`}
+                  >
+                    {severityLabel}
+                  </span>
+                </div>
+                <p className={styles.insightDescription}>{description}</p>
+              </div>
+            </article>
+          );
+        })}
+      </div>
     </div>
   );
 }

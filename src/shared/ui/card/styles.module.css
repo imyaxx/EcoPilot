@@ -12,8 +12,6 @@
   box-shadow: var(--shadow-sm);
 }
 
-/* ── Padding Variants ── */
-
 .compact {
   padding: var(--space-3);
 }
@@ -25,8 +23,6 @@
 .spacious {
   padding: var(--space-8);
 }
-
-/* ── Header / Body / Footer Slots ── */
 
 .header {
   display: flex;

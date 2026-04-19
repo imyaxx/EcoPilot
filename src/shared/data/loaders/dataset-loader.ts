@@ -1,7 +1,7 @@
 import type {
   DashboardDataset,
   DashboardMetricSnapshot,
-  EnergyPeriod,
+  DashboardMetricTrendDirection,
   ResourceTrendPoint,
 } from '../transformed';
 import {
@@ -18,71 +18,92 @@ const ELECTRICITY_WORKBOOK_URL = '/datasets/electricity-consumption-kazakhstan.x
 const TARIFFS_WORKBOOK_URL = '/datasets/tariffs-kazakhstan.xlsx';
 
 const CARBON_FACTOR = 0.5;
+const SPARKLINE_LENGTH = 8;
+
+function computeDelta(last: number, prev: number): number {
+  if (prev === 0) return 0;
+  return Number((((last - prev) / prev) * 100).toFixed(1));
+}
+
+function directionFor(delta: number): DashboardMetricTrendDirection {
+  if (delta > 0) return 'up';
+  if (delta < 0) return 'down';
+  return 'neutral';
+}
+
+function tailSparkline(trend: ResourceTrendPoint[]): number[] {
+  if (trend.length === 0) return [];
+  return trend.slice(-SPARKLINE_LENGTH).map((point) => point.value);
+}
 
 function buildMetrics(
   energyTrend: ResourceTrendPoint[],
   waterTrend: ResourceTrendPoint[],
-  _period: EnergyPeriod,
 ): DashboardMetricSnapshot[] {
   const lastEnergy = energyTrend[energyTrend.length - 1]?.value ?? 0;
   const prevEnergy = energyTrend[energyTrend.length - 2]?.value ?? lastEnergy;
   const lastWater = waterTrend[waterTrend.length - 1]?.value ?? 0;
   const prevWater = waterTrend[waterTrend.length - 2]?.value ?? lastWater;
 
-  const energyDelta = prevEnergy === 0 ? 0
-    : Number((((lastEnergy - prevEnergy) / prevEnergy) * 100).toFixed(1));
-  const waterDelta = prevWater === 0 ? 0
-    : Number((((lastWater - prevWater) / prevWater) * 100).toFixed(1));
+  const energyDelta = computeDelta(lastEnergy, prevEnergy);
+  const waterDelta = computeDelta(lastWater, prevWater);
 
   const carbon = Number((lastEnergy * CARBON_FACTOR).toFixed(0));
   const prevCarbon = Number((prevEnergy * CARBON_FACTOR).toFixed(0));
-  const carbonDelta = prevCarbon === 0 ? 0
-    : Number((((carbon - prevCarbon) / prevCarbon) * 100).toFixed(1));
+  const carbonDelta = computeDelta(carbon, prevCarbon);
 
   const efficiencyScore = Number(
-    Math.min(100, Math.max(0, 100 - Math.max(0, energyDelta) * 0.5 - Math.max(0, waterDelta) * 0.3)).toFixed(1),
+    Math.min(
+      100,
+      Math.max(0, 100 - Math.max(0, energyDelta) * 0.5 - Math.max(0, waterDelta) * 0.3),
+    ).toFixed(1),
   );
   const prevEfficiency = Number(
-    Math.min(100, Math.max(0, 100 - Math.max(0, energyDelta - 1) * 0.5 - Math.max(0, waterDelta - 1) * 0.3)).toFixed(1),
+    Math.min(
+      100,
+      Math.max(
+        0,
+        100 - Math.max(0, energyDelta - 1) * 0.5 - Math.max(0, waterDelta - 1) * 0.3,
+      ),
+    ).toFixed(1),
   );
   const efficiencyDelta = Number((efficiencyScore - prevEfficiency).toFixed(1));
+
+  const energySpark = tailSparkline(energyTrend);
+  const waterSpark = tailSparkline(waterTrend);
+  const carbonSpark = energySpark.map((value) => value * CARBON_FACTOR);
 
   return [
     {
       key: 'totalEnergy',
-      label: 'Total Energy',
       value: lastEnergy,
       formattedValue: lastEnergy.toLocaleString(),
-      unit: 'млн кВт·ч',
       deltaPercentage: Math.abs(energyDelta),
-      trendDirection: energyDelta > 0 ? 'up' : energyDelta < 0 ? 'down' : 'neutral',
+      trendDirection: directionFor(energyDelta),
+      sparkline: energySpark,
     },
     {
       key: 'totalWater',
-      label: 'Total Water',
       value: lastWater,
       formattedValue: lastWater.toLocaleString(),
-      unit: 'млн м³',
       deltaPercentage: Math.abs(waterDelta),
-      trendDirection: waterDelta > 0 ? 'up' : waterDelta < 0 ? 'down' : 'neutral',
+      trendDirection: directionFor(waterDelta),
+      sparkline: waterSpark,
     },
     {
       key: 'carbonFootprint',
-      label: 'Carbon Footprint',
       value: carbon,
       formattedValue: carbon.toLocaleString(),
-      unit: 'млн кг CO₂',
       deltaPercentage: Math.abs(carbonDelta),
-      trendDirection: carbonDelta > 0 ? 'up' : carbonDelta < 0 ? 'down' : 'neutral',
+      trendDirection: directionFor(carbonDelta),
+      sparkline: carbonSpark,
     },
     {
       key: 'efficiencyScore',
-      label: 'Efficiency Score',
       value: efficiencyScore,
       formattedValue: String(efficiencyScore),
-      unit: '%',
       deltaPercentage: Math.abs(efficiencyDelta),
-      trendDirection: efficiencyDelta > 0 ? 'up' : efficiencyDelta < 0 ? 'down' : 'neutral',
+      trendDirection: directionFor(efficiencyDelta),
     },
   ];
 }
@@ -100,8 +121,8 @@ export async function loadDashboardDataset(): Promise<DashboardDataset> {
 
   return {
     metrics: {
-      month: buildMetrics(energyMonthTrend, waterMonthTrend, 'month'),
-      year: buildMetrics(energyYearTrend, waterYearTrend, 'year'),
+      month: buildMetrics(energyMonthTrend, waterMonthTrend),
+      year: buildMetrics(energyYearTrend, waterYearTrend),
     },
     energyTrend: {
       month: energyMonthTrend,

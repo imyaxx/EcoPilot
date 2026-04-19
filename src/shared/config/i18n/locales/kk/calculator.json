@@ -1,0 +1,86 @@
+{
+  "hero": {
+    "eyebrow": "Жоспарла және жобала",
+    "title": "Шығындар мен үнемдеу калькуляторы",
+    "subtitle": "Ғимараттың қанша жұмсайтынын — және тиімді еткенде қаншаны үнемдейтінін есептеңіз."
+  },
+  "form": {
+    "title": "Ғимарат параметрлері",
+    "buildingType": "Ғимарат түрі",
+    "buildingTypes": {
+      "school": "Мектеп",
+      "residential": "Тұрғын үй",
+      "office": "Кеңсе"
+    },
+    "area": "Ауданы",
+    "areaUnit": "м²",
+    "areaPlaceholder": "Шаршы метрмен ауданын енгізіңіз",
+    "manualElectricity": "Электр қуаты",
+    "manualElectricityUnit": "кВт·сағ / ай",
+    "manualElectricityPlaceholder": "Міндетті емес — бағалауды ауыстырады",
+    "manualWater": "Су",
+    "manualWaterUnit": "м³ / ай",
+    "manualWaterPlaceholder": "Міндетті емес — бағалауды ауыстырады",
+    "reductionTarget": "Төмендету мақсаты",
+    "manualToggleShow": "Тұтынуды қолмен енгізу",
+    "manualToggleHide": "Қолмен енгізуді жасыру",
+    "useBuildingData": "Қала орташасын пайдалану"
+  },
+  "results": {
+    "title": "Нәтижелер",
+    "monthlyTotal": "Ағымдағы айлық шығын",
+    "yearlyTotal": "Ағымдағы жылдық шығын",
+    "yearlySavings": "Жылдық үнемдеу",
+    "monthlySavings": "Айлық үнемдеу",
+    "co2Reduction": "CO₂ төмендеуі",
+    "waterSavings": "Суды үнемдеу",
+    "paybackPeriod": "Өтелу мерзімі",
+    "paybackUnit": "ай",
+    "empty": "Ғимарат ауданын енгізіңіз — сандарды көресіз"
+  },
+  "breakdown": {
+    "title": "Шығын құрылымы",
+    "subtitle": "Қаражат шынымен қайда кетеді",
+    "electricity": "Электр қуаты",
+    "water": "Су",
+    "legend": "{{value}} {{currency}} / ай"
+  },
+  "comparison": {
+    "title": "Бұрын және кейін",
+    "current": "Қазір",
+    "afterSavings": "{{reduction}}% төмендетуден кейін",
+    "saved": "{{amount}} {{currency}} үнемдейсіз"
+  },
+  "recommendations": {
+    "title": "Ұсыныстар",
+    "subtitle": "Шотқа әсері бойынша сұрыпталған",
+    "impact": "Ықтимал әсер",
+    "items": {
+      "led": {
+        "title": "LED жарықтандыруға көшу",
+        "description": "Люминесцентті шамдарды LED-ке ауыстыру электрді 30–50%-ға азайтады.",
+        "impactLabel": "Жоғары әсер"
+      },
+      "smartMeters": {
+        "title": "Ақылды су есептегіштері",
+        "description": "Жеке есептегіштер тұтынушылардың көзі ашылғанда суды 15–20%-ға азайтады.",
+        "impactLabel": "Орташа әсер"
+      },
+      "hvac": {
+        "title": "HVAC кестесі",
+        "description": "Жылыту/салқындатудың түнгі кестесі энергия шығынын 20–30%-ға үнемдейді.",
+        "impactLabel": "Жоғары әсер"
+      },
+      "insulation": {
+        "title": "Қабырға мен шатыр жылыту",
+        "description": "Алматы климатында дұрыс жылыту жылыту жүктемесін 25–40%-ға азайтады.",
+        "impactLabel": "Жоғары әсер"
+      },
+      "solar": {
+        "title": "Шатырлы күн панельдері",
+        "description": "Күн мол Алматыда ішінара генерация желіден тұтынуды 10–25%-ға өтейді.",
+        "impactLabel": "Орташа әсер"
+      }
+    }
+  }
+}

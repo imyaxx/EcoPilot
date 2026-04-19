@@ -5,6 +5,7 @@
 
 @import './tokens.css';
 @import './typography.css';
+@import './primitives.css';
 
 *,
 *::before,
@@ -28,6 +29,9 @@ body {
   line-height: var(--leading-normal);
   color: var(--color-text-primary);
   background-color: var(--color-surface-base);
+  background-image: var(--gradient-hero);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   min-height: 100dvh;
 }
 
@@ -75,4 +79,16 @@ ol {
 ::selection {
   background-color: var(--color-brand-soft);
   color: var(--color-brand-strong);
+}
+
+/* Reduced motion defaults */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

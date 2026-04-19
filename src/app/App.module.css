@@ -4,6 +4,7 @@
   z-index: 100;
   display: flex;
   justify-content: center;
+  padding: 0 var(--space-4);
   pointer-events: none;
 }
 
@@ -11,47 +12,86 @@
   pointer-events: all;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-8);
-  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-4);
-  background-color: color-mix(in srgb, var(--color-surface-elevated) 90%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 60%, transparent);
-  border-radius: var(--radius-full, 9999px);
-  box-shadow: 0 2px 16px color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+  gap: var(--space-6);
+  padding: 6px 8px 6px var(--space-3);
+  background-color: color-mix(in srgb, var(--color-surface-elevated) 86%, transparent);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 55%, transparent);
+  border-radius: var(--radius-full);
+  box-shadow:
+    0 2px 20px color-mix(in srgb, var(--color-text-primary) 6%, transparent),
+    0 1px 3px color-mix(in srgb, var(--color-text-primary) 4%, transparent);
+  max-width: 100%;
+  animation: navDrop var(--duration-slow) var(--easing-decelerate) both;
 }
+
+/* ── brand ── */
 
 .navBrand {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  padding-right: var(--space-2);
+  border-right: 1px solid color-mix(in srgb, var(--color-border-subtle) 45%, transparent);
+  flex-shrink: 0;
+}
+
+.navBrandIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--gradient-brand);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-glow-brand);
 }
 
 .navBrandText {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  line-height: 1.1;
+}
+
+.navBrandName {
   font-family: var(--font-sans);
   font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
+  font-weight: var(--weight-bold);
   color: var(--color-text-primary);
   letter-spacing: var(--tracking-tight);
 }
 
+.navBrandTag {
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: var(--weight-medium);
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.04em;
+}
+
+/* ── tabs ── */
+
 .navTabs {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: 2px;
   background-color: var(--color-surface-sunken);
-  border-radius: var(--radius-full, 9999px);
+  border-radius: var(--radius-full);
   padding: 3px;
+  flex-shrink: 0;
 }
 
 .navTab {
-  padding: var(--space-1) var(--space-4);
-  border-radius: var(--radius-full, 9999px);
+  padding: 5px var(--space-4);
+  border-radius: var(--radius-full);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: var(--color-text-secondary);
+  white-space: nowrap;
   transition:
     background-color var(--duration-interactive) var(--easing-interactive),
     color var(--duration-interactive) var(--easing-interactive),
@@ -62,14 +102,105 @@
   color: var(--color-text-primary);
 }
 
+.navTab:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
 .navTabActive {
   background-color: var(--color-surface-elevated);
   color: var(--color-text-primary);
   font-weight: var(--weight-semibold);
-  box-shadow: 0 1px 4px color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--color-text-primary) 10%, transparent);
 }
 
 .navTabActive:hover {
   background-color: var(--color-surface-elevated);
-  color: var(--color-text-primary);
+}
+
+/* ── page wrapper ── */
+
+.pageContainer {
+  width: 100%;
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-12);
+}
+
+.pageSwitcher {
+  width: 100%;
+  animation: pageEnter var(--duration-entry) var(--easing-decelerate) both;
+}
+
+/* ── footer ── */
+
+.footer {
+  max-width: var(--container-max-width);
+  margin: var(--space-12) auto 0;
+  padding: var(--space-6) var(--space-6) var(--space-8);
+  border-top: 1px solid color-mix(in srgb, var(--color-border-subtle) 35%, transparent);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.footerText,
+.footerMade {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
+
+/* ── animations ── */
+
+@keyframes navDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── responsive ── */
+
+@media (max-width: 640px) {
+  .nav {
+    top: var(--space-2);
+    padding: 0 var(--space-2);
+  }
+  .navInner {
+    gap: var(--space-3);
+  }
+  .navBrandTag {
+    display: none;
+  }
+  .navTab {
+    padding: 5px var(--space-3);
+    font-size: var(--text-xs);
+  }
+  .footer {
+    padding: var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navInner,
+  .pageSwitcher {
+    animation: none;
+  }
 }

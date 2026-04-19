@@ -1,0 +1,86 @@
+{
+  "hero": {
+    "eyebrow": "Планируй и проектируй",
+    "title": "Калькулятор затрат и экономии",
+    "subtitle": "Оцените, сколько тратит ваше здание — и сколько можно сэкономить, сделав его эффективнее."
+  },
+  "form": {
+    "title": "Параметры здания",
+    "buildingType": "Тип здания",
+    "buildingTypes": {
+      "school": "Школа",
+      "residential": "Жилой дом",
+      "office": "Офис"
+    },
+    "area": "Площадь",
+    "areaUnit": "м²",
+    "areaPlaceholder": "Укажите площадь в квадратных метрах",
+    "manualElectricity": "Электричество",
+    "manualElectricityUnit": "кВт·ч / мес",
+    "manualElectricityPlaceholder": "Необязательно — переопределит оценку",
+    "manualWater": "Вода",
+    "manualWaterUnit": "м³ / мес",
+    "manualWaterPlaceholder": "Необязательно — переопределит оценку",
+    "reductionTarget": "Цель по снижению",
+    "manualToggleShow": "Ввести потребление вручную",
+    "manualToggleHide": "Скрыть ручной ввод",
+    "useBuildingData": "Использовать городские средние"
+  },
+  "results": {
+    "title": "Результаты",
+    "monthlyTotal": "Текущая плата в месяц",
+    "yearlyTotal": "Текущая плата в год",
+    "yearlySavings": "Экономия в год",
+    "monthlySavings": "Экономия в месяц",
+    "co2Reduction": "Снижение CO₂",
+    "waterSavings": "Экономия на воде",
+    "paybackPeriod": "Срок окупаемости",
+    "paybackUnit": "мес",
+    "empty": "Введите площадь здания — и увидите цифры"
+  },
+  "breakdown": {
+    "title": "Структура затрат",
+    "subtitle": "Куда реально уходят деньги",
+    "electricity": "Электричество",
+    "water": "Вода",
+    "legend": "{{value}} {{currency}} / мес"
+  },
+  "comparison": {
+    "title": "До и после",
+    "current": "Сейчас",
+    "afterSavings": "После снижения на {{reduction}}%",
+    "saved": "Вы сохраняете {{amount}} {{currency}}"
+  },
+  "recommendations": {
+    "title": "Рекомендации",
+    "subtitle": "Отсортированы по влиянию на счёт",
+    "impact": "Потенциальный эффект",
+    "items": {
+      "led": {
+        "title": "Замена освещения на LED",
+        "description": "Замена ламп на светодиодные сокращает потребление на 30–50%.",
+        "impactLabel": "Высокий эффект"
+      },
+      "smartMeters": {
+        "title": "Умные счётчики воды",
+        "description": "Индивидуальные счётчики уменьшают расход воды на 15–20% за счёт осознанности.",
+        "impactLabel": "Средний эффект"
+      },
+      "hvac": {
+        "title": "Планирование HVAC",
+        "description": "Расписание отопления и кондиционирования по ночам экономит 20–30% энергии.",
+        "impactLabel": "Высокий эффект"
+      },
+      "insulation": {
+        "title": "Утепление стен и кровли",
+        "description": "Правильное утепление в климате Алматы снижает нагрузку на отопление на 25–40%.",
+        "impactLabel": "Высокий эффект"
+      },
+      "solar": {
+        "title": "Солнечные панели на крыше",
+        "description": "Даже частичная генерация в солнечном Алматы покрывает 10–25% потребления.",
+        "impactLabel": "Средний эффект"
+      }
+    }
+  }
+}

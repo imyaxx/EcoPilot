@@ -1,0 +1,69 @@
+{
+  "appName": "EcoPilot",
+  "appTagline": "Энергетическая и водная обсерватория Алматы",
+  "appDescription": "Интеллектуальный мониторинг экологических показателей города в реальном времени",
+  "nav": {
+    "dashboard": "Дашборд",
+    "calculator": "Калькулятор",
+    "about": "О проекте"
+  },
+  "language": {
+    "label": "Язык",
+    "en": "English",
+    "ru": "Русский",
+    "kk": "Қазақша",
+    "short": {
+      "en": "EN",
+      "ru": "RU",
+      "kk": "KK"
+    }
+  },
+  "state": {
+    "loading": "Загрузка…",
+    "error": "Что-то пошло не так",
+    "retry": "Повторить",
+    "noData": "Данные недоступны",
+    "empty": "Пока нечего показать"
+  },
+  "actions": {
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "close": "Закрыть",
+    "search": "Поиск",
+    "filter": "Фильтр",
+    "reset": "Сбросить",
+    "export": "Экспорт",
+    "viewAll": "Показать всё",
+    "learnMore": "Подробнее"
+  },
+  "status": {
+    "live": "В реальном времени",
+    "online": "Онлайн",
+    "offline": "Оффлайн",
+    "active": "Активно",
+    "inactive": "Неактивно",
+    "datasetCoverage": "Охват данных"
+  },
+  "units": {
+    "kwh": "кВт·ч",
+    "gwh": "ГВт·ч",
+    "mlnKwh": "млн кВт·ч",
+    "mlnM3": "млн м³",
+    "mlnKgCO2": "млн кг CO₂",
+    "kgPerYear": "кг / год",
+    "kztPerMonth": "тенге / мес",
+    "kztPerYear": "тенге / год",
+    "kzt": "тенге",
+    "percent": "%",
+    "m2": "м²"
+  },
+  "track": {
+    "label": "Трек",
+    "energyResources": "Energy & Resources"
+  },
+  "footer": {
+    "dataSource": "Данные: Бюро национальной статистики РК, Алматы Су, esalmaty.kz",
+    "madeIn": "Сделано для EcoSolutions Hackathon · Алматы 2026"
+  }
+}
