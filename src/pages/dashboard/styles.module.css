@@ -121,10 +121,11 @@
 
 .periodTabs {
   display: inline-flex;
-  gap: 2px;
-  padding: 2px;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
   background-color: var(--color-surface-sunken);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-xl);
 }
 
 @keyframes heroFadeIn {

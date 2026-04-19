@@ -2,16 +2,16 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  padding: 3px;
+  padding: 4px;
   background-color: var(--color-surface-sunken);
   border-radius: var(--radius-full);
 }
 
 .button {
-  padding: 4px 10px;
+  padding: 6px 10px;
   border-radius: var(--radius-full);
   font-family: var(--font-sans);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: var(--weight-semibold);
   color: var(--color-text-tertiary);
   letter-spacing: 0.04em;
