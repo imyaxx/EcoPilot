@@ -87,8 +87,13 @@ function AppContent({ dataset }: AppContentProps) {
       </main>
 
       <footer className={styles.footer}>
-        <p className={styles.footerText}>{t('footer.dataSource')}</p>
-        <p className={styles.footerMade}>{t('footer.madeIn')}</p>
+        <div className={styles.footerMark} aria-hidden="true">
+          <Leaf size={20} weight="fill" />
+        </div>
+        <div className={styles.footerTextGroup}>
+          <p className={styles.footerBrand}>{t('appName')}</p>
+          <p className={styles.footerCaption}>{t('footer.copyright')}</p>
+        </div>
       </footer>
     </>
   );

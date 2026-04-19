@@ -63,7 +63,6 @@
     "energyResources": "Energy & Resources"
   },
   "footer": {
-    "dataSource": "Деректер: ҚР Ұлттық статистика бюросы, Алматы Су, esalmaty.kz",
-    "madeIn": "EcoSolutions Hackathon үшін жасалған · Алматы 2026"
+    "copyright": "© 2026 Қазақстан"
   }
 }

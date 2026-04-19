@@ -63,7 +63,6 @@
     "energyResources": "Energy & Resources"
   },
   "footer": {
-    "dataSource": "Data: Kazakhstan Statistics Bureau, Almaty Su, esalmaty.kz",
-    "madeIn": "Built for EcoSolutions Hackathon · Almaty 2026"
+    "copyright": "© 2026 Kazakhstan"
   }
 }
