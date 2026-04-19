@@ -50,37 +50,5 @@
     "current": "Today",
     "afterSavings": "After {{reduction}}% reduction",
     "saved": "You keep {{amount}} {{currency}}"
-  },
-  "recommendations": {
-    "title": "Recommendations",
-    "subtitle": "Ranked by impact on your bill",
-    "impact": "Potential impact",
-    "items": {
-      "led": {
-        "title": "LED lighting upgrade",
-        "description": "Replacing fluorescent lights with LEDs cuts electricity use by 30–50%.",
-        "impactLabel": "High impact"
-      },
-      "smartMeters": {
-        "title": "Smart water meters",
-        "description": "Individual metering reduces water use by 15–20% through awareness alone.",
-        "impactLabel": "Medium impact"
-      },
-      "hvac": {
-        "title": "HVAC scheduling",
-        "description": "Off-hours heating/cooling schedules save 20–30% of energy costs.",
-        "impactLabel": "High impact"
-      },
-      "insulation": {
-        "title": "Wall & roof insulation",
-        "description": "Proper insulation in Almaty's climate reduces heating load by 25–40%.",
-        "impactLabel": "High impact"
-      },
-      "solar": {
-        "title": "Rooftop solar (PV)",
-        "description": "Even partial rooftop solar in sunny Almaty offsets 10–25% of grid draw.",
-        "impactLabel": "Medium impact"
-      }
-    }
   }
 }

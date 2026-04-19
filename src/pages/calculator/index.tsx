@@ -6,8 +6,6 @@ import {
   TrendDown,
   Leaf,
   Drop,
-  Thermometer,
-  Sun,
   House,
   Sparkle,
   Buildings,
@@ -16,48 +14,6 @@ import { Card, CardHeader, CardBody, Button } from '../../shared/ui';
 import styles from './styles.module.css';
 
 type BuildingType = 'school' | 'residential' | 'office';
-
-type RecommendationKey = 'led' | 'smartMeters' | 'hvac' | 'insulation' | 'solar';
-
-interface RecommendationConfig {
-  key: RecommendationKey;
-  icon: ReactNode;
-  impactPercent: number;
-  iconTone: 'energy' | 'water' | 'brand' | 'carbon';
-}
-
-const RECOMMENDATIONS: RecommendationConfig[] = [
-  {
-    key: 'led',
-    icon: <Lightning size={18} weight="fill" />,
-    impactPercent: 40,
-    iconTone: 'energy',
-  },
-  {
-    key: 'hvac',
-    icon: <Thermometer size={18} weight="fill" />,
-    impactPercent: 25,
-    iconTone: 'brand',
-  },
-  {
-    key: 'insulation',
-    icon: <House size={18} weight="fill" />,
-    impactPercent: 30,
-    iconTone: 'carbon',
-  },
-  {
-    key: 'solar',
-    icon: <Sun size={18} weight="fill" />,
-    impactPercent: 18,
-    iconTone: 'energy',
-  },
-  {
-    key: 'smartMeters',
-    icon: <Drop size={18} weight="fill" />,
-    impactPercent: 17,
-    iconTone: 'water',
-  },
-];
 
 const ELECTRICITY_FACTOR: Record<BuildingType, number> = {
   school: 15,
@@ -164,11 +120,6 @@ export function CalculatorPage({
 
   const displayCurrency = (value: number): string =>
     hasInput ? numberFormatter.format(Math.round(value)) : '—';
-
-  const sortedRecommendations = useMemo(
-    () => [...RECOMMENDATIONS].sort((a, b) => b.impactPercent - a.impactPercent),
-    [],
-  );
 
   const handleBuildingTypeChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -522,7 +473,7 @@ export function CalculatorPage({
           </Card>
         </div>
 
-        {/* ── RIGHT column: result cards + recommendations ── */}
+        {/* ── RIGHT column: result cards ── */}
         <div className={styles.rightColumn}>
           <div className={styles.resultGrid}>
             <article className={styles.resultCard}>
@@ -598,66 +549,6 @@ export function CalculatorPage({
               </p>
             </article>
           </div>
-
-          {/* Recommendations */}
-          <section className={styles.recommendations}>
-            <div className={styles.recommendationsHeader}>
-              <h2 className={styles.recommendationsTitle}>
-                {t('recommendations.title')}
-              </h2>
-              <p className={styles.recommendationsSubtitle}>
-                {t('recommendations.subtitle')}
-              </p>
-            </div>
-
-            <div className={styles.recommendationsList}>
-              {sortedRecommendations.map((rec, index) => {
-                const toneClass =
-                  rec.iconTone === 'energy'
-                    ? styles.recIconEnergy
-                    : rec.iconTone === 'water'
-                    ? styles.recIconWater
-                    : rec.iconTone === 'carbon'
-                    ? styles.recIconCarbon
-                    : styles.recIconBrand;
-
-                return (
-                  <article
-                    key={rec.key}
-                    className={styles.recommendationCard}
-                    style={
-                      {
-                        '--entry-delay': `${index * 60}ms`,
-                      } as React.CSSProperties
-                    }
-                  >
-                    <div className={`${styles.recIcon} ${toneClass}`}>
-                      {rec.icon}
-                    </div>
-                    <div className={styles.recContent}>
-                      <div className={styles.recHeader}>
-                        <h3 className={styles.recTitle}>
-                          {t(`recommendations.items.${rec.key}.title`)}
-                        </h3>
-                        <span className={styles.recImpact}>
-                          −{rec.impactPercent}%
-                        </span>
-                      </div>
-                      <p className={styles.recDescription}>
-                        {t(`recommendations.items.${rec.key}.description`)}
-                      </p>
-                      <div className={styles.recBar} aria-hidden="true">
-                        <span
-                          className={`${styles.recBarFill} ${toneClass}`}
-                          style={{ width: `${rec.impactPercent * 2}%` }}
-                        />
-                      </div>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-          </section>
         </div>
       </div>
     </div>

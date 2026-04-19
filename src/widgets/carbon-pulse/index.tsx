@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Cloud } from '@phosphor-icons/react';
 import styles from './styles.module.css';
 
 interface CarbonPulseProps {
@@ -72,13 +71,7 @@ export function CarbonPulse({ annualEnergyMlnKwh }: CarbonPulseProps) {
       <div className={styles.decorGrid} aria-hidden="true" />
 
       <div className={styles.header}>
-        <div className={styles.eyebrow}>
-          <span className={styles.liveDot} aria-hidden="true" />
-          {t('carbonPulse.title')}
-        </div>
-        <div className={styles.iconBadge} aria-hidden="true">
-          <Cloud size={20} weight="duotone" />
-        </div>
+        <div className={styles.eyebrow}>{t('carbonPulse.title')}</div>
       </div>
 
       <div className={styles.counter}>

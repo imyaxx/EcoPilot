@@ -53,7 +53,7 @@
   --color-text-brand: var(--color-brand-primary);
 
   /* ── Semantic: Surface ── */
-  --color-surface-base: #fafdfb;
+  --color-surface-base: #ffffff;
   --color-surface-elevated: #ffffff;
   --color-surface-sunken: var(--color-neutral-50);
   --color-surface-overlay: rgba(26, 40, 32, 0.6);

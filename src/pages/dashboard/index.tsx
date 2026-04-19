@@ -3,20 +3,14 @@ import { useTranslation } from 'react-i18next';
 import {
   Lightning,
   Drop,
-  Gauge,
   ShieldCheck,
   Cloud,
-  Funnel,
-  ArrowsClockwise,
-  Export,
-  Pulse,
 } from '@phosphor-icons/react';
 import type {
   DashboardDataset,
   DashboardMetricKey,
   DashboardMetricSnapshot,
   EnergyPeriod,
-  SystemInsightCategory,
   WaterPeriod,
 } from '../../shared/data/transformed';
 import { selectDashboardDerivedData } from '../../shared/data/selectors';
@@ -25,7 +19,6 @@ import { MetricCard, type MetricAccent } from '../../widgets/metric-card';
 import { LineChart } from '../../widgets/line-chart';
 import { CarbonPulse } from '../../widgets/carbon-pulse';
 import { ConsumptionHeatmap } from '../../widgets/consumption-heatmap';
-import { InsightsPanel } from '../../widgets/insights-panel';
 import styles from './styles.module.css';
 
 interface MetricConfig {
@@ -52,13 +45,6 @@ const METRIC_CONFIG: Record<DashboardMetricKey, MetricConfig> = {
   },
 };
 
-const INSIGHT_CATEGORY_ICONS: Record<SystemInsightCategory, ReactNode> = {
-  energy: <Lightning size={18} weight="fill" />,
-  water: <Drop size={18} weight="fill" />,
-  efficiency: <Gauge size={18} weight="fill" />,
-  carbon: <Cloud size={18} weight="fill" />,
-};
-
 const ENERGY_PERIODS: EnergyPeriod[] = ['month', 'year'];
 const WATER_PERIODS: WaterPeriod[] = ['month', 'year'];
 
@@ -76,7 +62,7 @@ export function DashboardPage({
   dataset,
   annualEnergyForPulse,
 }: DashboardPageProps) {
-  const { t, i18n } = useTranslation('dashboard');
+  const { t } = useTranslation('dashboard');
   const [energyPeriod, setEnergyPeriod] = useState<EnergyPeriod>('month');
   const [waterPeriod, setWaterPeriod] = useState<WaterPeriod>('month');
 
@@ -91,13 +77,6 @@ export function DashboardPage({
   const activeWaterTrend = derivedData?.activeWaterTrend ?? [];
   const energyUnit = activeEnergyTrend[0]?.unit ?? '';
   const waterUnit = activeWaterTrend[0]?.unit ?? '';
-
-  const liveTime = useMemo(() => {
-    return new Intl.DateTimeFormat(i18n.language, {
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(new Date());
-  }, [i18n.language]);
 
   const heatmapSeries = useMemo(() => {
     if (!dataset) return [];
@@ -145,18 +124,7 @@ export function DashboardPage({
     <div className={styles.page}>
       {/* ── Hero ── */}
       <header className={styles.hero}>
-        <div className={styles.heroMeta}>
-          <span className={styles.heroEyebrow}>{t('hero.eyebrow')}</span>
-          <div className={styles.heroStatus}>
-            <span className={styles.heroStatusDot} aria-hidden="true" />
-            <span>{t('hero.liveIndicator', { time: liveTime })}</span>
-            <span className={styles.heroDivider} aria-hidden="true">·</span>
-            <span className={styles.heroCoverage}>
-              <Pulse size={12} weight="fill" />
-              {t('hero.datasetBadge')}
-            </span>
-          </div>
-        </div>
+        <span className={styles.heroEyebrow}>{t('hero.eyebrow')}</span>
         <h1 className={styles.heroTitle}>{t('hero.title')}</h1>
         <p className={styles.heroSubtitle}>{t('hero.subtitle')}</p>
       </header>
@@ -240,39 +208,6 @@ export function DashboardPage({
           <ConsumptionHeatmap series={heatmapSeries} />
         </section>
       )}
-
-      {/* ── Insights ── */}
-      <section className={styles.section}>
-        {dataset ? (
-          <InsightsPanel
-            insights={dataset.insights}
-            categoryIconMap={INSIGHT_CATEGORY_ICONS}
-          />
-        ) : (
-          <SkeletonCard height="180px" />
-        )}
-      </section>
-
-      {/* ── Controls ── */}
-      <div className={styles.controlsBar}>
-        <Button variant="ghost" size="small" icon={<Funnel size={13} weight="regular" />}>
-          {t('common:actions.filter')}
-        </Button>
-        <Button variant="ghost" size="small" icon={<Export size={13} weight="regular" />}>
-          {t('common:actions.export')}
-        </Button>
-        <Button
-          variant="ghost"
-          size="small"
-          icon={<ArrowsClockwise size={13} weight="regular" />}
-          onClick={() => {
-            setEnergyPeriod('month');
-            setWaterPeriod('month');
-          }}
-        >
-          {t('common:actions.reset')}
-        </Button>
-      </div>
     </div>
   );
 }

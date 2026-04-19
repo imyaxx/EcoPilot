@@ -54,30 +54,6 @@ export function ConsumptionHeatmap({ series }: ConsumptionHeatmapProps) {
           <h3 className={styles.title}>{t('heatmap.title')}</h3>
           <p className={styles.subtitle}>{t('heatmap.subtitle')}</p>
         </div>
-        <div className={styles.legend} aria-hidden="true">
-          <span className={styles.legendLabel}>
-            {t('heatmap.legend.low')}
-          </span>
-          <div className={styles.legendBar}>
-            {Array.from({ length: 6 }, (_, index) => {
-              const ratio = index / 5;
-              return (
-                <span
-                  key={index}
-                  className={styles.legendStep}
-                  style={
-                    {
-                      '--legend-ratio': ratio,
-                    } as React.CSSProperties
-                  }
-                />
-              );
-            })}
-          </div>
-          <span className={styles.legendLabel}>
-            {t('heatmap.legend.high')}
-          </span>
-        </div>
       </header>
 
       <div className={styles.grid}>

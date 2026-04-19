@@ -11,7 +11,6 @@ import {
   extractWaterYearTrend,
   extractWaterMonthTrend,
 } from '../adapters';
-import { generateInsights } from '../transformed/insights';
 import { loadWorkbook } from './workbook-loader';
 
 const ELECTRICITY_WORKBOOK_URL = '/datasets/electricity-consumption-kazakhstan.xlsx';
@@ -132,7 +131,6 @@ export async function loadDashboardDataset(): Promise<DashboardDataset> {
       month: waterMonthTrend,
       year: waterYearTrend,
     },
-    insights: generateInsights(energyYearTrend, waterYearTrend),
     tariffs: extractTariffs(tariffsWorkbook),
   };
 }

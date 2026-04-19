@@ -26,10 +26,6 @@
     0 2px 6px rgba(26, 40, 32, 0.04);
 }
 
-.metricCard:hover .accentBar {
-  transform: scaleX(1);
-}
-
 .metricCard:hover .icon {
   transform: scale(1.08) rotate(-4deg);
 }
@@ -57,9 +53,8 @@
   right: 0;
   height: 3px;
   background-color: var(--card-accent);
-  transform: scaleX(0.35);
+  transform: scaleX(1);
   transform-origin: left center;
-  transition: transform var(--duration-normal) var(--easing-spring);
 }
 
 .accentEnergy { --card-accent: var(--color-energy-primary); }

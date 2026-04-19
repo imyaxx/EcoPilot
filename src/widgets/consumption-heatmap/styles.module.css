@@ -41,40 +41,6 @@
   margin-top: 2px;
 }
 
-/* ── legend ── */
-
-.legend {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 4px var(--space-2);
-  background-color: var(--color-surface-sunken);
-  border-radius: var(--radius-full);
-}
-
-.legendLabel {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  color: var(--color-text-tertiary);
-  letter-spacing: 0.04em;
-}
-
-.legendBar {
-  display: inline-flex;
-  gap: 2px;
-}
-
-.legendStep {
-  width: 12px;
-  height: 10px;
-  border-radius: 2px;
-  background-color: color-mix(
-    in srgb,
-    var(--color-brand-primary) calc(var(--legend-ratio) * 70%),
-    var(--color-neutral-100)
-  );
-}
-
 /* ── grid ── */
 
 .grid {

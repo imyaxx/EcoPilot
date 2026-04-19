@@ -49,18 +49,6 @@ export function selectDashboardDerivedData(
   const energyValues = activeEnergyTrend.map((point) => point.value);
   const waterValues = activeWaterTrend.map((point) => point.value);
 
-  const criticalInsightsCount = dataset.insights.filter(
-    (insight) => insight.severity === 'critical',
-  ).length;
-
-  const warningInsightsCount = dataset.insights.filter(
-    (insight) => insight.severity === 'warning',
-  ).length;
-
-  const infoInsightsCount = dataset.insights.filter(
-    (insight) => insight.severity === 'info',
-  ).length;
-
   return {
     energyPeriod,
     waterPeriod,
@@ -69,9 +57,6 @@ export function selectDashboardDerivedData(
     activeWaterTrend,
     energySummary: buildTrendSummary(energyValues),
     waterSummary: buildTrendSummary(waterValues),
-    criticalInsightsCount,
-    warningInsightsCount,
-    infoInsightsCount,
     electricityTariff: getTariffByType(dataset.tariffs, 'electricity'),
     waterTariff: getTariffByType(dataset.tariffs, 'water'),
   };

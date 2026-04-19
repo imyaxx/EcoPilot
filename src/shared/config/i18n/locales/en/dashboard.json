@@ -60,43 +60,5 @@
       "low": "Low",
       "high": "High"
     }
-  },
-  "insights": {
-    "title": "System Insights",
-    "severity": {
-      "critical": "Critical",
-      "warning": "Warning",
-      "info": "Info"
-    },
-    "items": {
-      "energy-growth-high": {
-        "title": "High growth in electricity consumption",
-        "description": "Consumption rose by {{delta}}% compared to the previous period ({{prev}} → {{last}} mln kWh)."
-      },
-      "energy-growth-moderate": {
-        "title": "Moderate growth in electricity consumption",
-        "description": "Consumption rose by {{delta}}% ({{prev}} → {{last}} mln kWh). Worth auditing system efficiency."
-      },
-      "energy-reduction": {
-        "title": "Electricity consumption is down",
-        "description": "Consumption dropped by {{delta}}% ({{prev}} → {{last}} mln kWh). Efficiency measures are paying off."
-      },
-      "water-growth-high": {
-        "title": "Significant growth in water consumption",
-        "description": "Water supply volume rose by {{delta}}% ({{prev}} → {{last}} mln m³). Likely network losses or load growth."
-      },
-      "water-growth-moderate": {
-        "title": "Water consumption is rising",
-        "description": "Water supply volume rose by {{delta}}% ({{prev}} → {{last}} mln m³)."
-      },
-      "water-reduction": {
-        "title": "Water consumption is down",
-        "description": "Water supply volume fell by {{delta}}% ({{prev}} → {{last}} mln m³)."
-      },
-      "carbon-footprint-info": {
-        "title": "Power-grid carbon footprint",
-        "description": "At current consumption of {{last}} mln kWh, estimated CO₂ emissions reach ~{{carbon}} mln kg. Kazakhstan generates ~85% of its electricity from coal and gas."
-      }
-    }
   }
 }

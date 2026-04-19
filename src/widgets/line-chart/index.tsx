@@ -19,7 +19,7 @@ interface LineChartProps {
 }
 
 const VIEWBOX_WIDTH = 720;
-const VIEWBOX_HEIGHT = 260;
+const VIEWBOX_HEIGHT = 360;
 const PADDING = { top: 24, right: 24, bottom: 36, left: 52 };
 const GRID_ROWS = 4;
 

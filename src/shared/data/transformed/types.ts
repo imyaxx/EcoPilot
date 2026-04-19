@@ -25,34 +25,6 @@ export interface ResourceTrendPoint {
   unit: string;
 }
 
-export type SystemInsightSeverity = 'info' | 'warning' | 'critical';
-
-export type SystemInsightCategory =
-  | 'water'
-  | 'energy'
-  | 'efficiency'
-  | 'carbon';
-
-export type SystemInsightId =
-  | 'energy-growth-high'
-  | 'energy-growth-moderate'
-  | 'energy-reduction'
-  | 'water-growth-high'
-  | 'water-growth-moderate'
-  | 'water-reduction'
-  | 'carbon-footprint-info';
-
-/**
- * Raw insight record. Translation happens in the UI layer — we only carry
- * interpolation values here so the presentation stays language-agnostic.
- */
-export interface SystemInsight {
-  id: SystemInsightId;
-  severity: SystemInsightSeverity;
-  category: SystemInsightCategory;
-  values: Record<string, string | number>;
-}
-
 export type UtilityType = 'electricity' | 'water';
 
 export interface UtilityTariff {
@@ -68,7 +40,6 @@ export interface DashboardDataset {
   metrics: Record<EnergyPeriod, DashboardMetricSnapshot[]>;
   energyTrend: Record<EnergyPeriod, ResourceTrendPoint[]>;
   waterTrend: Record<WaterPeriod, ResourceTrendPoint[]>;
-  insights: SystemInsight[];
   tariffs: UtilityTariff[];
 }
 
@@ -87,9 +58,6 @@ export interface DashboardSelectorResult {
   activeWaterTrend: ResourceTrendPoint[];
   energySummary: DashboardTrendSummary;
   waterSummary: DashboardTrendSummary;
-  criticalInsightsCount: number;
-  warningInsightsCount: number;
-  infoInsightsCount: number;
   electricityTariff: UtilityTariff | null;
   waterTariff: UtilityTariff | null;
 }
