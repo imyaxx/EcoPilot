@@ -19,6 +19,7 @@ import { MetricCard, type MetricAccent } from '../../widgets/metric-card';
 import { LineChart } from '../../widgets/line-chart';
 import { CarbonPulse } from '../../widgets/carbon-pulse';
 import { ConsumptionHeatmap } from '../../widgets/consumption-heatmap';
+import { AiInsight } from '../../widgets/ai-insight';
 import styles from './styles.module.css';
 
 interface MetricConfig {
@@ -62,7 +63,7 @@ export function DashboardPage({
   dataset,
   annualEnergyForPulse,
 }: DashboardPageProps) {
-  const { t } = useTranslation('dashboard');
+  const { t, i18n } = useTranslation('dashboard');
   const [energyPeriod, setEnergyPeriod] = useState<EnergyPeriod>('month');
   const [waterPeriod, setWaterPeriod] = useState<WaterPeriod>('month');
 
@@ -208,6 +209,23 @@ export function DashboardPage({
       {heatmapSeries.length > 0 && (
         <section className={styles.section}>
           <ConsumptionHeatmap series={heatmapSeries} />
+        </section>
+      )}
+
+      {/* ── AI Insight ── */}
+      {derivedData && (
+        <section className={styles.section}>
+          <AiInsight
+            data={{
+              totalEnergy: derivedData.metrics.find((m) => m.key === 'totalEnergy')?.value ?? 0,
+              totalWater: derivedData.metrics.find((m) => m.key === 'totalWater')?.value ?? 0,
+              carbonFootprint: derivedData.metrics.find((m) => m.key === 'carbonFootprint')?.value ?? 0,
+              efficiencyScore: derivedData.metrics.find((m) => m.key === 'efficiencyScore')?.value ?? 0,
+              energyDelta: derivedData.metrics.find((m) => m.key === 'totalEnergy')?.deltaPercentage ?? 0,
+              waterDelta: derivedData.metrics.find((m) => m.key === 'totalWater')?.deltaPercentage ?? 0,
+              language: i18n.language,
+            }}
+          />
         </section>
       )}
     </div>

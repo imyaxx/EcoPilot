@@ -11,6 +11,7 @@ import {
   Buildings,
 } from '@phosphor-icons/react';
 import { Card, CardHeader, CardBody, Button } from '../../shared/ui';
+import { AiAdvisor } from '../../widgets/ai-advisor';
 import styles from './styles.module.css';
 
 type BuildingType = 'school' | 'residential' | 'office';
@@ -549,6 +550,20 @@ export function CalculatorPage({
               </p>
             </article>
           </div>
+
+          <AiAdvisor
+            disabled={!hasInput}
+            input={{
+              buildingType: form.buildingType,
+              area: areaNum,
+              electricityKwh,
+              waterM3,
+              monthlyTotal,
+              savedYearly,
+              reductionPct: form.reductionPct,
+              language: i18n.language,
+            }}
+          />
         </div>
       </div>
     </div>
