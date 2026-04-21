@@ -15,10 +15,6 @@
 /* ── Hero ── */
 
 .hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 430px);
-  gap: var(--space-6);
-  align-items: start;
   padding: 0 0 var(--space-4);
   animation: heroFadeIn var(--duration-slow) var(--easing-decelerate) both;
 }
@@ -28,7 +24,6 @@
   flex-direction: column;
   gap: var(--space-2);
   min-width: 0;
-  padding-top: clamp(2.5rem, 4.5vw, 3.75rem);
 }
 
 .heroEyebrow {
@@ -56,18 +51,6 @@
   color: var(--color-text-secondary);
   line-height: var(--leading-relaxed);
   max-width: 60ch;
-}
-
-.heroPulse {
-  width: 100%;
-  max-width: 390px;
-  justify-self: end;
-  align-self: start;
-  margin-top: clamp(1.5rem, 3vw, 2.5rem);
-}
-
-.heroPulse > * {
-  width: 100%;
 }
 
 /* ── section wrapper ── */
@@ -106,23 +89,6 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-5);
-}
-
-@media (max-width: 980px) {
-  .hero {
-    grid-template-columns: 1fr;
-    align-items: start;
-  }
-
-  .heroPulse {
-    max-width: none;
-    justify-self: stretch;
-    margin-top: 0;
-  }
-
-  .heroCopy {
-    padding-top: 0;
-  }
 }
 
 @media (max-width: 860px) {

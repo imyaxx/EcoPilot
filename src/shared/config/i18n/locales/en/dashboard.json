@@ -42,13 +42,6 @@
     },
     "empty": "No series available for this period"
   },
-  "carbonPulse": {
-    "title": "Live Carbon Counter",
-    "subtitle": "Estimated CO₂ emitted by Almaty's power grid since you opened this page",
-    "basedOn": "Based on current annual consumption ≈ {{value}} mln kWh",
-    "unit": "kg CO₂",
-    "footnote": "~85% of Kazakhstan's electricity is generated from coal and gas"
-  },
   "heatmap": {
     "title": "Consumption Heatmap",
     "subtitle": "Monthly intensity — darker cells mean higher load",

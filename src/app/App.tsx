@@ -26,9 +26,6 @@ function AppContent({ dataset }: AppContentProps) {
   const waterTariff =
     dataset?.tariffs.find((tariff) => tariff.utilityType === 'water')?.price ?? 0;
 
-  const annualEnergy =
-    dataset?.energyTrend.year.at(-1)?.value ?? 0;
-
   return (
     <>
       <header className={styles.nav}>
@@ -71,12 +68,7 @@ function AppContent({ dataset }: AppContentProps) {
           className={styles.pageSwitcher}
           key={page}
         >
-          {page === 'dashboard' && (
-            <DashboardPage
-              dataset={dataset}
-              annualEnergyForPulse={annualEnergy}
-            />
-          )}
+          {page === 'dashboard' && <DashboardPage dataset={dataset} />}
           {page === 'calculator' && (
             <CalculatorPage
               electricityTariff={electricityTariff}
