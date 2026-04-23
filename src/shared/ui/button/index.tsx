@@ -7,33 +7,22 @@ type ButtonSize = 'small' | 'medium' | 'large';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  icon?: ReactNode;
   children?: ReactNode;
 }
 
 export function Button({
   variant = 'primary',
   size = 'medium',
-  icon,
   children,
   className,
   ...rest
 }: ButtonProps) {
-  const isIconOnly = icon && !children;
-
-  const classNames = [
-    styles.button,
-    styles[variant],
-    styles[size],
-    isIconOnly && styles.iconOnly,
-    className,
-  ]
+  const classNames = [styles.button, styles[variant], styles[size], className]
     .filter(Boolean)
     .join(' ');
 
   return (
     <button className={classNames} {...rest}>
-      {icon}
       {children}
     </button>
   );

@@ -244,7 +244,6 @@ export function LineChart({
             </linearGradient>
           </defs>
 
-          {/* grid rows */}
           {geometry.gridLines.map((y, index) => (
             <line
               key={`grid-${index}`}
@@ -256,7 +255,6 @@ export function LineChart({
             />
           ))}
 
-          {/* y axis labels */}
           {geometry.axisValues.map((value, index) => {
             const y = geometry.gridLines[index];
             return (
@@ -273,7 +271,6 @@ export function LineChart({
             );
           })}
 
-          {/* x axis labels */}
           {geometry.points.map((point, index) => {
             const totalLabels = geometry.points.length;
             const shouldSkip =
@@ -292,7 +289,6 @@ export function LineChart({
             );
           })}
 
-          {/* area fill */}
           {geometry.areaPath && (
             <path
               d={geometry.areaPath}
@@ -301,10 +297,8 @@ export function LineChart({
             />
           )}
 
-          {/* main line */}
           <path d={geometry.linePath} className={styles.line} />
 
-          {/* active indicator (vertical guide + halo) */}
           {activePoint && (
             <>
               <line
@@ -323,7 +317,6 @@ export function LineChart({
             </>
           )}
 
-          {/* data points */}
           {geometry.points.map((point, index) => (
             <circle
               key={`point-${index}`}

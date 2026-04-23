@@ -1,43 +1,19 @@
 import * as XLSX from 'xlsx';
-import type { EnergyPeriod, ResourceTrendPoint } from '../transformed';
+import { ENERGY_SHEET_CONFIG, ENERGY_TOTAL_MARKER } from '../../config/dashboard-data';
+import type { ResourceTrendPoint } from '../transformed';
 
-type WorkbookEnergyPeriod = EnergyPeriod;
 type CellValue = XLSX.CellObject['v'] | null;
-
-interface EnergySheetConfig {
-  sheetName: string;
-  startRowIndex: number;
-  labelColumnIndex: number;
-  valueColumnIndex: number;
-}
-
-const ENERGY_UNIT = 'млн кВт·ч';
-const MONTH_TOTAL_LABEL = 'ИТОГО';
+type WorkbookEnergyPeriod = keyof typeof ENERGY_SHEET_CONFIG;
 
 /**
- * The monthly energy sheet name encodes its dataset year
- * (e.g. `Monthly_Profile_2024_modeled`). Parsed so the UI can label the
- * period without hardcoding the year in locale files.
+ * The monthly electricity sheet name encodes its dataset year (e.g.
+ * `Monthly_Profile_2024_modeled`). Parsed so the UI can label the period
+ * without hardcoding the year in locale files.
  */
 export function getEnergyMonthYear(): number {
   const match = ENERGY_SHEET_CONFIG.month.sheetName.match(/(\d{4})/);
   return match ? Number(match[1]) : new Date().getFullYear();
 }
-
-const ENERGY_SHEET_CONFIG = {
-  year: {
-    sheetName: 'Annual_Consumption_GWh',
-    startRowIndex: 2,
-    labelColumnIndex: 0,
-    valueColumnIndex: 1,
-  },
-  month: {
-    sheetName: 'Monthly_Profile_2024_modeled',
-    startRowIndex: 3,
-    labelColumnIndex: 0,
-    valueColumnIndex: 2,
-  },
-} satisfies Record<WorkbookEnergyPeriod, EnergySheetConfig>;
 
 function getWorksheet(
   workbook: XLSX.WorkBook,
@@ -82,7 +58,7 @@ function getCellValue(
 
 export function extractEnergyYearTrend(workbook: XLSX.WorkBook): ResourceTrendPoint[] {
   const worksheet = getWorksheet(workbook, 'year');
-  const { startRowIndex, labelColumnIndex, valueColumnIndex } = ENERGY_SHEET_CONFIG.year;
+  const { startRowIndex, labelColumnIndex, valueColumnIndex, unitKey } = ENERGY_SHEET_CONFIG.year;
   const lastRowIndex = getLastRowIndex(worksheet);
   const yearTrend: ResourceTrendPoint[] = [];
 
@@ -102,7 +78,7 @@ export function extractEnergyYearTrend(workbook: XLSX.WorkBook): ResourceTrendPo
     yearTrend.push({
       label: String(yearValue),
       value: consumptionValue,
-      unit: ENERGY_UNIT,
+      unitKey,
     });
   }
 
@@ -113,14 +89,14 @@ export function extractEnergyYearTrend(workbook: XLSX.WorkBook): ResourceTrendPo
 
 export function extractEnergyMonthTrend(workbook: XLSX.WorkBook): ResourceTrendPoint[] {
   const worksheet = getWorksheet(workbook, 'month');
-  const { startRowIndex, labelColumnIndex, valueColumnIndex } = ENERGY_SHEET_CONFIG.month;
+  const { startRowIndex, labelColumnIndex, valueColumnIndex, unitKey } = ENERGY_SHEET_CONFIG.month;
   const lastRowIndex = getLastRowIndex(worksheet);
   const monthTrend: ResourceTrendPoint[] = [];
 
   for (let rowIndex = startRowIndex; rowIndex <= lastRowIndex; rowIndex += 1) {
     const monthLabel = getCellValue(worksheet, rowIndex, labelColumnIndex);
 
-    if (monthLabel === null || monthLabel === MONTH_TOTAL_LABEL) {
+    if (monthLabel === null || monthLabel === ENERGY_TOTAL_MARKER) {
       break;
     }
 
@@ -137,7 +113,7 @@ export function extractEnergyMonthTrend(workbook: XLSX.WorkBook): ResourceTrendP
     monthTrend.push({
       label: monthLabel,
       value: consumptionValue,
-      unit: ENERGY_UNIT,
+      unitKey,
     });
   }
 

@@ -1,3 +1,4 @@
+import { DASHBOARD_DATASET_URLS, DASHBOARD_FACTORS } from '../../config/dashboard-data';
 import type {
   DashboardDataset,
   DashboardMetricSnapshot,
@@ -15,12 +16,6 @@ import {
 } from '../adapters';
 import { loadWorkbook } from './workbook-loader';
 
-const ELECTRICITY_WORKBOOK_URL = '/datasets/electricity-consumption-kazakhstan.xlsx';
-const TARIFFS_WORKBOOK_URL = '/datasets/tariffs-kazakhstan.xlsx';
-
-const CARBON_FACTOR = 0.5;
-const SPARKLINE_LENGTH = 8;
-
 function computeDelta(last: number, prev: number): number {
   if (prev === 0) return 0;
   return Number((((last - prev) / prev) * 100).toFixed(1));
@@ -34,7 +29,7 @@ function directionFor(delta: number): DashboardMetricTrendDirection {
 
 function tailSparkline(trend: ResourceTrendPoint[]): number[] {
   if (trend.length === 0) return [];
-  return trend.slice(-SPARKLINE_LENGTH).map((point) => point.value);
+  return trend.slice(-DASHBOARD_FACTORS.sparklineLength).map((point) => point.value);
 }
 
 function buildMetrics(
@@ -49,8 +44,8 @@ function buildMetrics(
   const energyDelta = computeDelta(lastEnergy, prevEnergy);
   const waterDelta = computeDelta(lastWater, prevWater);
 
-  const carbon = Number((lastEnergy * CARBON_FACTOR).toFixed(0));
-  const prevCarbon = Number((prevEnergy * CARBON_FACTOR).toFixed(0));
+  const carbon = Number((lastEnergy * DASHBOARD_FACTORS.carbonPerEnergyUnit).toFixed(0));
+  const prevCarbon = Number((prevEnergy * DASHBOARD_FACTORS.carbonPerEnergyUnit).toFixed(0));
   const carbonDelta = computeDelta(carbon, prevCarbon);
 
   const efficiencyScore = Number(
@@ -72,13 +67,13 @@ function buildMetrics(
 
   const energySpark = tailSparkline(energyTrend);
   const waterSpark = tailSparkline(waterTrend);
-  const carbonSpark = energySpark.map((value) => value * CARBON_FACTOR);
+  const carbonSpark = energySpark.map((value) => value * DASHBOARD_FACTORS.carbonPerEnergyUnit);
 
   return [
     {
       key: 'totalEnergy',
       value: lastEnergy,
-      formattedValue: lastEnergy.toLocaleString(),
+      precision: 0,
       deltaPercentage: Math.abs(energyDelta),
       trendDirection: directionFor(energyDelta),
       sparkline: energySpark,
@@ -86,7 +81,7 @@ function buildMetrics(
     {
       key: 'totalWater',
       value: lastWater,
-      formattedValue: lastWater.toLocaleString(),
+      precision: 0,
       deltaPercentage: Math.abs(waterDelta),
       trendDirection: directionFor(waterDelta),
       sparkline: waterSpark,
@@ -94,7 +89,7 @@ function buildMetrics(
     {
       key: 'carbonFootprint',
       value: carbon,
-      formattedValue: carbon.toLocaleString(),
+      precision: 0,
       deltaPercentage: Math.abs(carbonDelta),
       trendDirection: directionFor(carbonDelta),
       sparkline: carbonSpark,
@@ -102,7 +97,7 @@ function buildMetrics(
     {
       key: 'efficiencyScore',
       value: efficiencyScore,
-      formattedValue: String(efficiencyScore),
+      precision: 1,
       deltaPercentage: Math.abs(efficiencyDelta),
       trendDirection: directionFor(efficiencyDelta),
     },
@@ -111,8 +106,8 @@ function buildMetrics(
 
 export async function loadDashboardDataset(): Promise<DashboardDataset> {
   const [electricityWorkbook, tariffsWorkbook] = await Promise.all([
-    loadWorkbook(ELECTRICITY_WORKBOOK_URL),
-    loadWorkbook(TARIFFS_WORKBOOK_URL),
+    loadWorkbook(DASHBOARD_DATASET_URLS.electricity),
+    loadWorkbook(DASHBOARD_DATASET_URLS.tariffs),
   ]);
 
   const energyMonthTrend = extractEnergyMonthTrend(electricityWorkbook);

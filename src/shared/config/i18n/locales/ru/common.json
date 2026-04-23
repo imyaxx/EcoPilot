@@ -2,7 +2,8 @@
   "appName": "EcoPilot",
   "nav": {
     "dashboard": "Дашборд",
-    "calculator": "Калькулятор"
+    "calculator": "Калькулятор",
+    "label": "Основная навигация"
   },
   "language": {
     "label": "Язык",
@@ -19,12 +20,21 @@
     "kgPerYear": "кг / год",
     "kztPerMonth": "тенге / мес",
     "kztPerYear": "тенге / год",
-    "kzt": "тенге"
+    "kzt": "тенге",
+    "mlnKwh": "млн кВт·ч",
+    "mlnM3": "млн м³"
   },
   "track": {
     "energyResources": "Energy & Resources"
   },
   "footer": {
     "copyright": "Сделано для EcoSolutions Hackathon · Алматы 2026"
+  },
+  "dataset": {
+    "loadingTitle": "Загружаю городские датасеты",
+    "loadingDescription": "Подготавливаю дашборд и калькулятор из локальных Excel-файлов.",
+    "errorTitle": "Не удалось загрузить локальные датасеты",
+    "errorDescription": "Проверьте, что Excel-файлы доступны, и попробуйте снова.",
+    "retry": "Повторить"
   }
 }

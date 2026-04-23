@@ -43,7 +43,6 @@ export interface CalculatorMetrics {
   yearlyCo2Reduction: number;
   yearlyWaterSavings: number;
   paybackMonths: number;
-  electricityShare: number;
 }
 
 function parseOptionalNumber(value: string): number | null {
@@ -94,8 +93,6 @@ export function useCalculatorMetrics(
     const paybackMonths =
       monthlySavings > 0 ? Math.round(investment / monthlySavings) : 0;
 
-    const electricityShare = monthlyTotal > 0 ? monthlyElectricityCost / monthlyTotal : 0;
-
     return {
       areaM2,
       manualElectricityKwh,
@@ -112,7 +109,6 @@ export function useCalculatorMetrics(
       yearlyCo2Reduction,
       yearlyWaterSavings,
       paybackMonths,
-      electricityShare,
     };
   }, [form, electricityTariff, waterTariff]);
 }

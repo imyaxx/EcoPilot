@@ -1,46 +1,14 @@
 import * as XLSX from 'xlsx';
+import { TARIFF_SHEET_CONFIG } from '../../config/dashboard-data';
 import type { UtilityTariff } from '../transformed';
 
 type TariffUtilityType = UtilityTariff['utilityType'];
 
-const ASSUMPTIONS_SHEET_NAME = 'Assumptions_for_Dashboard';
-const VALUE_COLUMN_INDEX = 1;
-
-// Row indices in Assumptions_for_Dashboard sheet (0-based):
-// 0: header, 1: electricity tariff, 2: water tariff (baseline)
-const TARIFF_ROW_INDEX = {
-  electricity: 1,
-  water: 2,
-} satisfies Record<TariffUtilityType, number>;
-
-/**
- * Language-agnostic metadata for each tariff. The human-readable label and
- * source come from i18n ("dataSource" in common.json and calculator UI), so
- * we keep only stable technical identifiers here.
- */
-const TARIFF_METADATA: Record<
-  TariffUtilityType,
-  Omit<UtilityTariff, 'price' | 'utilityType'>
-> = {
-  electricity: {
-    label: 'electricity.tariff.almaty',
-    unit: 'kWh',
-    currency: 'KZT',
-    sourceLabel: 'esalmaty.kz',
-  },
-  water: {
-    label: 'water.tariff.almaty',
-    unit: 'm³',
-    currency: 'KZT',
-    sourceLabel: 'Almaty Su',
-  },
-};
-
 function getWorksheet(workbook: XLSX.WorkBook): XLSX.WorkSheet {
-  const worksheet = workbook.Sheets[ASSUMPTIONS_SHEET_NAME];
+  const worksheet = workbook.Sheets[TARIFF_SHEET_CONFIG.sheetName];
 
   if (!worksheet) {
-    throw new Error(`Worksheet "${ASSUMPTIONS_SHEET_NAME}" not found`);
+    throw new Error(`Worksheet "${TARIFF_SHEET_CONFIG.sheetName}" not found`);
   }
 
   return worksheet;
@@ -65,7 +33,7 @@ function getNumericCellValue(
   const cellValue = cell?.v ?? null;
 
   if (typeof cellValue !== 'number' || !Number.isFinite(cellValue)) {
-    throw new Error(`Invalid ${fieldName} value in "${ASSUMPTIONS_SHEET_NAME}"`);
+    throw new Error(`Invalid ${fieldName} value in "${TARIFF_SHEET_CONFIG.sheetName}"`);
   }
 
   return cellValue;
@@ -74,16 +42,15 @@ function getNumericCellValue(
 export function extractTariffs(workbook: XLSX.WorkBook): UtilityTariff[] {
   const worksheet = getWorksheet(workbook);
 
-  return (Object.entries(TARIFF_ROW_INDEX) as Array<[TariffUtilityType, number]>).map(
-    ([utilityType, rowIndex]) => ({
-      utilityType,
-      price: getNumericCellValue(
-        worksheet,
-        rowIndex,
-        VALUE_COLUMN_INDEX,
-        `${utilityType} tariff`,
-      ),
-      ...TARIFF_METADATA[utilityType],
-    }),
-  );
+  return (
+    Object.entries(TARIFF_SHEET_CONFIG.rowIndexByUtility) as Array<[TariffUtilityType, number]>
+  ).map(([utilityType, rowIndex]) => ({
+    utilityType,
+    price: getNumericCellValue(
+      worksheet,
+      rowIndex,
+      TARIFF_SHEET_CONFIG.valueColumnIndex,
+      `${utilityType} tariff`,
+    ),
+  }));
 }

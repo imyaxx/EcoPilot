@@ -35,17 +35,12 @@ export function CardHeader({ title, action }: CardHeaderProps) {
   );
 }
 
-interface CardSlotProps {
+interface CardBodyProps {
   children: ReactNode;
   className?: string;
 }
 
-export function CardBody({ children, className }: CardSlotProps) {
+export function CardBody({ children, className }: CardBodyProps) {
   const classNames = [styles.body, className].filter(Boolean).join(' ');
-  return <div className={classNames}>{children}</div>;
-}
-
-export function CardFooter({ children, className }: CardSlotProps) {
-  const classNames = [styles.footer, className].filter(Boolean).join(' ');
   return <div className={classNames}>{children}</div>;
 }

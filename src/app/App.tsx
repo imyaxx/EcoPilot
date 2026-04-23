@@ -3,26 +3,28 @@
  * between Dashboard and Calculator pages, and mounts the footer.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Leaf } from '@phosphor-icons/react';
 import { AppProviders } from './providers';
 import { DashboardPage } from '../pages/dashboard';
 import { CalculatorPage } from '../pages/calculator';
-import { loadDashboardDataset } from '../shared/data/loaders';
-import { BrandMark, LanguageSwitcher } from '../shared/ui';
+import { BrandMark, Button, LanguageSwitcher } from '../shared/ui';
 import type { DashboardDataset } from '../shared/data/transformed';
 import styles from './App.module.css';
 
 import './styles/base.css';
 
 type ActivePage = 'dashboard' | 'calculator';
+type DatasetStatus = 'loading' | 'ready' | 'error';
 
 interface AppContentProps {
   dataset: DashboardDataset | null;
+  datasetStatus: DatasetStatus;
+  onRetryLoad: () => void;
 }
 
-function AppContent({ dataset }: AppContentProps) {
+function AppContent({ dataset, datasetStatus, onRetryLoad }: AppContentProps) {
   const { t } = useTranslation('common');
   const [page, setPage] = useState<ActivePage>('dashboard');
 
@@ -45,7 +47,7 @@ function AppContent({ dataset }: AppContentProps) {
             </div>
           </div>
 
-          <nav className={styles.navTabs} aria-label={t('nav.dashboard')}>
+          <nav className={styles.navTabs} aria-label={t('nav.label')}>
             <button
               type="button"
               className={`${styles.navTab} ${page === 'dashboard' ? styles.navTabActive : ''}`}
@@ -59,6 +61,7 @@ function AppContent({ dataset }: AppContentProps) {
               className={`${styles.navTab} ${page === 'calculator' ? styles.navTabActive : ''}`}
               onClick={() => setPage('calculator')}
               aria-pressed={page === 'calculator'}
+              disabled={datasetStatus !== 'ready'}
             >
               {t('nav.calculator')}
             </button>
@@ -69,18 +72,42 @@ function AppContent({ dataset }: AppContentProps) {
       </header>
 
       <main className={styles.pageContainer}>
-        <div
-          className={styles.pageSwitcher}
-          key={page}
-        >
-          {page === 'dashboard' && <DashboardPage dataset={dataset} />}
-          {page === 'calculator' && (
-            <CalculatorPage
-              electricityTariff={electricityTariff}
-              waterTariff={waterTariff}
-            />
-          )}
-        </div>
+        {datasetStatus === 'ready' && dataset ? (
+          <div className={styles.pageSwitcher}>
+            {page === 'dashboard' && <DashboardPage dataset={dataset} />}
+            {page === 'calculator' && (
+              <CalculatorPage
+                electricityTariff={electricityTariff}
+                waterTariff={waterTariff}
+              />
+            )}
+          </div>
+        ) : (
+          <section className={styles.datasetState}>
+            <div className={styles.datasetStateCard}>
+              <div className={styles.datasetStateIcon} aria-hidden="true">
+                <Leaf size={18} weight="fill" />
+              </div>
+              <div className={styles.datasetStateCopy}>
+                <h1 className={styles.datasetStateTitle}>
+                  {datasetStatus === 'loading'
+                    ? t('dataset.loadingTitle')
+                    : t('dataset.errorTitle')}
+                </h1>
+                <p className={styles.datasetStateDescription}>
+                  {datasetStatus === 'loading'
+                    ? t('dataset.loadingDescription')
+                    : t('dataset.errorDescription')}
+                </p>
+              </div>
+              {datasetStatus === 'error' && (
+                <Button variant="secondary" onClick={onRetryLoad}>
+                  {t('dataset.retry')}
+                </Button>
+              )}
+            </div>
+          </section>
+        )}
       </main>
 
       <footer className={styles.footer}>
@@ -96,15 +123,23 @@ function AppContent({ dataset }: AppContentProps) {
 
 export function App() {
   const [dataset, setDataset] = useState<DashboardDataset | null>(null);
+  const [datasetStatus, setDatasetStatus] = useState<DatasetStatus>('loading');
 
-  useEffect(() => {
+  const requestDataset = useCallback((handlers: { onSuccess?: () => void } = {}) => {
     let isMounted = true;
 
-    void loadDashboardDataset()
+    void import('../shared/data/loaders')
+      .then(({ loadDashboardDataset }) => loadDashboardDataset())
       .then((loaded) => {
-        if (isMounted) setDataset(loaded);
+        if (!isMounted) return;
+        setDataset(loaded);
+        setDatasetStatus('ready');
+        handlers.onSuccess?.();
       })
       .catch((error: unknown) => {
+        if (!isMounted) return;
+        setDataset(null);
+        setDatasetStatus('error');
         if (import.meta.env.DEV) {
           console.error('Failed to load dataset', error);
         }
@@ -115,9 +150,23 @@ export function App() {
     };
   }, []);
 
+  const handleRetryLoad = useCallback(() => {
+    setDataset(null);
+    setDatasetStatus('loading');
+    return requestDataset();
+  }, [requestDataset]);
+
+  useEffect(() => {
+    return requestDataset();
+  }, [requestDataset]);
+
   return (
     <AppProviders>
-      <AppContent dataset={dataset} />
+      <AppContent
+        dataset={dataset}
+        datasetStatus={datasetStatus}
+        onRetryLoad={handleRetryLoad}
+      />
     </AppProviders>
   );
 }

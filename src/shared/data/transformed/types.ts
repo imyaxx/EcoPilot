@@ -1,3 +1,5 @@
+import type { ResourceUnitKey } from '../../config/dashboard-data';
+
 export type DashboardMetricKey =
   | 'totalEnergy'
   | 'totalWater'
@@ -12,28 +14,23 @@ export type DashboardMetricTrendDirection = 'up' | 'down' | 'neutral';
 export interface DashboardMetricSnapshot {
   key: DashboardMetricKey;
   value: number;
-  formattedValue: string;
+  precision?: number;
   deltaPercentage: number;
   trendDirection: DashboardMetricTrendDirection;
-  /** Optional mini trend used to render inline sparklines. */
   sparkline?: number[];
 }
 
 export interface ResourceTrendPoint {
   label: string;
   value: number;
-  unit: string;
+  unitKey: ResourceUnitKey;
 }
 
 export type UtilityType = 'electricity' | 'water';
 
 export interface UtilityTariff {
   utilityType: UtilityType;
-  label: string;
   price: number;
-  unit: string;
-  currency: string;
-  sourceLabel: string;
 }
 
 export interface DashboardDataset {
@@ -47,21 +44,10 @@ export interface DashboardDataset {
   };
 }
 
-export interface DashboardTrendSummary {
-  currentValue: number;
-  previousValue: number;
-  absoluteChange: number;
-  percentageChange: number;
-}
-
 export interface DashboardSelectorResult {
   energyPeriod: EnergyPeriod;
   waterPeriod: WaterPeriod;
   metrics: DashboardMetricSnapshot[];
   activeEnergyTrend: ResourceTrendPoint[];
   activeWaterTrend: ResourceTrendPoint[];
-  energySummary: DashboardTrendSummary;
-  waterSummary: DashboardTrendSummary;
-  electricityTariff: UtilityTariff | null;
-  waterTariff: UtilityTariff | null;
 }

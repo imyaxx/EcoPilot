@@ -7,6 +7,7 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Lightning, Drop, ShieldCheck, Cloud } from '@phosphor-icons/react';
+import { formatNumber } from '../../shared/lib/number-format';
 import type {
   DashboardDataset,
   DashboardMetricKey,
@@ -41,7 +42,7 @@ interface DashboardPageProps {
 }
 
 export function DashboardPage({ dataset }: DashboardPageProps) {
-  const { t } = useTranslation('dashboard');
+  const { t, i18n } = useTranslation('dashboard');
   const [energyPeriod, setEnergyPeriod] = useState<EnergyPeriod>('month');
   const [waterPeriod, setWaterPeriod] = useState<WaterPeriod>('month');
 
@@ -61,16 +62,35 @@ export function DashboardPage({ dataset }: DashboardPageProps) {
 
   const activeEnergyTrend = derivedData?.activeEnergyTrend ?? [];
   const activeWaterTrend = derivedData?.activeWaterTrend ?? [];
-  const energyUnit = activeEnergyTrend[0]?.unit ?? '';
-  const waterUnit = activeWaterTrend[0]?.unit ?? '';
+  const energyUnit = activeEnergyTrend[0]?.unitKey
+    ? t(`common:units.${activeEnergyTrend[0].unitKey}`)
+    : '';
+  const waterUnit = activeWaterTrend[0]?.unitKey
+    ? t(`common:units.${activeWaterTrend[0].unitKey}`)
+    : '';
 
   const heatmapSeries = useMemo(() => {
     if (!dataset) return [];
+
     return [
-      { key: 'energy' as const, points: dataset.energyTrend.month },
-      { key: 'water' as const, points: dataset.waterTrend.month },
+      {
+        key: 'energy' as const,
+        points: dataset.energyTrend.month.map((point) => ({
+          label: point.label,
+          value: point.value,
+          unit: t(`common:units.${point.unitKey}`),
+        })),
+      },
+      {
+        key: 'water' as const,
+        points: dataset.waterTrend.month.map((point) => ({
+          label: point.label,
+          value: point.value,
+          unit: t(`common:units.${point.unitKey}`),
+        })),
+      },
     ];
-  }, [dataset]);
+  }, [dataset, t]);
 
   const renderMetricCard = (metric: DashboardMetricSnapshot, index: number) => {
     const config = METRIC_CONFIG[metric.key];
@@ -87,7 +107,10 @@ export function DashboardPage({ dataset }: DashboardPageProps) {
       <MetricCard
         key={metric.key}
         label={t(`metrics.${metric.key}.label`)}
-        value={metric.formattedValue}
+        value={formatNumber(metric.value, i18n.language, {
+          maximumFractionDigits: metric.precision ?? 0,
+          minimumFractionDigits: metric.precision ?? 0,
+        })}
         unit={t(`metrics.${metric.key}.unit`)}
         accent={config.accent}
         icon={config.icon}

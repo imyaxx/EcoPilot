@@ -128,7 +128,59 @@
 
 .pageSwitcher {
   width: 100%;
-  animation: pageEnter var(--duration-entry) var(--easing-decelerate) both;
+}
+
+.datasetState {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-10) var(--space-4) 0;
+}
+
+.datasetStateCard {
+  width: min(100%, 720px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-8);
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 60%, transparent);
+  border-radius: var(--radius-2xl);
+  background: color-mix(in srgb, var(--color-surface-elevated) 92%, transparent);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.datasetStateIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--gradient-brand);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-glow-brand);
+}
+
+.datasetStateCopy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.datasetStateTitle {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text-primary);
+}
+
+.datasetStateDescription {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
 }
 
 /* ── footer ── */
@@ -185,17 +237,6 @@
   from {
     opacity: 0;
     transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pageEnter {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
   }
   to {
     opacity: 1;

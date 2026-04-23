@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatNumber } from '../../shared/lib/number-format';
 import styles from './styles.module.css';
 
 interface HeatmapSeries {
@@ -22,7 +23,7 @@ function intensity(value: number, min: number, max: number): number {
 }
 
 export function ConsumptionHeatmap({ series }: ConsumptionHeatmapProps) {
-  const { t } = useTranslation('dashboard');
+  const { t, i18n } = useTranslation('dashboard');
   const [hovered, setHovered] = useState<HoveredCell | null>(null);
 
   const normalized = useMemo(
@@ -70,6 +71,10 @@ export function ConsumptionHeatmap({ series }: ConsumptionHeatmapProps) {
                 const isActive =
                   hovered?.seriesIndex === seriesIndex &&
                   hovered?.cellIndex === cellIndex;
+                const formattedValue = formatNumber(cell.value, i18n.language, {
+                  maximumFractionDigits: 0,
+                });
+
                 return (
                   <button
                     key={`${entry.key}-${cell.label}-${cellIndex}`}
@@ -90,7 +95,7 @@ export function ConsumptionHeatmap({ series }: ConsumptionHeatmapProps) {
                     onBlur={() => setHovered(null)}
                     aria-label={`${t(`heatmap.rows.${entry.key}`)} — ${
                       cell.label
-                    }: ${cell.value.toLocaleString()} ${cell.unit}`}
+                    }: ${formattedValue} ${cell.unit}`}
                   >
                     <span className={styles.cellInner} />
                     {isActive && (
@@ -99,7 +104,7 @@ export function ConsumptionHeatmap({ series }: ConsumptionHeatmapProps) {
                           {cell.label}
                         </span>
                         <span className={styles.cellTooltipValue}>
-                          {cell.value.toLocaleString()} {cell.unit}
+                          {formattedValue} {cell.unit}
                         </span>
                       </span>
                     )}

@@ -23,6 +23,11 @@ function isSupportedLanguage(value: string | null): value is SupportedLanguage {
   return value !== null && (SUPPORTED_LANGUAGES as readonly string[]).includes(value);
 }
 
+function syncDocumentLanguage(language: SupportedLanguage): void {
+  if (typeof document === 'undefined') return;
+  document.documentElement.setAttribute('lang', language);
+}
+
 function detectInitialLanguage(): SupportedLanguage {
   if (typeof window === 'undefined') return DEFAULT_LANGUAGE;
 
@@ -66,9 +71,11 @@ const resources = {
   },
 } as const;
 
+const initialLanguage = detectInitialLanguage();
+
 void i18n.use(initReactI18next).init({
   resources,
-  lng: detectInitialLanguage(),
+  lng: initialLanguage,
   fallbackLng: DEFAULT_LANGUAGE,
   defaultNS: 'common',
   ns: ['common', 'dashboard', 'calculator'],
@@ -76,5 +83,7 @@ void i18n.use(initReactI18next).init({
     escapeValue: false,
   },
 });
+
+syncDocumentLanguage(initialLanguage);
 
 export default i18n;

@@ -2,7 +2,8 @@
   "appName": "EcoPilot",
   "nav": {
     "dashboard": "Dashboard",
-    "calculator": "Calculator"
+    "calculator": "Calculator",
+    "label": "Main navigation"
   },
   "language": {
     "label": "Language",
@@ -19,12 +20,21 @@
     "kgPerYear": "kg / year",
     "kztPerMonth": "KZT / month",
     "kztPerYear": "KZT / year",
-    "kzt": "KZT"
+    "kzt": "KZT",
+    "mlnKwh": "mln kWh",
+    "mlnM3": "mln m³"
   },
   "track": {
     "energyResources": "Energy & Resources"
   },
   "footer": {
     "copyright": "Built for EcoSolutions Hackathon · Almaty 2026"
+  },
+  "dataset": {
+    "loadingTitle": "Loading city datasets",
+    "loadingDescription": "Preparing the dashboard and calculator from local workbook data.",
+    "errorTitle": "Could not load local datasets",
+    "errorDescription": "Check that the workbook files are available and try again.",
+    "retry": "Try again"
   }
 }
