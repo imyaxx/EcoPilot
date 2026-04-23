@@ -1,4 +1,12 @@
+/**
+ * AiAdvisor — renders the AI-generated energy-efficiency recommendations
+ * panel in the calculator right column. The component only ships structured
+ * building data to the /api/ai-advise serverless proxy; the prompt template
+ * and OpenAI key live on the server.
+ */
+
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Sparkle, ArrowRight, WarningCircle } from '@phosphor-icons/react';
 import { Card, CardHeader, CardBody, Button } from '../../shared/ui';
 import styles from './styles.module.css';
@@ -19,75 +27,53 @@ interface AiAdvisorProps {
   disabled?: boolean;
 }
 
-const BUILDING_LABEL: Record<string, string> = {
-  school: 'школа',
-  residential: 'жилой дом',
-  office: 'офис',
-};
+type ErrorKind = 'generic' | 'rateLimit' | 'network';
 
-function buildPrompt(input: AiAdvisorInput): string {
-  const lang =
-    input.language === 'ru'
-      ? 'русском'
-      : input.language === 'kk'
-        ? 'казахском'
-        : 'английском';
-
-  return `Ты — энергетический консультант для зданий Казахстана (Алматы).
-
-Данные здания:
-- Тип: ${BUILDING_LABEL[input.buildingType] ?? input.buildingType}
-- Площадь: ${input.area} м²
-- Потребление электроэнергии: ${Math.round(input.electricityKwh)} кВт·ч/мес
-- Потребление воды: ${input.waterM3.toFixed(1)} м³/мес
-- Текущие затраты: ${Math.round(input.monthlyTotal)} ₸/мес
-- Целевое снижение: ${input.reductionPct}%
-- Потенциальная годовая экономия: ${Math.round(input.savedYearly)} ₸
-
-Дай 3–4 конкретные рекомендации по снижению потребления именно для этого типа здания в казахстанских реалиях.
-Каждая рекомендация — одно конкретное действие, примерный эффект в % и срок окупаемости.
-Формат: короткий заголовок (эмодзи + название), затем 1–2 предложения с деталями.
-Отвечай на ${lang} языке. Будь конкретным, без воды.`;
-}
+const ADVISE_ENDPOINT = '/api/ai-advise';
 
 export function AiAdvisor({ input, disabled }: AiAdvisorProps) {
+  const { t } = useTranslation('calculator');
   const [advice, setAdvice] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [errorKind, setErrorKind] = useState<ErrorKind | null>(null);
   const [generated, setGenerated] = useState(false);
+
+  const errorMessage =
+    errorKind === 'rateLimit'
+      ? t('aiAdvisor.errorRateLimit')
+      : errorKind === 'network'
+        ? t('aiAdvisor.errorNetwork')
+        : errorKind === 'generic'
+          ? t('aiAdvisor.errorGeneric')
+          : null;
 
   const handleGenerate = async () => {
     setLoading(true);
-    setError(null);
+    setErrorKind(null);
     setAdvice('');
 
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      const response = await fetch(ADVISE_ENDPOINT, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY as string}`,
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          max_tokens: 1000,
-          messages: [{ role: 'user', content: buildPrompt(input) }],
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input),
       });
 
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+      if (response.status === 429) {
+        setErrorKind('rateLimit');
+        return;
       }
 
-      const data = (await response.json()) as {
-        choices: { message: { content: string } }[];
-      };
-      const text = data.choices[0]?.message.content ?? '';
+      if (!response.ok) {
+        setErrorKind('generic');
+        return;
+      }
 
-      setAdvice(text);
+      const data = (await response.json()) as { advice?: string };
+      setAdvice(data.advice ?? '');
       setGenerated(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Ошибка запроса');
+    } catch {
+      setErrorKind('network');
     } finally {
       setLoading(false);
     }
@@ -96,17 +82,17 @@ export function AiAdvisor({ input, disabled }: AiAdvisorProps) {
   const handleReset = () => {
     setAdvice('');
     setGenerated(false);
-    setError(null);
+    setErrorKind(null);
   };
 
   return (
     <Card>
       <CardHeader
-        title="ИИ-советник"
+        title={t('aiAdvisor.title')}
         action={
           generated ? (
             <Button variant="ghost" size="small" onClick={handleReset}>
-              Обновить
+              {t('aiAdvisor.refresh')}
             </Button>
           ) : undefined
         }
@@ -117,16 +103,14 @@ export function AiAdvisor({ input, disabled }: AiAdvisorProps) {
             <div className={styles.introIcon}>
               <Sparkle size={20} weight="fill" />
             </div>
-            <p className={styles.introText}>
-              Получите персональные рекомендации по снижению потребления для
-              вашего здания — на основе введённых данных.
-            </p>
+            <p className={styles.introText}>{t('aiAdvisor.introText')}</p>
             <Button
               variant="primary"
               onClick={() => void handleGenerate()}
               disabled={disabled || loading}
+              className={styles.generateButton}
             >
-              Получить рекомендации
+              {t('aiAdvisor.generate')}
               <ArrowRight size={14} weight="bold" />
             </Button>
           </div>
@@ -139,14 +123,14 @@ export function AiAdvisor({ input, disabled }: AiAdvisorProps) {
               <span />
               <span />
             </div>
-            <p className={styles.loadingText}>Анализирую данные здания…</p>
+            <p className={styles.loadingText}>{t('aiAdvisor.loading')}</p>
           </div>
         )}
 
-        {error && (
-          <div className={styles.error}>
+        {errorMessage && (
+          <div className={styles.error} role="alert">
             <WarningCircle size={16} weight="fill" />
-            <span>{error}</span>
+            <span>{errorMessage}</span>
           </div>
         )}
 
@@ -154,7 +138,6 @@ export function AiAdvisor({ input, disabled }: AiAdvisorProps) {
           <div className={styles.advice}>
             {advice.split('\n').map((line, i) => {
               if (!line.trim()) return null;
-              // Lines starting with emoji + bold-looking text → treat as header
               const isHeader = /^[^\w\s]/.test(line.trim()) && line.length < 80;
               return isHeader ? (
                 <p key={i} className={styles.adviceHeader}>

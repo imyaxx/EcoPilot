@@ -2,9 +2,7 @@
   "hero": {
     "eyebrow": "City-scale observatory",
     "title": "Almaty in numbers",
-    "subtitle": "Energy, water and carbon — monitored in one place so the city can act on what matters.",
-    "liveIndicator": "Synced {{time}}",
-    "datasetBadge": "2019 – 2025"
+    "subtitle": "Energy, water and carbon — monitored in one place so the city can act on what matters."
   },
   "metrics": {
     "totalEnergy": {
@@ -25,19 +23,14 @@
     }
   },
   "period": {
-    "label": "Period",
     "monthly": "Monthly",
-    "monthly2024": "Monthly 2024",
-    "monthly2025": "Monthly 2025",
+    "monthlyYear": "Monthly {{year}}",
     "annual": "Annual"
   },
   "charts": {
     "energyTrend": "Energy Consumption",
     "waterUsage": "Water Consumption",
-    "yAxisHint": "values shown in {{unit}}",
     "tooltip": {
-      "period": "Period",
-      "value": "Value",
       "change": "vs previous"
     },
     "empty": "No series available for this period"
@@ -48,10 +41,6 @@
     "rows": {
       "energy": "Energy",
       "water": "Water"
-    },
-    "legend": {
-      "low": "Low",
-      "high": "High"
     }
   }
 }

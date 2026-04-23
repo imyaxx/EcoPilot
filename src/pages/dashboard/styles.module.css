@@ -1,6 +1,6 @@
 /* ============================================
    Dashboard Page Layout
-   1200px container, hero, metric grid, charts row
+   1200px container · hero · metric grid · charts row · heatmap.
    ============================================ */
 
 .page {
@@ -37,12 +37,13 @@
 
 .heroTitle {
   font-family: var(--font-sans);
-  font-size: clamp(1.875rem, 4vw, 2.75rem);
+  font-size: clamp(1.5rem, 4vw, 2.75rem);
   font-weight: var(--weight-bold);
   line-height: 1.05;
   letter-spacing: -0.025em;
   color: var(--color-text-primary);
   margin-top: var(--space-2);
+  min-height: clamp(2.25rem, 4vw, 3rem);
 }
 
 .heroSubtitle {
@@ -65,18 +66,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-4);
-}
-
-@media (max-width: 960px) {
-  .metricsGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .metricsGrid {
-    grid-template-columns: 1fr;
-  }
+  align-items: start;
 }
 
 /* ── Charts section ── */
@@ -89,13 +79,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-5);
-}
-
-@media (max-width: 860px) {
-  .chartsGrid {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
+  align-items: start;
 }
 
 /* ── period tabs (inside chart headers) ── */
@@ -123,5 +107,29 @@
 @media (prefers-reduced-motion: reduce) {
   .hero {
     animation: none;
+  }
+}
+
+/* ── responsive ── */
+
+@media (max-width: 960px) {
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .chartsGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .page {
+    padding: var(--space-5) var(--space-4) var(--space-8);
+  }
+}
+
+@media (max-width: 480px) {
+  .metricsGrid {
+    grid-template-columns: 1fr;
   }
 }

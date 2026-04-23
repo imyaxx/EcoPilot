@@ -41,6 +41,10 @@ export interface DashboardDataset {
   energyTrend: Record<EnergyPeriod, ResourceTrendPoint[]>;
   waterTrend: Record<WaterPeriod, ResourceTrendPoint[]>;
   tariffs: UtilityTariff[];
+  monthlyYears: {
+    energy: number;
+    water: number;
+  };
 }
 
 export interface DashboardTrendSummary {

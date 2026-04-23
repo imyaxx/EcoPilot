@@ -14,6 +14,16 @@ interface EnergySheetConfig {
 const ENERGY_UNIT = 'млн кВт·ч';
 const MONTH_TOTAL_LABEL = 'ИТОГО';
 
+/**
+ * The monthly energy sheet name encodes its dataset year
+ * (e.g. `Monthly_Profile_2024_modeled`). Parsed so the UI can label the
+ * period without hardcoding the year in locale files.
+ */
+export function getEnergyMonthYear(): number {
+  const match = ENERGY_SHEET_CONFIG.month.sheetName.match(/(\d{4})/);
+  return match ? Number(match[1]) : new Date().getFullYear();
+}
+
 const ENERGY_SHEET_CONFIG = {
   year: {
     sheetName: 'Annual_Consumption_GWh',

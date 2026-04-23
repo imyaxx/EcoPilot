@@ -1,11 +1,8 @@
 {
   "appName": "EcoPilot",
-  "appTagline": "Almaty Energy & Water Observatory",
-  "appDescription": "Real-time environmental performance intelligence for the city",
   "nav": {
     "dashboard": "Dashboard",
-    "calculator": "Calculator",
-    "about": "About"
+    "calculator": "Calculator"
   },
   "language": {
     "label": "Language",
@@ -18,51 +15,16 @@
       "kk": "KK"
     }
   },
-  "state": {
-    "loading": "Loading…",
-    "error": "Something went wrong",
-    "retry": "Retry",
-    "noData": "No data available",
-    "empty": "Nothing to show yet"
-  },
-  "actions": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "close": "Close",
-    "search": "Search",
-    "filter": "Filter",
-    "reset": "Reset",
-    "export": "Export",
-    "viewAll": "View all",
-    "learnMore": "Learn more"
-  },
-  "status": {
-    "live": "Live",
-    "online": "Online",
-    "offline": "Offline",
-    "active": "Active",
-    "inactive": "Inactive",
-    "datasetCoverage": "Dataset coverage"
-  },
   "units": {
-    "kwh": "kWh",
-    "gwh": "GWh",
-    "mlnKwh": "mln kWh",
-    "mlnM3": "mln m³",
-    "mlnKgCO2": "mln kg CO₂",
     "kgPerYear": "kg / year",
     "kztPerMonth": "KZT / month",
     "kztPerYear": "KZT / year",
-    "kzt": "KZT",
-    "percent": "%",
-    "m2": "m²"
+    "kzt": "KZT"
   },
   "track": {
-    "label": "Track",
     "energyResources": "Energy & Resources"
   },
   "footer": {
-    "copyright": "© 2026 Kazakhstan"
+    "copyright": "Built for EcoSolutions Hackathon · Almaty 2026"
   }
 }

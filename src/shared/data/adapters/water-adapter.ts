@@ -7,6 +7,16 @@ const WATER_YEAR_SHEET = 'Water_Consumption_Almaty_Annual';
 const WATER_MONTH_SHEET = 'Monthly_Water_2025_modeled';
 const WATER_UNIT = 'млн м³';
 
+/**
+ * The monthly water sheet name encodes its dataset year (e.g.
+ * `Monthly_Water_2025_modeled`). Parsed so the UI can label the period
+ * without hardcoding the year in locale files.
+ */
+export function getWaterMonthYear(): number {
+  const match = WATER_MONTH_SHEET.match(/(\d{4})/);
+  return match ? Number(match[1]) : new Date().getFullYear();
+}
+
 function getWorksheet(workbook: XLSX.WorkBook, sheetName: string): XLSX.WorkSheet {
   const worksheet = workbook.Sheets[sheetName];
 

@@ -4,7 +4,7 @@
   z-index: 100;
   display: flex;
   justify-content: center;
-  padding: 0 var(--space-4);
+  padding: env(safe-area-inset-top) var(--space-4) 0;
   pointer-events: none;
 }
 
@@ -147,15 +147,7 @@
 }
 
 .footerMark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: var(--gradient-brand);
-  color: var(--color-text-inverse);
-  box-shadow: var(--shadow-glow-brand);
+  /* BrandMark supplies size, gradient, and glow; no overrides needed. */
 }
 
 .footerTextGroup {
@@ -216,11 +208,24 @@
 @media (max-width: 640px) {
   .nav {
     top: var(--space-2);
-    padding: 0 var(--space-2);
+    padding: env(safe-area-inset-top) var(--space-2) 0;
   }
   .navInner {
     gap: var(--space-3);
     padding: 6px 8px 6px var(--space-3);
+    flex-wrap: nowrap;
+  }
+  .navBrand {
+    gap: 8px;
+    padding-right: var(--space-2);
+  }
+  .navBrandIcon {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+  }
+  .navBrandName {
+    font-size: 0.875rem;
   }
   .navBrandTag {
     display: none;
@@ -232,6 +237,15 @@
   .footer {
     margin-top: var(--space-8);
     padding: var(--space-5) var(--space-4) var(--space-6);
+  }
+}
+
+@media (max-width: 400px) {
+  .navInner {
+    gap: var(--space-2);
+  }
+  .navTab {
+    padding: 5px var(--space-2);
   }
 }
 

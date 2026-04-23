@@ -1,11 +1,8 @@
 {
   "appName": "EcoPilot",
-  "appTagline": "Алматының энергия және су обсерваториясы",
-  "appDescription": "Қала экологиялық көрсеткіштерін нақты уақыт режимінде қадағалау",
   "nav": {
     "dashboard": "Дашборд",
-    "calculator": "Калькулятор",
-    "about": "Жоба туралы"
+    "calculator": "Калькулятор"
   },
   "language": {
     "label": "Тіл",
@@ -18,51 +15,16 @@
       "kk": "KK"
     }
   },
-  "state": {
-    "loading": "Жүктелуде…",
-    "error": "Бірдеңе қате кетті",
-    "retry": "Қайталау",
-    "noData": "Деректер жоқ",
-    "empty": "Әзірге көрсетер ештеңе жоқ"
-  },
-  "actions": {
-    "save": "Сақтау",
-    "cancel": "Бас тарту",
-    "confirm": "Растау",
-    "close": "Жабу",
-    "search": "Іздеу",
-    "filter": "Сүзгі",
-    "reset": "Тазалау",
-    "export": "Экспорт",
-    "viewAll": "Барлығын көру",
-    "learnMore": "Толығырақ"
-  },
-  "status": {
-    "live": "Нақты уақытта",
-    "online": "Онлайн",
-    "offline": "Оффлайн",
-    "active": "Белсенді",
-    "inactive": "Белсенді емес",
-    "datasetCoverage": "Деректер қамтуы"
-  },
   "units": {
-    "kwh": "кВт·сағ",
-    "gwh": "ГВт·сағ",
-    "mlnKwh": "млн кВт·сағ",
-    "mlnM3": "млн м³",
-    "mlnKgCO2": "млн кг CO₂",
     "kgPerYear": "кг / жыл",
     "kztPerMonth": "теңге / ай",
     "kztPerYear": "теңге / жыл",
-    "kzt": "теңге",
-    "percent": "%",
-    "m2": "м²"
+    "kzt": "теңге"
   },
   "track": {
-    "label": "Трек",
     "energyResources": "Energy & Resources"
   },
   "footer": {
-    "copyright": "© 2026 Қазақстан"
+    "copyright": "EcoSolutions Hackathon үшін жасалған · Алматы 2026"
   }
 }

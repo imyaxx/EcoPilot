@@ -1,4 +1,9 @@
-.root {
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+}
+
+.segmented {
   display: inline-flex;
   align-items: center;
   gap: 2px;
@@ -37,4 +42,45 @@
 .button:focus-visible {
   outline: var(--focus-ring-width) solid var(--color-focus-ring);
   outline-offset: 2px;
+}
+
+/* ── mobile-only cycle button ── */
+
+.cycleButton {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background-color: var(--color-surface-sunken);
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  letter-spacing: 0.04em;
+  transition:
+    background-color var(--duration-interactive) var(--easing-interactive),
+    color var(--duration-interactive) var(--easing-interactive);
+}
+
+.cycleButton:hover {
+  background-color: color-mix(in srgb, var(--color-surface-sunken) 60%, var(--color-surface-elevated));
+}
+
+.cycleButton:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.cycleCode {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .segmented {
+    display: none;
+  }
+  .cycleButton {
+    display: inline-flex;
+  }
 }

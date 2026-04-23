@@ -1,3 +1,8 @@
+/**
+ * App — shell: loads the dataset once, renders the sticky nav, switches
+ * between Dashboard and Calculator pages, and mounts the footer.
+ */
+
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Leaf } from '@phosphor-icons/react';
@@ -5,7 +10,7 @@ import { AppProviders } from './providers';
 import { DashboardPage } from '../pages/dashboard';
 import { CalculatorPage } from '../pages/calculator';
 import { loadDashboardDataset } from '../shared/data/loaders';
-import { LanguageSwitcher } from '../shared/ui';
+import { BrandMark, LanguageSwitcher } from '../shared/ui';
 import type { DashboardDataset } from '../shared/data/transformed';
 import styles from './App.module.css';
 
@@ -79,9 +84,7 @@ function AppContent({ dataset }: AppContentProps) {
       </main>
 
       <footer className={styles.footer}>
-        <div className={styles.footerMark} aria-hidden="true">
-          <Leaf size={20} weight="fill" />
-        </div>
+        <BrandMark size="lg" className={styles.footerMark} />
         <div className={styles.footerTextGroup}>
           <p className={styles.footerBrand}>{t('appName')}</p>
           <p className={styles.footerCaption}>{t('footer.copyright')}</p>
@@ -102,7 +105,9 @@ export function App() {
         if (isMounted) setDataset(loaded);
       })
       .catch((error: unknown) => {
-        console.error('Failed to load dataset', error);
+        if (import.meta.env.DEV) {
+          console.error('Failed to load dataset', error);
+        }
       });
 
     return () => {

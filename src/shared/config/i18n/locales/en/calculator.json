@@ -27,11 +27,9 @@
     "useBuildingData": "Use city averages"
   },
   "results": {
-    "title": "Results",
     "monthlyTotal": "Current monthly cost",
     "yearlyTotal": "Current yearly cost",
     "yearlySavings": "Yearly savings",
-    "monthlySavings": "Monthly savings",
     "co2Reduction": "CO₂ reduction",
     "waterSavings": "Water savings",
     "paybackPeriod": "Payback period",
@@ -42,13 +40,16 @@
     "title": "Cost Breakdown",
     "subtitle": "Where the money actually goes",
     "electricity": "Electricity",
-    "water": "Water",
-    "legend": "{{value}} {{currency}} / month"
+    "water": "Water"
   },
-  "comparison": {
-    "title": "Before vs After",
-    "current": "Today",
-    "afterSavings": "After {{reduction}}% reduction",
-    "saved": "You keep {{amount}} {{currency}}"
+  "aiAdvisor": {
+    "title": "AI Advisor",
+    "refresh": "Regenerate",
+    "introText": "Get tailored recommendations to cut consumption for your building — grounded in the numbers you just entered.",
+    "generate": "Generate recommendations",
+    "loading": "Analyzing building data…",
+    "errorGeneric": "Could not generate advice right now. Please try again.",
+    "errorRateLimit": "Too many requests. Please wait a moment and try again.",
+    "errorNetwork": "Connection issue. Check your network and retry."
   }
 }

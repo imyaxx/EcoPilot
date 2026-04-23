@@ -1,11 +1,12 @@
+/**
+ * DashboardPage — city-scale observatory landing page. KPI grid + two trend
+ * charts + monthly heatmap. Data arrives pre-transformed from the dataset
+ * loader; this file only composes widgets and wires i18n.
+ */
+
 import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Lightning,
-  Drop,
-  ShieldCheck,
-  Cloud,
-} from '@phosphor-icons/react';
+import { Lightning, Drop, ShieldCheck, Cloud } from '@phosphor-icons/react';
 import type {
   DashboardDataset,
   DashboardMetricKey,
@@ -26,31 +27,14 @@ interface MetricConfig {
 }
 
 const METRIC_CONFIG: Record<DashboardMetricKey, MetricConfig> = {
-  totalEnergy: {
-    accent: 'energy',
-    icon: <Lightning size={16} weight="fill" />,
-  },
-  totalWater: {
-    accent: 'water',
-    icon: <Drop size={16} weight="fill" />,
-  },
-  carbonFootprint: {
-    accent: 'carbon',
-    icon: <Cloud size={16} weight="fill" />,
-  },
-  efficiencyScore: {
-    accent: 'brand',
-    icon: <ShieldCheck size={16} weight="fill" />,
-  },
+  totalEnergy: { accent: 'energy', icon: <Lightning size={16} weight="fill" /> },
+  totalWater: { accent: 'water', icon: <Drop size={16} weight="fill" /> },
+  carbonFootprint: { accent: 'carbon', icon: <Cloud size={16} weight="fill" /> },
+  efficiencyScore: { accent: 'brand', icon: <ShieldCheck size={16} weight="fill" /> },
 };
 
 const ENERGY_PERIODS: EnergyPeriod[] = ['month', 'year'];
 const WATER_PERIODS: WaterPeriod[] = ['month', 'year'];
-
-function periodKey(period: EnergyPeriod | WaterPeriod, fallback: string): string {
-  if (period === 'year') return 'period.annual';
-  return fallback;
-}
 
 interface DashboardPageProps {
   dataset: DashboardDataset | null;
@@ -65,8 +49,15 @@ export function DashboardPage({ dataset }: DashboardPageProps) {
     ? selectDashboardDerivedData(dataset, energyPeriod, waterPeriod)
     : null;
 
-  const activeEnergyPeriodLabel = t(periodKey(energyPeriod, 'period.monthly2024'));
-  const activeWaterPeriodLabel = t(periodKey(waterPeriod, 'period.monthly2025'));
+  const activeEnergyPeriodLabel =
+    energyPeriod === 'year'
+      ? t('period.annual')
+      : t('period.monthlyYear', { year: dataset?.monthlyYears.energy ?? '' });
+
+  const activeWaterPeriodLabel =
+    waterPeriod === 'year'
+      ? t('period.annual')
+      : t('period.monthlyYear', { year: dataset?.monthlyYears.water ?? '' });
 
   const activeEnergyTrend = derivedData?.activeEnergyTrend ?? [];
   const activeWaterTrend = derivedData?.activeWaterTrend ?? [];
@@ -76,14 +67,8 @@ export function DashboardPage({ dataset }: DashboardPageProps) {
   const heatmapSeries = useMemo(() => {
     if (!dataset) return [];
     return [
-      {
-        key: 'energy' as const,
-        points: dataset.energyTrend.month,
-      },
-      {
-        key: 'water' as const,
-        points: dataset.waterTrend.month,
-      },
+      { key: 'energy' as const, points: dataset.energyTrend.month },
+      { key: 'water' as const, points: dataset.waterTrend.month },
     ];
   }, [dataset]);
 
@@ -95,9 +80,7 @@ export function DashboardPage({ dataset }: DashboardPageProps) {
         : {
             value: `${metric.deltaPercentage.toFixed(1)}%`,
             direction:
-              metric.trendDirection === 'up'
-                ? ('positive' as const)
-                : ('negative' as const),
+              metric.trendDirection === 'up' ? ('positive' as const) : ('negative' as const),
           };
 
     return (
@@ -117,7 +100,6 @@ export function DashboardPage({ dataset }: DashboardPageProps) {
 
   return (
     <div className={styles.page}>
-      {/* ── Hero ── */}
       <header className={styles.hero}>
         <div className={styles.heroCopy}>
           <span className={styles.heroEyebrow}>{t('hero.eyebrow')}</span>
@@ -126,7 +108,6 @@ export function DashboardPage({ dataset }: DashboardPageProps) {
         </div>
       </header>
 
-      {/* ── KPI Metrics ── */}
       <section className={styles.section}>
         <div className={styles.metricsGrid}>
           {derivedData
@@ -137,7 +118,6 @@ export function DashboardPage({ dataset }: DashboardPageProps) {
         </div>
       </section>
 
-      {/* ── Charts ── */}
       <section className={styles.chartsSection}>
         <div className={styles.chartsGrid}>
           <LineChart
@@ -159,7 +139,7 @@ export function DashboardPage({ dataset }: DashboardPageProps) {
                     aria-pressed={energyPeriod === option}
                     onClick={() => setEnergyPeriod(option)}
                   >
-                    {t(option === 'year' ? 'period.annual' : 'period.monthly')}
+                    {option === 'year' ? t('period.annual') : t('period.monthly')}
                   </Button>
                 ))}
               </div>
@@ -184,7 +164,7 @@ export function DashboardPage({ dataset }: DashboardPageProps) {
                     aria-pressed={waterPeriod === option}
                     onClick={() => setWaterPeriod(option)}
                   >
-                    {t(option === 'year' ? 'period.annual' : 'period.monthly')}
+                    {option === 'year' ? t('period.annual') : t('period.monthly')}
                   </Button>
                 ))}
               </div>
@@ -193,7 +173,6 @@ export function DashboardPage({ dataset }: DashboardPageProps) {
         </div>
       </section>
 
-      {/* ── Heatmap ── */}
       {heatmapSeries.length > 0 && (
         <section className={styles.section}>
           <ConsumptionHeatmap series={heatmapSeries} />

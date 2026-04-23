@@ -10,6 +10,8 @@ import {
   extractTariffs,
   extractWaterYearTrend,
   extractWaterMonthTrend,
+  getEnergyMonthYear,
+  getWaterMonthYear,
 } from '../adapters';
 import { loadWorkbook } from './workbook-loader';
 
@@ -132,5 +134,9 @@ export async function loadDashboardDataset(): Promise<DashboardDataset> {
       year: waterYearTrend,
     },
     tariffs: extractTariffs(tariffsWorkbook),
+    monthlyYears: {
+      energy: getEnergyMonthYear(),
+      water: getWaterMonthYear(),
+    },
   };
 }

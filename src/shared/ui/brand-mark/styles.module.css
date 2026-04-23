@@ -1,0 +1,27 @@
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-brand);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-glow-brand);
+  flex-shrink: 0;
+}
+
+.boxSm {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+}
+
+.boxMd {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+}
+
+.boxLg {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+}

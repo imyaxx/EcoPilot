@@ -67,6 +67,7 @@
   font-weight: var(--weight-semibold);
   color: var(--color-text-primary);
   letter-spacing: var(--tracking-tight);
+  min-height: 1.4em;
 }
 
 .subtitle {
